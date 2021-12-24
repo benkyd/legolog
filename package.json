@@ -1,0 +1,19 @@
+{
+  "name": "legolog-webserver-cdn",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest src/__test",
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "setup": "npm i"
+  },
+  "author": "Ben Kyd <benjaminkyd@gmail.com> (https://benkyd.co.uk)",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.2",
+    "jest": "^27.4.5"
+  }
+}
