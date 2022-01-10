@@ -1,11 +1,14 @@
+const Logger = require('./logger.js');
 const Config = require('./config.js');
+const Server = require('./routes/server.js');
 
 async function main() {
-    console.log('Pre-Init Loading...');
+    Logger.info('Pre-Init Loading...');
+    Logger.init();
     Config.load();
 
-    
-
+    Server.load();
+    Server.listen(process.env.PORT);
 }
 
 main();
