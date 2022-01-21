@@ -4,12 +4,23 @@ const clc = require('cli-color');
 const moment = require('moment');
 const fs = require('fs');
 
-let LogLevel = 1;
+let LogLevel = 0;
 let logPath = 'logs.log';
 let dateFormat = 'DD-MM-YY HH:mm:ss'
 
+// Must be ran after the config is initalised
+// TODO: network logs
 module.exports.init = async function(path) {
     if (path) logPath = path;
+
+    // ALWAYS logs to console, others are aditionals
+    switch (process.env.LOG_TARGET)
+    {
+        case 'console':
+        case 'file':
+        case 'network':
+        default:
+    }
 
     if (!fs.existsSync(logPath)) {
         fs.writeFileSync(logPath, '');
@@ -29,10 +40,6 @@ module.exports.VERBOSE_LOGS = 0;
 module.exports.DEBUG_LOGS   = 1;
 module.exports.INFO_LOGS    = 2;
 module.exports.WARN_LOGS    = 3;
-
-module.exports.welcome = function() {
-    // Unused
-}
 
 module.exports.middleware = function(origin, message) {
     let d = moment().format(dateFormat);
