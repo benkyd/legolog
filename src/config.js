@@ -8,9 +8,8 @@ function load() {
     Logger.debug(`CONFIG: ${JSON.stringify(res.parsed)}`);
     Logger.debug(`CONFIG: running in ${res.parsed.NODE_ENV} mode`);
 
-    // If NODE_ENV is dev, every config item that is dev is made into the actual one so that the
+    // if NODE_ENV is dev, every config item that is dev is made into the actual one so that the
     // individual modules do not need to care about hte mode of operation
-
     if (res.parsed.NODE_ENV === 'dev') {
         Object.keys(res.parsed).forEach(key => {
             if (key.endsWith('_DEV')) {

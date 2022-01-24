@@ -8,7 +8,7 @@ let LogLevel = 0;
 let logPath = 'logs.log';
 let dateFormat = 'DD-MM-YY HH:mm:ss'
 
-// Must be ran after the config is initalised
+// must be ran after the config is initalised
 // TODO: network logs
 module.exports.init = async function(path) {
     if (path) logPath = path;
