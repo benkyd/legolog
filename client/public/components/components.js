@@ -8,7 +8,9 @@ class Component extends HTMLElement {
     }
 }
 
-// some not-so-scalable way to load all the components
+// other components with behaviour go here
+
+// some not-so-scalable way to load all the generic template-like components
 async function loadComponents() {
     // because of "sECuRItY" i can't simply just find everything in the components folder
     // there is a way to sideload this with express and have it do all that stuff
@@ -17,10 +19,12 @@ async function loadComponents() {
         'navbar'
     ];
     for (let i = 0; i < components.length; i++) {
-        const path = `./components/${components[i]}.html`;
+        const path = `./components/${components[i]}/${components[i]}.html`;
         const component = await sideLoad(path);
-        const stylePath = `./components/${components[i]}.css`;
+        const stylePath = `./components/${components[i]}/${components[i]}.css`;
         const styleComponent = await sideLoad(stylePath);
+        const scriptPath = `./components/${components[i]}/${components[i]}.js`;
+        const scriptComponent = await sideLoad(scriptPath);
 
         const Template = class extends Component {
             constructor() {
@@ -31,6 +35,11 @@ async function loadComponents() {
 
                 shadow.innerHTML = component;
                 
+                const script = document.createElement('script');
+                script.text = scriptComponent;
+                shadow.appendChild(script);
+                
+                // always assume global.css is the first css file
                 const style = document.createElement('style');
                 style.textContent = styleComponent;
                 shadow.appendChild(style);

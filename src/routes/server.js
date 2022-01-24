@@ -21,8 +21,6 @@ function listen(port) {
     app.use(logRequest);
 
     app.use(express.static('client/public/'));
-
-    app.get('/', (req, res) => { res.end('lol') })
 }
 
 module.exports = {
