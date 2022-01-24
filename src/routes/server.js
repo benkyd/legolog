@@ -15,10 +15,12 @@ function logRequest(req, res, next)
 function listen(port) {
     const app = express();
     app.listen(port);
-    Logger.info(`Listening on port ${port}...`);
+    Logger.info(`LISTENING ON ${port}...`);
     
     Logger.info(`Setting up basic middleware...`);
     app.use(logRequest);
+
+    app.use(express.static('client/public/'));
 
     app.get('/', (req, res) => { res.end('lol') })
 }
