@@ -18,6 +18,7 @@ async function loadComponents() {
     const components = [ 
         'navbar'
     ];
+
     for (let i = 0; i < components.length; i++) {
         const path = `./components/${components[i]}/${components[i]}.html`;
         const component = await sideLoad(path);
@@ -38,7 +39,7 @@ async function loadComponents() {
                 const script = document.createElement('script');
                 script.text = scriptComponent;
                 shadow.appendChild(script);
-                
+
                 // always assume global.css is the first css file
                 const style = document.createElement('style');
                 style.textContent = styleComponent;
@@ -47,6 +48,7 @@ async function loadComponents() {
         }
         Object.defineProperty(Template, 'name', {value: components[i]});
         customElements.define(`${components[i]}-component`, Template);
+
     }
 }
 

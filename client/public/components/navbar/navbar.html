@@ -1,25 +1,34 @@
-<!-- Basic NavBar template that uses logo.svg -->
-<div class="tl-nav-bar">
-    <div class="tl-nav-item">
-        <img class="nav-bar-logo" src="/res/logo.svg" alt="LegoLog Logo">
+<nav class="navbar">
+    <div class="logo"><img src="res/logo.svg" height="50" alt="logo"></div>
+    
+    <div class="push-left">
+        <!-- https://jonsuh.com/hamburgers/ -->
+        <button id="menu-toggler" class="hamburger">
+            <span class="hamburger-line hamburger-line-top"></span>
+            <span class="hamburger-line hamburger-line-middle"></span>
+            <span class="hamburger-line hamburger-line-bottom"></span>
+        </button>
+    
+        <ul id="primary-menu" class="menu nav-menu">
+            <li class="menu-item current-menu-item"><a class="nav-link"  href="#">New</a></li>
+            <li class="menu-item dropdown"><a class="nav-link"  href="#">Sets ▾</a>
+                <!-- TODO: Going to need to dynamically generate this -->
+                <ul class = "sub-nav">
+                    <li><a class="sub-nav-link"  href="#">1</a></li>
+                    <li><a class="sub-nav-link"  href="#">2</a></li>
+                    <li><a class="sub-nav-link"  href="#">3</a></li>
+                </ul>
+            </li>
+            <li class="menu-item dropdown"><a class="nav-link"  href="#">Bricks ▾</a>
+                <ul class="sub-nav" >
+                    <li><a class="sub-nav-link" href="#">1</a></li>
+                    <li><a class="sub-nav-link" href="#">2</a></li>
+                    <li><a class="sub-nav-link" href="#">3</a></li>
+                </ul>
+            </li>
+
+            <li class="menu-item "><a class="nav-link"  href="#">My Account</a>
+            </li>
+        </ul>
     </div>
-    <div class="tl-nav-item">
-        New
-    </div>
-    <div class="tl-nav-item">
-        Offers
-    </div>
-    <div class="tl-nav-item">
-        Bricks
-    </div>
-    <div class="tl-nav-item">
-        Our Sets
-    </div>
-    <div class="tl-nav-item">
-        My Sets
-    </div>
-    <div class="tl-nav-item tl-nav-right">
-        My Account
-        <div class="nested-nav-item"></div>
-    </div>
-</div> <!-- end of nav-bar -->
+</nav>

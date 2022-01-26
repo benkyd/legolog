@@ -3,7 +3,13 @@ body {
     font-size: 14px;
     line-height: 1.42857143;
     color: #333;
-    background-color: rgb(241, 241, 241);
+    text-decoration: none;
+    /* background-color: rgb(241, 241, 241); */
+    background-color: #D7C2FF;
+    width: 70%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .text {
