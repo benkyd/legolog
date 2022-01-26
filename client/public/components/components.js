@@ -31,6 +31,7 @@ async function loadComponents() {
             constructor() {
                 super();
             }
+            
             async connectedCallback() {
                 const shadow = this.attachShadow({mode: 'open'});
 

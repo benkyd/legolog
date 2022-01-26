@@ -1,20 +1,19 @@
 body {
     font-family: 'Open Sans', sans-serif;
-    font-size: 14px;
-    line-height: 1.42857143;
-    color: #333;
+    font-size: 20px;
+    color: #222;
     text-decoration: none;
-    /* background-color: rgb(241, 241, 241); */
     background-color: #D7C2FF;
-    width: 70%;
     display: block;
     margin-left: auto;
     margin-right: auto;
 }
 
-.text {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 14px;
-    color: #333;
-    line-height: 1.5;
+limited-margin {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 900px;
+    width: 70%;
+    max-width: 1200px;
 }
