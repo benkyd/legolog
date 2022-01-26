@@ -13,7 +13,14 @@ limited-margin {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    min-width: 900px;
-    width: 70%;
+    width: 85%;
     max-width: 1200px;
+}
+
+/* responsive sidebar stop scrolling */
+/* also making sure this is applied any time it's on a mobile device */
+@media (pointer:none), (pointer:coarse), screen and (max-width: 900px) {
+    limited-margin {
+        width: 100%;
+    }
 }
