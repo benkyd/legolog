@@ -7,7 +7,7 @@
     height: 35px;
     background-color: #00B4F5;
     box-shadow: #222 0px 0px 5px;
-    transition: all 0.2s ease-in;
+    transition: all 0.3s ease-in;
 }
 
 .notification-bar-text {
@@ -79,7 +79,7 @@
 }
 
 #notification-toggler:hover .cross-line {
-    background: #555;
+    background: #777;
 }
 
 .cross-line-top {
@@ -100,6 +100,6 @@
 /* don's show on mobile or "small mode" */
 @media (pointer:none), (pointer:coarse), screen and (max-width: 900px) {
     .notification-bar {
-        transform: translatey(-100%);
+        transform: translatey(-200%);
     }
 }
