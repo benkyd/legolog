@@ -16,14 +16,17 @@ async function loadComponents() {
     // there is a way to sideload this with express and have it do all that stuff
     // TODO: implement this
     const components = [ 
-        'navbar'
+        'navbar',
+        'notification-bar',
     ];
 
     for (let i = 0; i < components.length; i++) {
         const path = `./components/${components[i]}/${components[i]}.html`;
-        const component = await sideLoad(path);
+        let component = await sideLoad(path);
+
         const stylePath = `./components/${components[i]}/${components[i]}.css`;
         const styleComponent = await sideLoad(stylePath);
+
         const scriptPath = `./components/${components[i]}/${components[i]}.js`;
         const scriptComponent = await sideLoad(scriptPath);
 
@@ -31,10 +34,15 @@ async function loadComponents() {
             constructor() {
                 super();
             }
-            
-            async connectedCallback() {
-                const shadow = this.attachShadow({mode: 'open'});
 
+            async connectedCallback() {
+                // TODO: THIS NEEDS DOCUMENTATION / REFACTORING
+                // make a kinda generic way to do this
+                // needs to be before the shadow dom is attatched
+                component = component.replace('${innerText}', this.innerText)
+
+                const shadow = this.attachShadow({mode: 'open'});
+                
                 shadow.innerHTML = component;
                 
                 const script = document.createElement('script');
