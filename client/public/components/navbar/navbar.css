@@ -111,6 +111,11 @@
    }
 }
 
+/* Make sure the thing doesnt move */
+.nav-menu {
+    transform: translatey(-100%);
+}
+
 @media (pointer:none), (pointer:coarse), screen and (max-width: 900px) {
     .nav-menu {
         position: fixed;
