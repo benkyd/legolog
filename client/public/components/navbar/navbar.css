@@ -1,20 +1,30 @@
-.logo {
-    max-width: 200px;
-}
-
 .navbar {
-    align-items: flex-end;
     display: flex;
+    font-family: 'Josefin Sans', sans-serif;
+    justify-content: space-between;
+    align-items: baseline;
     flex-direction: row;
-    font-family: 'Londrina Solid', cursive;
+    flex-wrap: wrap;
     font-size: 1.5em;
     margin: auto;
-    padding: 20px 50px;
+    padding-bottom: 20px;
     color: #222;
 }
 
-.push-left {
+.push-right {
     margin-left: auto;
+    text-align: right;
+}
+
+.push-down {
+    align-self: flex-end;
+    flex-basis: 100%;
+    margin-top: auto;
+}
+
+.logo {
+    flex-grow: 2;
+    transform: translatey(30%);
 }
 
 .hamburger {
@@ -26,7 +36,7 @@
     position: relative;
     height: 60px;
     width: 60px;
-    z-index: 100;
+    z-index: 200;
 }
 
 .hamburger-line {
@@ -72,6 +82,7 @@
 }
 
 .nav-menu {
+    font-family: 'Londrina Solid', cursive;
     display: flex;
     list-style: none;
     margin: 0;
@@ -112,9 +123,9 @@
 }
 
 /* Make sure the thing doesnt move */
-.nav-menu {
+/* .nav-menu {
     transform: translatey(-100%);
-}
+} */
 
 @media (pointer:none), (pointer:coarse), screen and (max-width: 900px) {
     .nav-menu {
@@ -129,6 +140,7 @@
         left: 0;
         transform: translatey(-100%);
         text-align: center;
+        z-index: 100;
    }
     .menu-active .nav-menu {
         transform: translatey(0%);
@@ -160,3 +172,7 @@
 .sub-nav:hover {
     display: block;
 }
+
+/* search bar */
+
+

@@ -1,5 +1,5 @@
 body {
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Josefin Sans', sans-serif;
     font-size: 20px;
     color: #222;
     text-decoration: none;
@@ -15,13 +15,34 @@ limited-margin {
     margin-left: auto;
     margin-right: auto;
     width: 85%;
-    max-width: 1200px;
+    max-width: 1400px;
 }
+
+content-margin {
+    position: relative;
+    display: inherit;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    max-width: 1300px;
+}
+
 
 /* responsive sidebar stop scrolling */
 /* also making sure this is applied any time it's on a mobile device */
 @media (pointer:none), (pointer:coarse), screen and (max-width: 900px) {
     limited-margin {
-        width: 100%;
+        width: 90%;
+        padding-left: 1em;
+        padding-right: 1em;
     }
+    content-margin {
+        width: 90%;
+        padding-left: 2em;
+        padding-right: 2em;
+    }
+}
+
+#top-picks {
+
 }

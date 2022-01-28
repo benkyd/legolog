@@ -1,22 +1,22 @@
 <nav class="navbar">
     <div class="logo"><img src="res/logo.svg" height="80em" alt="logo"></div>
     
-    <div class="push-left">
+    <div class="push-right">
         <!-- https://jonsuh.com/hamburgers/ -->
         <button id="menu-toggler" class="hamburger">
             <span class="hamburger-line hamburger-line-top"></span>
             <span class="hamburger-line hamburger-line-middle"></span>
             <span class="hamburger-line hamburger-line-bottom"></span>
-        </button>   
+        </button>
     
         <ul id="primary-menu" class="menu nav-menu">
-            <li class="menu-item current-menu-item"><a class="nav-link"  href="#">New</a></li>
-            <li class="menu-item dropdown"><a class="nav-link"  href="#">Sets▾</a>
+            <li class="menu-item current-menu-item"><a class="nav-link" href="#">New</a></li>
+            <li class="menu-item dropdown"><a class="nav-link" href="#">Sets▾</a>
                 <!-- TODO: Going to need to dynamically generate this -->
                 <ul class = "sub-nav">
-                    <li><a class="sub-nav-link"  href="#">1</a></li>
-                    <li><a class="sub-nav-link"  href="#">2</a></li>
-                    <li><a class="sub-nav-link"  href="#">3</a></li>
+                    <li><a class="sub-nav-link" href="#">1</a></li>
+                    <li><a class="sub-nav-link" href="#">2</a></li>
+                    <li><a class="sub-nav-link" href="#">3</a></li>
                 </ul>
             </li>
             <li class="menu-item dropdown"><a class="nav-link"  href="#">Bricks▾</a>
@@ -26,7 +26,17 @@
                     <li><a class="sub-nav-link" href="#">3</a></li>
                 </ul>
             </li>
-            <li class="menu-item "><a class="nav-link"  href="#">My Account</a>
+            <li class="menu-item"><a class="nav-link" href="#">My Account</a>
         </ul>
+        <div class="push-down">
+            <span class="push-right">
+                <input id="search-bar" type="text" placeholder="search..."/>
+            </span>
+            <img src="https://www.svgrepo.com/show/13666/heart.svg" width="30px" alt="">
+            <img src="https://www.svgrepo.com/show/80543/shopping-cart-outline.svg" width="30px" alt="">
+            <span id="cart-number">5</span>
+        </div>
     </div>
+
+
 </nav>
