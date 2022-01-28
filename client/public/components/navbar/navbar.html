@@ -9,7 +9,7 @@
             <span class="hamburger-line hamburger-line-bottom"></span>
         </button>
     
-        <ul id="primary-menu" class="menu nav-menu">
+        <ul class="primary-menu menu nav-menu">
             <li class="menu-item current-menu-item"><a class="nav-link" href="#">New</a></li>
             <li class="menu-item dropdown"><a class="nav-link" href="#">Sets▾</a>
                 <!-- TODO: Going to need to dynamically generate this -->
@@ -28,14 +28,20 @@
             </li>
             <li class="menu-item"><a class="nav-link" href="#">My Account</a>
         </ul>
-        <div class="push-down">
-            <span class="push-right">
-                <input id="search-bar" type="text" placeholder="search..."/>
+        <ul class="secondary-menu menu push-down">
+            
+            <span class="search-wrapper">
+                <img class="search-icon" src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDU2Ljk2NiA1Ni45NjYiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDU2Ljk2NiA1Ni45NjY7IiB4bWw6c3BhY2U9InByZXNlcnZlIiB3aWR0aD0iMTZweCIgaGVpZ2h0PSIxNnB4Ij4KPHBhdGggZD0iTTU1LjE0Niw1MS44ODdMNDEuNTg4LDM3Ljc4NmMzLjQ4Ni00LjE0NCw1LjM5Ni05LjM1OCw1LjM5Ni0xNC43ODZjMC0xMi42ODItMTAuMzE4LTIzLTIzLTIzcy0yMywxMC4zMTgtMjMsMjMgIHMxMC4zMTgsMjMsMjMsMjNjNC43NjEsMCw5LjI5OC0xLjQzNiwxMy4xNzctNC4xNjJsMTMuNjYxLDE0LjIwOGMwLjU3MSwwLjU5MywxLjMzOSwwLjkyLDIuMTYyLDAuOTIgIGMwLjc3OSwwLDEuNTE4LTAuMjk3LDIuMDc5LTAuODM3QzU2LjI1NSw1NC45ODIsNTYuMjkzLDUzLjA4LDU1LjE0Niw1MS44ODd6IE0yMy45ODQsNmM5LjM3NCwwLDE3LDcuNjI2LDE3LDE3cy03LjYyNiwxNy0xNywxNyAgcy0xNy03LjYyNi0xNy0xN1MxNC42MSw2LDIzLjk4NCw2eiIgZmlsbD0iIzAwMDAwMCIvPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K" />
+                <input id="search-bar" class="menu-item" type="text" placeholder="search..."/>
             </span>
-            <img src="https://www.svgrepo.com/show/13666/heart.svg" width="30px" alt="">
-            <img src="https://www.svgrepo.com/show/80543/shopping-cart-outline.svg" width="30px" alt="">
-            <span id="cart-number">5</span>
-        </div>
+
+            <img class="menu-item" src="https://www.svgrepo.com/show/13666/heart.svg" width="27px" alt="">
+            
+            <span class="cart-wrapper">
+                <img class="menu-item" src="https://www.svgrepo.com/show/80543/shopping-cart-outline.svg" width="30px" alt="">
+                <span class="menu-item" id="cart-number">5</span>
+            </span>
+        </ul>
     </div>
 
 
