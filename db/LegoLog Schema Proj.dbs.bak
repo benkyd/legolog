@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="AppEng 2021/22" id="Project-1b11" database="LogicalDesign" >
+	<schema name="AppEng 2021/22" >
+		<table name="LegoBrick" >
+			<column name="id" type="varchar" length="16" jt="12" mandatory="y" />
+			<column name="name" type="varchar" length="100" jt="12" mandatory="y" />
+			<index name="pk_LegoBrick" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+	</schema>
+	<layout name="Default Layout" id="Layout-478" show_relation="columns" >
+		<entity schema="AppEng 2021/22" name="LegoBrick" color="C1D8EE" x="48" y="80" />
+		<callout x="752" y="48" pointer="Round" >
+			<comment><![CDATA[Right-click the layout to create entities or shapes, create relations using drag and drop.
+Save the design to file. Use the Convert menu option to convert the model to a physical model.]]></comment>
+		</callout>
+	</layout>
+</project>
