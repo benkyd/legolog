@@ -27,7 +27,7 @@
 
 .logo {
     flex-grow: 2;
-    transform: translatey(-30%);
+    transform: translatey(-40%);
 }
 
 .hamburger {
@@ -94,7 +94,6 @@
     padding: 0;
     transition: all 0.25s ease-in;
 }
-
 
 .nav-menu .menu-item a {
     color: #222;
@@ -188,7 +187,7 @@
     display: flex;
     margin-top: 9px;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-around;
     color: #222;
     align-items: center;
     align-content: center;
@@ -202,7 +201,7 @@
     position: relative;
     display: flex;
     min-width: 100px;
-    margin-left: 8px;
+    /* margin-left: 8px; */
     z-index: 1;
 }
 
@@ -248,6 +247,20 @@
     background-color: white;
 } */
 
+
+#cart-wrapper {
+    display: flex;
+    flex-basis: 10%;
+    justify-content: space-between;
+    padding-bottom: 2px;
+}
+
+#cart-icon {
+    padding-top: 2px;
+}
+
 #cart-number {
-    margin-top: 8px;
+    padding-top: 9px;
+    font-size: 1em;
+    font-weight: 100;
 }
