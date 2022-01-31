@@ -9,6 +9,19 @@ class Component extends HTMLElement {
 }
 
 // other components with behaviour go here
+// non-generic components
+
+class LoadingComponent extends Component {
+    constructor() {
+        super();
+    }
+
+    async connectedCallback() {
+
+    }
+}
+
+customElements.define(`loading-component`, LoadingComponent);
 
 // some not-so-scalable way to load all the generic template-like components
 async function loadComponents() {

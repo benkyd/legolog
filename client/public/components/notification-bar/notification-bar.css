@@ -97,7 +97,7 @@
     transform: translatey(-200%);
 }
 
-/* don's show on mobile or "small mode" */
+/* don's show on mobile or 'small mode' */
 @media (pointer:none), (pointer:coarse), screen and (max-width: 900px) {
     .notification-bar {
         transform: translatey(-200%);
