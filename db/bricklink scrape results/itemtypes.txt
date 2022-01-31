@@ -1,0 +1,11 @@
+Item Type ID	Item Type Name
+
+S	Set
+P	Part
+M	Minifigure
+B	Book
+G	Gear
+C	Catalog
+I	Instruction
+O	Original Box
+U	Unsorted Lot
