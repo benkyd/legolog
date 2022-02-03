@@ -1,6 +1,3 @@
-Category ID	Category Name	Number	Name	Year Released	Weight (in Grams)	Dimensions
-
-
 67	Town / Classic Town / Supplemental	0011-2	Town Mini-Figures	1982	?	? x ? x ?
 34	Space / Supplemental	0012-1	Space Mini-Figures	1982	?	? x ? x ?
 34	Space / Supplemental	0013-1	Space Mini-Figures	1982	?	? x ? x ?
