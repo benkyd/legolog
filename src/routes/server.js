@@ -1,10 +1,7 @@
 const Logger = require('../logger.js');
 
 const express = require('express');
-
-function load() {
-
-}
+const app = express();
 
 function logRequest(req, res, next)
 {
@@ -13,7 +10,6 @@ function logRequest(req, res, next)
 }
 
 function listen(port) {
-    const app = express();
     app.listen(port);
     Logger.info(`LISTENING ON ${port}...`);
     
@@ -24,6 +20,7 @@ function listen(port) {
 }
 
 module.exports = {
+    app,
     load,
     listen
 };
