@@ -1,91 +1,91 @@
-CREATE TABLE LegoBrickPriceHistory (
-	id 					integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-	brick_id 			integer NOT NULL,
-	price_point			decimal NOT NULL,
-	date_point 			date NOT NULL,
+CREATE TABLE IF NOT EXISTS LegoBrickPriceHistory (
+	id 					INT NOT NULL PRIMARY KEY AUTOINCREMENT,
+	brick_id 			INT NOT NULL,
+	price_point			DECIMAL NOT NULL,
+	date_point 			DATETIME NOT NULL,
 	FOREIGN KEY ( id ) REFERENCES LegoBrick( id )
 );
 
-CREATE TABLE LegoSetPriceHistory (
-	id 					integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-	set_id 				integer NOT NULL,
-	price_point			decimal NOT NULL,
-	date_point 			date NOT NULL,
+CREATE TABLE IF NOT EXISTS LegoSetPriceHistory (
+	id 					INT NOT NULL PRIMARY KEY AUTOINCREMENT,
+	set_id 				INT NOT NULL,
+	price_point			DECIMAL NOT NULL,
+	date_point 			DATETIME NOT NULL,
 	FOREIGN KEY ( id ) REFERENCES LegoSet( id )
 );
 
-CREATE TABLE LegoBrickInventory (
-	id                  varchar(50) NOT NULL PRIMARY KEY,
-	stock				int NOT NULL,
-	price				decimal NOT NULL,
-	demand_factor		decimal NOT NULL,
-	backorder 		  	boolean,
-	backorder_stock	  	int,
-	last_updated		datetime NOT NULL
+CREATE TABLE IF NOT EXISTS LegoBrickInventory (
+	id                  VARCHAR (50) NOT NULL PRIMARY KEY,
+	stock				INT NOT NULL,
+	price				DECIMAL NOT NULL,
+	demand_factor		DECIMAL NOT NULL,
+	backorder 		  	BOOLEAN,
+	backorder_stock	  	INT,
+	last_updated		DATETIME NOT NULL
 	FOREIGN KEY ( id ) REFERENCES LegoBrick( id )
 );
 
-CREATE TABLE LegoSetInventory (
-	id                  varchar(50) NOT NULL PRIMARY KEY,
-	stock				int NOT NULL,
-	price				decimal NOT NULL,
-	demand_factor		decimal NOT NULL,
-	backorder 		  	boolean,
-	backorder_stock	  	int,
-	last_updated		datetime NOT NULL
+CREATE TABLE IF NOT EXISTS LegoSetInventory (
+	id                  VARCHAR (50) NOT NULL PRIMARY KEY,
+	stock				INT NOT NULL,
+	price				DECIMAL NOT NULL,
+	demand_factor		DECIMAL NOT NULL,
+	backorder 		  	BOOLEAN,
+	backorder_stock	  	INT,
+	last_updated		DATETIME NOT NULL
 	FOREIGN KEY ( id ) REFERENCES LegoSet( id )
 );
 
-CREATE TABLE Catagory (
-	id                   integer NOT NULL PRIMARY KEY,
-	name                 varchar(100)   
+CREATE TABLE IF NOT EXISTS Catagory (
+	id                   INT NOT NULL PRIMARY KEY,
+	name                 VARCHAR (100)   
 );
 
-CREATE TABLE ColourType (
-	id                   integer NOT NULL PRIMARY KEY,
-	name                 varchar(64)
+CREATE TABLE IF NOT EXISTS ColourType (
+	id                   INT NOT NULL PRIMARY KEY,
+	name                 VARCHAR (64)
 );
 
-CREATE TABLE LegoBrickColour (
-	id                   integer NOT NULL PRIMARY KEY,
-	name                 varchar(100),
-	hexrgb               varchar(6) NOT NULL,
-	col_type             integer,
+CREATE TABLE IF NOT EXISTS LegoBrickColour (
+	id                   INT NOT NULL PRIMARY KEY,
+	name                 VARCHAR (100),
+	hexrgb               VARCHAR (6) NOT NULL,
+	col_type             INT,
 	FOREIGN KEY ( col_type ) REFERENCES ColourType( id )
 );
 
-CREATE TABLE LegoSet (
-	id                   varchar(50) NOT NULL PRIMARY KEY,
-	catagory             integer,
-	name                 varchar(100),
-	date_released        date,
-	dimensions_x         decimal,
-	dimensions_y         decimal,
-	dimensions_z         decimal,
+CREATE TABLE IF NOT EXISTS LegoSet (
+	id                   VARCHAR (50) NOT NULL PRIMARY KEY,
+	catagory             INT,
+	name                 VARCHAR (100),
+	date_released        DATETIME,
+	dimensions_x         DECIMAL,
+	dimensions_y         DECIMAL,
+	dimensions_z         DECIMAL,
 	FOREIGN KEY ( catagory ) REFERENCES Catagory( id ),
 	FOREIGN KEY ( id ) REFERENCES LegoSetInventory( id )
 );
 
-CREATE TABLE LegoBrick (
-	id                   varchar(50) NOT NULL PRIMARY KEY,
-	name                 text(100) NOT NULL,
-	colour               integer,
-	catagory             integer,
-	weight               decimal,
-	dimensions_x         integer,
-	dimensions_y         integer,
-	dimensions_z         integer,
-	date_from            date,
-	date_to              date,
+CREATE TABLE IF NOT EXISTS LegoBrick (
+	id                   VARCHAR (50) NOT NULL PRIMARY KEY,
+	name                 TEXT(100) NOT NULL,
+	colour               INT,
+	catagory             INT,
+	weight               DECIMAL,
+	dimensions_x         INT,
+	dimensions_y         INT,
+	dimensions_z         INT,
+	date_from            DATETIME,
+	date_to              DATETIME,
 	FOREIGN KEY ( colour ) REFERENCES LegoBrickColour( id ),
 	FOREIGN KEY ( catagory ) REFERENCES Catagory( id )
 );
 
-CREATE TABLE SetDescriptor (
-	id                   varchar(50) NOT NULL PRIMARY KEY,
-	set_id               varchar(50) NOT NULL,
-	brick_id             varchar(50) NOT NULL,
-	amount               integer,
+CREATE TABLE IF NOT EXISTS SetDescriptor (
+	id                   VARCHAR (50) NOT NULL PRIMARY KEY,
+	set_id               VARCHAR (50) NOT NULL,
+	brick_id             VARCHAR (50) NOT NULL,
+	amount               INT,
 	FOREIGN KEY ( set_id ) REFERENCES LegoSet( id ),
 	FOREIGN KEY ( brick_id ) REFERENCES LegoBrick( id )
 );
