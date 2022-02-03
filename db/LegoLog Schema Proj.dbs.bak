@@ -1,19 +1,143 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<project name="AppEng 2021/22" id="Project-1b11" database="LogicalDesign" >
-	<schema name="AppEng 2021/22" >
-		<table name="LegoBrick" >
-			<column name="id" type="varchar" length="16" jt="12" mandatory="y" />
-			<column name="name" type="varchar" length="100" jt="12" mandatory="y" />
-			<index name="pk_LegoBrick" unique="PRIMARY_KEY" >
+<project name="schema.sql" id="Project-323" database="Sqlite" >
+	<schema name="public" >
+		<table name="Brick" spec="" >
+			<column name="id" type="varchar" length="20" jt="12" mandatory="y" />
+			<column name="name" type="text" length="100" jt="-1" mandatory="y" />
+			<column name="colour" type="integer" jt="4" />
+			<column name="catagory" type="integer" jt="4" />
+			<column name="weight" type="decimal" jt="3" />
+			<column name="dimensions_x" type="integer" jt="4" />
+			<column name="dimensions_y" type="integer" jt="4" />
+			<column name="dimensions_z" type="integer" jt="4" />
+			<column name="date_from" type="date" jt="91" />
+			<column name="date_to" type="date" jt="91" />
+			<index name="pk_Brick" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="FK_Brick BrickColour" to_schema="public" to_table="BrickColour" options="" >
+				<fk_column name="colour" pk="id" />
+			</fk>
+			<fk name="FK_Brick Catagory" to_schema="public" to_table="Catagory" options="" >
+				<fk_column name="catagory" pk="id" />
+			</fk>
+		</table>
+		<table name="BrickColour" spec="" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="name" type="varchar" length="100" jt="12" />
+			<column name="hexrgb" type="varchar" length="6" jt="12" mandatory="y" />
+			<column name="col_type" type="integer" jt="4" />
+			<index name="pk_BrickColour" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="FK_BrickColour ColourType" to_schema="public" to_table="ColourType" options="" >
+				<fk_column name="col_type" pk="id" />
+			</fk>
+		</table>
+		<table name="BrickSet" spec="" >
+			<column name="id" type="varchar" length="20" jt="12" mandatory="y" />
+			<column name="catagory" type="integer" jt="4" />
+			<column name="name" type="varchar" length="100" jt="12" />
+			<column name="date_released" type="date" jt="91" />
+			<column name="dimensions_x" type="decimal" jt="3" />
+			<column name="dimensions_y" type="decimal" jt="3" />
+			<column name="dimensions_z" type="decimal" jt="3" />
+			<fk name="FK_BrickSet Catagory" to_schema="public" to_table="Catagory" options="" >
+				<fk_column name="catagory" pk="id" />
+			</fk>
+		</table>
+		<table name="Catagory" spec="" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="name" type="varchar" length="100" jt="12" />
+			<index name="pk_Catagory" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
 		</table>
+		<table name="ColourType" spec="" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="name" type="varchar" length="64" jt="12" />
+			<index name="pk_ColourType" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="SetBrick" spec="" >
+			<column name="id" type="varchar" length="50" jt="12" mandatory="y" />
+			<column name="set_id" type="varchar" length="50" jt="12" mandatory="y" />
+			<column name="brick_id" type="varchar" length="50" jt="12" mandatory="y" />
+			<column name="amount" type="integer" jt="4" />
+			<index name="pk_SetBrick" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="FK_SetBrick BrickSet" to_schema="public" to_table="BrickSet" options="" >
+				<fk_column name="set_id" pk="id" />
+			</fk>
+			<fk name="FK_SetBrick Brick" to_schema="public" to_table="Brick" options="" >
+				<fk_column name="brick_id" pk="id" />
+			</fk>
+		</table>
 	</schema>
-	<layout name="Default Layout" id="Layout-478" show_relation="columns" >
-		<entity schema="AppEng 2021/22" name="LegoBrick" color="C1D8EE" x="48" y="80" />
-		<callout x="752" y="48" pointer="Round" >
-			<comment><![CDATA[Right-click the layout to create entities or shapes, create relations using drag and drop.
-Save the design to file. Use the Convert menu option to convert the model to a physical model.]]></comment>
-		</callout>
+	<layout name="Layout" id="Layout-20e8" show_relation="columns" >
+		<entity schema="public" name="Brick" color="BED3F4" x="272" y="48" />
+		<entity schema="public" name="BrickColour" color="BED3F4" x="464" y="48" />
+		<entity schema="public" name="BrickSet" color="BED3F4" x="272" y="352" />
+		<entity schema="public" name="Catagory" color="BED3F4" x="464" y="256" />
+		<entity schema="public" name="ColourType" color="BED3F4" x="624" y="48" />
+		<entity schema="public" name="SetBrick" color="BED3F4" x="48" y="256" />
+		<script name="schema.sql" id="Editor-1de1" language="SQL" >
+			<string><![CDATA[CREATE TABLE Catagory ( 
+	id                   integer NOT NULL  PRIMARY KEY  ,
+	name                 varchar(100)     
+ );
+
+CREATE TABLE ColourType ( 
+	id                   integer NOT NULL  PRIMARY KEY  ,
+	name               varchar(64)     
+ );
+
+CREATE TABLE BrickSet ( 
+	id                   varchar(20) NOT NULL    ,
+	catagory             integer     ,
+	name                 varchar(100)     ,
+	date_released        date     ,
+	dimensions_x         decimal     ,
+	dimensions_y         decimal     ,
+	dimensions_z         decimal     ,
+	FOREIGN KEY ( catagory ) REFERENCES Catagory( id )  
+ );
+
+CREATE TABLE SetBrick ( 
+	id 				 	 varchar(50) NOT NULL  PRIMARY KEY  ,
+	set_id               varchar(50) NOT NULL     ,
+	brick_id             varchar(50) NOT NULL     ,
+	amount               integer     ,
+	FOREIGN KEY ( set_id ) REFERENCES BrickSet( id )  ,
+	FOREIGN KEY ( brick_id ) REFERENCES Brick( id )  ,
+
+ );
+
+CREATE TABLE BrickColour ( 
+	id                   integer NOT NULL  PRIMARY KEY  ,
+	name                 varchar(100)     ,
+	hexrgb               varchar(6) NOT NULL    ,
+	col_type               integer     ,
+	FOREIGN KEY ( col_type ) REFERENCES ColourType( id )  
+ );
+
+CREATE TABLE Brick ( 
+	id                   varchar(20) NOT NULL  PRIMARY KEY  ,
+	name                 text(100) NOT NULL    ,
+	colour               integer     ,
+	catagory             integer     ,
+	weight               decimal     ,
+	dimensions_x         integer     ,
+	dimensions_y         integer     ,
+	dimensions_z         integer     ,
+	date_from            date     ,
+	date_to              date     ,
+	FOREIGN KEY ( colour ) REFERENCES BrickColour( id )  ,
+	FOREIGN KEY ( catagory ) REFERENCES Catagory( id )  
+ );
+]]></string>
+		</script>
 	</layout>
 </project>
