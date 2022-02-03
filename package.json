@@ -12,10 +12,13 @@
   "author": "Ben Kyd <benjaminkyd@gmail.com> (https://benkyd.co.uk)",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.25.0",
     "cli-color": "^2.0.1",
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
     "jest": "^27.4.5",
-    "moment": "^2.29.1"
+    "jsdom": "^19.0.0",
+    "moment": "^2.29.1",
+    "node-fetch": "^2.6.7"
   }
 }
