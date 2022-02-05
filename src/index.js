@@ -7,7 +7,6 @@ async function main() {
     Logger.init();
     Config.load();
 
-    Server.load();
     Server.listen(process.env.PORT);
 }
 
