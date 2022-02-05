@@ -21,6 +21,5 @@ function listen(port) {
 
 module.exports = {
     app,
-    load,
     listen
 };

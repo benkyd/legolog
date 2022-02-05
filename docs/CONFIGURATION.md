@@ -1,5 +1,8 @@
 # DotEnv
 
+Items suffixed with `_DEV` will automatically replace the non-dev
+version of the same item internally
+
 ```config
 NODE_ENV=dev/prod
 
