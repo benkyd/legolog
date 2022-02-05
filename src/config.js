@@ -3,7 +3,7 @@ const Logger = require('./logger.js');
 const dotenv = require('dotenv');
 
 function load() {
-    Logger.info('Loading config...');
+    Logger.info('Loading Config...');
     const res = dotenv.config();
     Logger.debug(`CONFIG: ${JSON.stringify(res.parsed)}`);
     Logger.debug(`CONFIG: running in ${res.parsed.NODE_ENV} mode`);

@@ -49,6 +49,14 @@ module.exports.middleware = function(origin, message) {
         + clc.yellow(`MIDDLEWARE: ${origin}`) + '] ' + message);
 }
 
+module.exports.database = function(message) {
+    let d = moment().format(dateFormat);
+    fs.appendFileSync(logPath, `[${d.toLocaleString()}] [POSTGRES: SQL] ${message} \n`);
+    if (LogLevel > 0) return; 
+    console.log('[' + d.toLocaleString() + '] [' 
+        + clc.magentaBright(`POSTGRES: SQL`) + '] ' + message);
+}
+
 module.exports.debug = function(message) {
     let d = moment().format(dateFormat);
     fs.appendFileSync(logPath, `[${d.toLocaleString()}] [DEBUG] ${message} \n`);

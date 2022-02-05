@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest src/__test",
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
+    "dev": "nodemon src/index.js --watch src",
     "setup": "npm i"
   },
   "author": "Ben Kyd <benjaminkyd@gmail.com> (https://benkyd.co.uk)",
@@ -17,9 +17,10 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
     "jest": "^27.4.5",
-    "jsdom": "^19.0.0",
     "md5": "^2.3.0",
     "moment": "^2.29.1",
-    "node-fetch": "^2.6.7"
+    "node-fetch": "^2.6.7",
+    "pg": "^8.7.3",
+    "pg-native": "^3.0.0"
   }
 }
