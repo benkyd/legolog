@@ -11,7 +11,7 @@ function logRequest(req, res, next)
 
 function listen(port) {
     app.listen(port);
-    Logger.info(`LISTENING ON ${port}...`);
+    Logger.info(`Listening on ${port}...`);
     
     Logger.info(`Setting up basic middleware...`);
     app.use(logRequest);
