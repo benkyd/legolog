@@ -16,4 +16,4 @@ class RelationshipTypes {
     }
 }
 
-module.exports = DataTypes;
+module.exports = RelationshipTypes;
