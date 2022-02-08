@@ -1,4 +1,5 @@
 const Logger = require('../logger.js');
+const EntityFramework = require('./psql-entity-framework/entity-relationships.js');
 
 const { Client } = require('pg');
 
@@ -8,7 +9,7 @@ class Database {
     }
 
     async connect(options) {
-        Logger.info('Database Connecting...');
+        Logger.Info('Database Connecting...');
 
         // review options
         if (!options) {
@@ -24,24 +25,35 @@ class Database {
         this.options = options;
 
         this.connection = await this.connectToDatabase();
-        Logger.info('Database Connected');
+        Logger.Info('Database Connected');
     }
 
     async connectToDatabase() {
-        return new Promise((resolve, reject) => {
+        const con =  new Promise((resolve, reject) => {
             const psqlClient = new Client(this.options);
 
             psqlClient.connect();
             psqlClient.query('SELECT NOW()', (err, res) => {
                 if (err) reject(err);
                 this.connection = psqlClient;
-                Logger.database(`PSQL Time: ${res.rows[0].now}`);
-                Logger.database(`Connected to ${this.options.host}`);
+                Logger.Database(`PSQL Time: ${res.rows[0].now}`);
+                Logger.Database(`Connected to ${this.options.host}`);
                 resolve(psqlClient);
             });
-        
         });
+
+        await con;
+        this.ORM = new EntityFramework(this.connection);
+        return this.connection;
+    }
+
+    get getORM() {
+        return this.ORM;
     }
 }
 
-module.exports = Database;
+module.exports = {
+    IDatabase: Database,
+    DataTypes: require('./psql-entity-framework/types.js'),
+    DataConstraints: require('./psql-entity-framework/relationships_constraints.js')
+}

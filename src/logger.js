@@ -10,7 +10,7 @@ let dateFormat = 'DD-MM-YY HH:mm:ss'
 
 // must be ran after the config is initalised
 // TODO: network logs
-module.exports.init = async function(path) {
+module.exports.Init = async function(path) {
     if (path) logPath = path;
 
     // ALWAYS logs to console, others are aditionals
@@ -41,7 +41,7 @@ module.exports.DEBUG_LOGS   = 1;
 module.exports.INFO_LOGS    = 2;
 module.exports.WARN_LOGS    = 3;
 
-module.exports.middleware = function(origin, message) {
+module.exports.Middleware = function(origin, message) {
     let d = moment().format(dateFormat);
     fs.appendFileSync(logPath, `[${d.toLocaleString()}] [MIDDLEWARE: ${origin}] ${message} \n`);
     if (LogLevel > 0) return; 
@@ -49,7 +49,7 @@ module.exports.middleware = function(origin, message) {
         + clc.yellow(`MIDDLEWARE: ${origin}`) + '] ' + message);
 }
 
-module.exports.database = function(message) {
+module.exports.Database = function(message) {
     let d = moment().format(dateFormat);
     fs.appendFileSync(logPath, `[${d.toLocaleString()}] [POSTGRES: SQL] ${message} \n`);
     if (LogLevel > 0) return; 
@@ -57,7 +57,7 @@ module.exports.database = function(message) {
         + clc.magentaBright(`POSTGRES: SQL`) + '] ' + message);
 }
 
-module.exports.debug = function(message) {
+module.exports.Debug = function(message) {
     let d = moment().format(dateFormat);
     fs.appendFileSync(logPath, `[${d.toLocaleString()}] [DEBUG] ${message} \n`);
     if (LogLevel > 1) return; 
@@ -65,14 +65,14 @@ module.exports.debug = function(message) {
         + clc.cyan('DEBUG') + '] ' + message);
 }
 
-module.exports.ready = function() {
+module.exports.Ready = function() {
     let d = moment().format(dateFormat);
     fs.appendFileSync(logPath, `[${d.toLocaleString()}] [READY] \n`);
     console.log('[' + d.toLocaleString() + '] ['
         + clc.rainbow('READY') + ']');
 }
     
-module.exports.info = function(message) {
+module.exports.Info = function(message) {
     let d = moment().format(dateFormat);
     fs.appendFileSync(logPath, `[${d.toLocaleString()}] [INFO] ${message} \n`);
     if (LogLevel > 2) return; 
@@ -80,7 +80,7 @@ module.exports.info = function(message) {
         + clc.green('INFO') + '] ' + message);
 }
 
-module.exports.warn = function(message) {
+module.exports.Warn = function(message) {
     let d = moment().format(dateFormat);
     fs.appendFileSync(logPath, `[${d.toLocaleString()}] [WARN] ${message} \n`);
     if (LogLevel > 3) return; 
@@ -88,14 +88,14 @@ module.exports.warn = function(message) {
         + clc.yellow('WARN') + '] ' + message);
 }
 
-module.exports.error = function(message) {
+module.exports.Error = function(message) {
     let d = moment().format(dateFormat);
     fs.appendFileSync(logPath, `[${d.toLocaleString()}] [ERROR] ${message} \n`);
     console.error('[' + d.toLocaleString() + '] [' 
         + clc.red('ERROR') + '] ' + message);
 }
 
-module.exports.panic = function(message) {
+module.exports.Panic = function(message) {
     let d = moment().format(dateFormat);
     fs.appendFileSync(logPath, `[${d.toLocaleString()}] [PANIC] ${message} \n`);
     console.error('[' + d.toLocaleString() + '] [' 

@@ -1,4 +1,8 @@
 class RelationshipTypes {
+    static PRIMARY_KEY() {
+        return "PRIMARY KEY";
+    }
+
     static get UNIQUE() {
         return 'UNIQUE';
     }
@@ -11,8 +15,8 @@ class RelationshipTypes {
         return 'REFERENCES';
     }
 
-    static FOREIGN_KEY(localKey, foreignKey) {
-        return `FOREIGN KEY (${localKey}) REFERENCES ${foreignKey}`;
+    static FOREIGN_KEY(references) {
+        return { references };
     }
 }
 
