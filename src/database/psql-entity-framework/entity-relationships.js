@@ -1,12 +1,15 @@
+const Logger = require('../../logger.js');
 const DataTypes = require('./types.js');
 
 class PSQLObjectRelation {
     constructor(psqlConnection) {
-        this.connection = psqlConnection;
+        Logger.Database('ORM Loading...');
+        this.connection = psqlConnection;;
+        this.models = {}
     }
 
-    async AddModel(name, model) {
-        Logger.database(`ORM Adding ${name}`);
+    async addModel(name, model, constraints) {
+        Logger.Database(`ORM Adding ${name}`);
         let sql = `CREATE TABLE IF NOT EXISTS ${name} (`;
         let keys = Object.keys(model);
         for (let i = 0; i < keys.length; i++) {
@@ -16,12 +19,12 @@ class PSQLObjectRelation {
             if (i < keys.length - 1) sql += ', ';
         }
         sql += ');';
-        Logger.database(sql);
-        await this.connection.query(sql);
+        Logger.Database(sql);
+        // await this.connection.query(sql);
     }
 
-    async SyncModels() {
-        Logger.database('ORM Syncing...');
+    async syncModels() {
+        Logger.Database('ORM Syncing...');
 
     }
 }

@@ -11,6 +11,10 @@ class DataTypes {
         return 'BIGINT';
     }
 
+    static get DECIMAL() {
+        return 'DECIMAL';
+    }
+
     static get TEXT() {
         return 'TEXT';
     }
