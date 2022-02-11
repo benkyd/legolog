@@ -20,6 +20,11 @@ class Model {
         Logger.Database(`Model ${name} created, with properties: ${JSON.stringify(properties)}`);
     }
 
+    /**
+     * @function property
+     * @description Gets a property from the model
+     * @param {string} name - The name of the target property
+     */
     property(name) {
         if (this.dummy)
         {

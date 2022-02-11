@@ -1,7 +1,7 @@
 const Logger = require('../../logger.js');
 const DataTypes = require('./types.js');
+const DataConstraints = require('./relationships_constraints.js');
 const Model = require('./model.js');
-const { DataConstraints } = require('../database.js');
 
 /**
  * In order to keep the models dynamic and flexible, we need to be able to add
@@ -90,25 +90,50 @@ class PSQLObjectRelation {
      * @description Resolves all the dependancies for the models that have been added where properties weren't available when they were added
      */
     resolveDepends() {
-        console.log(this.models)
-        for (const model in this.models) {
-            console.log(model)
 
-            // for (const property of model.properties) {
-           
-            //     for (const constraint of property.constraints) {
-            //         if (typeof constraint === 'object') {
-            //             console.log('')
-            //             if (constraint.fk.ref === DataTypes.INHERET)
-            //                 Logger.Debug(`Model ${model.name} has a dependancy on ${property.inherit}`);
-            //         }
-            //     }
-           
-            // }
-        } 
+        for (const dummyModelI in this.dummyModels)
+        {
+            const dummyModel = this.dummyModels[dummyModelI];
+            console.log(dummyModel);
+
+            if (!this.models[dummyModel.name]) {
+                Logger.Error(`Model ${dummyModel.name} does not exist, cannot resolve dependancies`);
+                continue;
+            }
+
+            const referenceModel = this.models[dummyModel.name];
+            console.log(referenceModel);
+
+        }
+
+
+        // for (const modelName in this.models) {
+        //     const model = this.models[modelName];
+
+        //     for (const propertyName in model.properties) {
+        //         const property = model.properties[propertyName];
+                
+        //         for (const constraint of property.constraints) {
+                    
+        //             // If the constraint is a foreign key, resolve it
+        //             if (constraint.fk) {
+        //                 const references = constraint.fk.ref;
+        //                 // Ignore if no resolution is needed
+        //                 if (references !== DataTypes.INHERET) continue;
+
+        //                 Logger.Debug(`Resolving dependancy for ${modelName}.${propertyName}, references ${references}`);
+        //                 const fkModel = this.models[constraint.fk.ref];
+        //             }
+        //         }
+        //     }
+        // }
     }
 
-    // ONLY run this after all models are properly added
+    /**
+     * @function syncModels
+     * @description Syncs the models to the database
+     * ONLY run this after all models are properly added
+     */
     async syncModels() {
         Logger.Database('ORM Syncing...');
         this.resolveDepends();
