@@ -47,6 +47,10 @@ class Database {
         return this.connection;
     }
 
+    async ORMReady() {
+        await this.ORM.syncModels();
+    }
+
     get getORM() {
         return this.ORM;
     }

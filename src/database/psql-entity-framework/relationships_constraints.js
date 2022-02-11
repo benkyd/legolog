@@ -1,5 +1,5 @@
 class RelationshipTypes {
-    static PRIMARY_KEY() {
+    static get PRIMARY_KEY() {
         return "PRIMARY KEY";
     }
 

@@ -4,7 +4,7 @@ function init(databaseInstance) {
     module.exports.Database = databaseInstance;
     module.exports.Models = {};
     
-    let files = fs.readdirSync(__dirname);
+    let files = fs.readdirSync(__dirname).reverse();
     files.forEach(file => {
         if (file !== 'model-manager.js') {
             const model = require(`./${file}`);
@@ -15,5 +15,5 @@ function init(databaseInstance) {
 }
 
 module.exports = {
-    Init: init
+    Init: init,
 }

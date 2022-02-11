@@ -14,6 +14,7 @@ async function main() {
     await Database.connect();
 
     ModelManager.Init(Database);
+    await Database.ORMReady();
 
     Server.Listen(process.env.PORT);
 }
