@@ -12,7 +12,7 @@ async function init() {
             type: DataTypes.INTEGER,
             constraints: [ DataConstraints.FOREIGN_KEY_REF(ORM.model('catagory').property('id')) ]
         },
-        date_released: DataTypes.DATE,
+        date_released: DataTypes.TIMESTAMP,
         dimenions_x: DataTypes.DECIMAL,
         dimenions_y: DataTypes.DECIMAL,
         dimenions_z: DataTypes.DECIMAL,
