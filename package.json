@@ -7,6 +7,7 @@
     "test": "jest src/__test",
     "start": "node src/index.js",
     "dev": "nodemon src/index.js --watch src",
+    "gendoc": "jsdoc -r ./src/ ./client/ -c ./jsdoc.json -d ./jsdoc/",
     "setup": "npm i"
   },
   "author": "Ben Kyd <benjaminkyd@gmail.com> (https://benkyd.co.uk)",
@@ -17,6 +18,7 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
     "jest": "^27.4.5",
+    "jsdoc": "^3.6.10",
     "md5": "^2.3.0",
     "moment": "^2.29.1",
     "node-fetch": "^2.6.7",
