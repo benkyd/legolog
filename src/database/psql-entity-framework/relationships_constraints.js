@@ -15,8 +15,14 @@ class RelationshipTypes {
         return 'REFERENCES';
     }
 
-    static FOREIGN_KEY(references) {
-        return { references };
+    // NOT a string, ER framework will handle this
+    static FOREIGN_KEY_REF(references) {
+        return { fk: { ref: references } };
+    }
+
+    // ONE TO ONE RELATIONSHIP, again ER framework will handle this
+    static FOREIGN_KEY_121(type, references) {
+        return { fk: { ref: references }, type: type, constraints: [ this.UNIQUE ] };
     }
 }
 
