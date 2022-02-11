@@ -1,4 +1,8 @@
 class DataTypes {
+    static get INHERET() {
+        return 'INHERET';
+    }
+
     static VARCHAR(length) {
         return `VARCHAR(${length})`;
     }

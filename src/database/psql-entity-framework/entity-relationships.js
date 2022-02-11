@@ -1,7 +1,7 @@
 const Logger = require('../../logger.js');
 const DataTypes = require('./types.js');
 const Model = require('./model.js');
-
+const { DataConstraints } = require('../database.js');
 
 /**
  * In order to keep the models dynamic and flexible, we need to be able to add
@@ -22,27 +22,96 @@ class PSQLObjectRelation {
         Logger.Database('ORM Loading...');
         this.connection = psqlConnection;;
         this.models = [];
+        // dummyModels are for models that have requested a model that doesn't exist
+        // the model that doesn't exist will be added here, and once it is added, the
+        // dummy dependancy will be resolved
+        this.dummyModels = [];
     }
 
+    /**
+     * @function model
+     * @description Gets a model from the database stash
+     * @param {string} modelName - The name of the target model
+     */
     model(modelName) {
-        return { }
+        // TODO: Resolve the dependancy if it dosen't exist and make a note of it
+        if (!this.models[modelName]) { 
+            Logger.Database(`Model ${modelName} does not exist, adding to dummyModels`);
+            const dummy = new Model(modelName, {}, true);
+            this.dummyModels.push(dummy);
+            return dummy;
+        }
+        return this.models[modelName];
     }
 
-    addModel(name, model, constraints) {
+    /**
+     * @function addModel
+     * @description Adds a model to the database stash
+     * @param {string} name 
+     * @param {object} model
+     */
+    addModel(name, model) {
         Logger.Database(`ORM Adding ${name}`);
 
-        const keys = Object.keys(model);
-        this.models[name] = new Model;
+        if (this.models[name]) {
+            Logger.Error(`Redefinition of model ${name}, ignoring.`);
+            return;
+        }
 
+        const keys = Object.keys(model);
+
+        /**
+         * Make sure that every property has a type and a conatraints array
+         * If not, add it
+         * The structure should always look like:
+         * property: {
+         *   type: DataTypes.VARCHAR(50),
+         *   constraints: [ DataConstraints.PRIMARY_KEY, DataConstraints.NOT_NULL ]
+         * }
+         */
+        keys.forEach(key => {
+            if (typeof model[key] != 'object') {
+                const type = model[key];
+                model[key] = {
+                    type: type,
+                    constraints: []
+                };
+            }
+            if (!model[key].constraints) {
+                model[key].constraints = [];
+            }
+        });
+
+        this.models[name] = new Model(name, model);
     }
 
+    /**
+     * @function resolveDependants
+     * @description Resolves all the dependancies for the models that have been added where properties weren't available when they were added
+     */
     resolveDepends() {
-        
+        console.log(this.models)
+        for (const model in this.models) {
+            console.log(model)
+
+            // for (const property of model.properties) {
+           
+            //     for (const constraint of property.constraints) {
+            //         if (typeof constraint === 'object') {
+            //             console.log('')
+            //             if (constraint.fk.ref === DataTypes.INHERET)
+            //                 Logger.Debug(`Model ${model.name} has a dependancy on ${property.inherit}`);
+            //         }
+            //     }
+           
+            // }
+        } 
     }
 
     // ONLY run this after all models are properly added
     async syncModels() {
         Logger.Database('ORM Syncing...');
+        this.resolveDepends();
 
     }
 }
