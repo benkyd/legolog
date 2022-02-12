@@ -25,11 +25,15 @@ class Model {
      * @description Gets a property from the model
      * @param {string} name - The name of the target property
      */
-    property(name) {
+    property(name, referer = "") {
         if (this.dummy)
         {
+            if (this.properties[name]) {
+                this.properties[name].referers.push(referer);
+            }
             this.properties[name] = {
                 type: DataTypes.INHERET,
+                referers: [referer],
                 constraints: [],
                 dummy: true
             }
