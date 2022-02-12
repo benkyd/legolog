@@ -37,8 +37,13 @@ class PSQLObjectRelation {
         // TODO: Resolve the dependancy if it dosen't exist and make a note of it
         if (!this.models[modelName]) { 
             Logger.Database(`Model ${modelName} does not exist, adding to dummyModels`);
+
+            if (this.dummyModels[modelName]) {
+                return this.dummyModels[modelName];
+            }
+
             const dummy = new Model(modelName, {}, true);
-            this.dummyModels.push(dummy);
+            this.dummyModels[modelName] = dummy;
             return dummy;
         }
         return this.models[modelName];
@@ -89,44 +94,50 @@ class PSQLObjectRelation {
      * @function resolveDependants
      * @description Resolves all the dependancies for the models that have been added where properties weren't available when they were added
      */
+    // TODO: Make this more maintainable
     resolveDepends() {
-
-        for (const dummyModelI in this.dummyModels)
+        for (const dummyModelName in this.dummyModels)
         {
-            const dummyModel = this.dummyModels[dummyModelI];
-            console.log(dummyModel);
+            const dummyModel = this.dummyModels[dummyModelName];
 
             if (!this.models[dummyModel.name]) {
                 Logger.Error(`Model ${dummyModel.name} does not exist, cannot resolve dependancies`);
                 continue;
             }
 
-            const referenceModel = this.models[dummyModel.name];
-            console.log(referenceModel);
+            for (const propertyName in dummyModel.properties)
+            {
+                const property = dummyModel.properties[propertyName];
 
-        }
+                if (property.type !== DataTypes.INHERET) {
+                    continue;
+                }
 
+                if (property.referers.length === 0 || property.referers[0] === '') {
+                    Logger.Error(`Model ${dummyModel.name} has a property ${propertyName} with no referers`);
+                    continue;
+                }
 
-        // for (const modelName in this.models) {
-        //     const model = this.models[modelName];
-
-        //     for (const propertyName in model.properties) {
-        //         const property = model.properties[propertyName];
-                
-        //         for (const constraint of property.constraints) {
+                for (const referer of property.referers) {
+                    if (!this.models[referer]) {
+                        Logger.Error(`Model ${dummyModel.name} has a property ${propertyName} with a referer ${referer} that does not exist`);
+                        continue;
+                    }
                     
-        //             // If the constraint is a foreign key, resolve it
-        //             if (constraint.fk) {
-        //                 const references = constraint.fk.ref;
-        //                 // Ignore if no resolution is needed
-        //                 if (references !== DataTypes.INHERET) continue;
+                    // TODO: Make more generic
+                    const relaventConstraints = this.models[referer].properties[dummyModelName].constraints;
+                    for (const constraint in relaventConstraints) {
+                        if (typeof relaventConstraints[constraint] === 'object') {
+                            this.models[referer].properties[dummyModelName].constraints[constraint] = DataConstraints.FOREIGN_KEY_REF(dummyModel.name);
+                            Logger.Database(`Model ${referer} has a property ${dummyModel.name} which was resolved to a foreign key`);
+                            break;
+                        }
+                    }
 
-        //                 Logger.Debug(`Resolving dependancy for ${modelName}.${propertyName}, references ${references}`);
-        //                 const fkModel = this.models[constraint.fk.ref];
-        //             }
-        //         }
-        //     }
-        // }
+                    this.dummyModels.splice(this.dummyModels.indexOf(dummyModel), 1);
+                }
+            }
+        }
     }
 
     /**
@@ -137,7 +148,7 @@ class PSQLObjectRelation {
     async syncModels() {
         Logger.Database('ORM Syncing...');
         this.resolveDepends();
-
+        console.log(this.models['lego_brick']);
     }
 }
 
