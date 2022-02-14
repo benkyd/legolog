@@ -3,8 +3,8 @@ const fs = require('fs');
 function init(databaseInstance) {
     module.exports.Database = databaseInstance;
     module.exports.Models = {};
-    
-    let files = fs.readdirSync(__dirname).reverse();
+
+    const files = fs.readdirSync(__dirname).reverse();
     files.forEach(file => {
         if (file !== 'model-manager.js') {
             const model = require(`./${file}`);

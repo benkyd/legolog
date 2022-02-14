@@ -19,9 +19,8 @@ function load() {
             }
         });
     }
-
 }
 
 module.exports = {
-    Load: load
-}
+    Load: load,
+};
