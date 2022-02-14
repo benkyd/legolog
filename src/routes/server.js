@@ -12,8 +12,8 @@ function logRequest(req, res, next)
 function listen(port) {
     app.listen(port);
     Logger.Info(`Listening on ${port}...`);
-    
-    Logger.Info(`Setting up basic middleware...`);
+
+    Logger.Info('Setting up basic middleware...');
     app.use(logRequest);
 
     app.use(express.static('client/public/'));
@@ -21,5 +21,5 @@ function listen(port) {
 
 module.exports = {
     App: app,
-    Listen: listen
+    Listen: listen,
 };

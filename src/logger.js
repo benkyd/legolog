@@ -10,16 +10,15 @@ let dateFormat = 'DD-MM-YY HH:mm:ss'
 
 // must be ran after the config is initalised
 // TODO: network logs
-module.exports.Init = async function(path) {
+module.exports.Init = function (path) {
     if (path) logPath = path;
 
     // ALWAYS logs to console, others are aditionals
-    switch (process.env.LOG_TARGET)
-    {
-        case 'console':
-        case 'file':
-        case 'network':
-        default:
+    switch (process.env.LOG_TARGET) {
+    case 'console':
+    case 'file':
+    case 'network':
+    default:
     }
 
     if (!fs.existsSync(logPath)) {
