@@ -35,7 +35,7 @@ class PSQLObjectRelation {
      */
     model(modelName) {
         // TODO: Resolve the dependancy if it dosen't exist and make a note of it
-        if (!this.models[modelName]) { 
+        if (!this.models[modelName]) {
             Logger.Database(`Model ${modelName} does not exist, adding to dummyModels`);
 
             if (this.dummyModels[modelName]) {
@@ -52,7 +52,7 @@ class PSQLObjectRelation {
     /**
      * @function addModel
      * @description Adds a model to the database stash
-     * @param {string} name 
+     * @param {string} name
      * @param {object} model
      */
     addModel(name, model) {
@@ -75,11 +75,11 @@ class PSQLObjectRelation {
          * }
          */
         keys.forEach(key => {
-            if (typeof model[key] != 'object') {
+            if (typeof model[key] !== 'object') {
                 const type = model[key];
                 model[key] = {
                     type: type,
-                    constraints: []
+                    constraints: [],
                 };
             }
             if (!model[key].constraints) {
@@ -96,8 +96,7 @@ class PSQLObjectRelation {
      */
     // TODO: Make this more maintainable
     resolveDepends() {
-        for (const dummyModelName in this.dummyModels)
-        {
+        for (const dummyModelName in this.dummyModels) {
             const dummyModel = this.dummyModels[dummyModelName];
 
             if (!this.models[dummyModel.name]) {
@@ -145,10 +144,10 @@ class PSQLObjectRelation {
      * @description Syncs the models to the database
      * ONLY run this after all models are properly added
      */
-    async syncModels() {
+    syncModels() {
         Logger.Database('ORM Syncing...');
         this.resolveDepends();
-        console.log(this.models['lego_brick']);
+        console.log(this.models.lego_brick);
     }
 }
 

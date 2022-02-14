@@ -14,16 +14,16 @@
 const md5 = require('md5');
 const fs = require('fs');
 
-fs.readdir('./image/', (err, files) => {
+fs.readdir('./image/', (files) => {
     files.forEach((file) => {
         file = file.split('.png')[0];
         const hash = md5(file);
         const bucket = hash.substring(0, 4);
         const newFile = `./image/${bucket[0]}/${bucket[1]}/${bucket[2]}/${bucket[3]}/${file}.png`;
-        
+
         // if directory doesn't exist, create it
-        if (!fs.existsSync(`./image/`)) {
-            fs.mkdirSync(`./image/`);
+        if (!fs.existsSync('./image/')) {
+            fs.mkdirSync('./image/');
         }
         if (!fs.existsSync(`./image/${bucket[0]}/`)) {
             fs.mkdirSync(`./image/${bucket[0]}/`);
