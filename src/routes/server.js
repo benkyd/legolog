@@ -3,9 +3,8 @@ const Logger = require('../logger.js');
 const express = require('express');
 const app = express();
 
-function logRequest(req, res, next)
-{
-    Logger.Middleware('REQUEST', `${req.originalUrl} [${req.method}: ${req.headers['x-forwarded-for'] || req.socket.remoteAddress }]`);
+function logRequest(req, res, next) {
+    Logger.Middleware('REQUEST', `${req.originalUrl} [${req.method}: ${req.headers['x-forwarded-for'] || req.socket.remoteAddress}]`);
     next();
 }
 

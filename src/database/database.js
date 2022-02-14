@@ -18,7 +18,7 @@ class Database {
                 host: process.env.DATABASE_HOST,
                 database: process.env.DATABASE_DB,
                 password: process.env.DATABASE_PASSWORD,
-                port: process.env.DATABASE_PORT
+                port: process.env.DATABASE_PORT,
             };
         }
 
@@ -29,7 +29,7 @@ class Database {
     }
 
     async connectToDatabase() {
-        const con =  new Promise((resolve, reject) => {
+        const con = new Promise((resolve, reject) => {
             const psqlClient = new Client(this.options);
 
             psqlClient.connect();
@@ -59,5 +59,5 @@ class Database {
 module.exports = {
     IDatabase: Database,
     DataTypes: require('./psql-entity-framework/types.js'),
-    DataConstraints: require('./psql-entity-framework/relationships_constraints.js')
-}
+    DataConstraints: require('./psql-entity-framework/relationships_constraints.js'),
+};
