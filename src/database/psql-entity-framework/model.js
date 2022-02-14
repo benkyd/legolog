@@ -21,19 +21,14 @@ class Model {
         Logger.Database(`Model ${name} created, with properties: ${JSON.stringify(properties)}`);
     }
 
-    /**
-     * @function property
-     * @description Gets a property from the model
-     * @param {string} name - The name of the target property
-     */
-    property(name, referer = '') {
+    property(name) {
         if (this.dummy) {
             if (this.properties[name]) {
-                this.properties[name].referers.push(referer);
+                // THIS;
             }
             this.properties[name] = {
                 type: DataTypes.INHERET,
-                referers: [referer],
+                referers: [],
                 constraints: [],
                 dummy: true,
             };

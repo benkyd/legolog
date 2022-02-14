@@ -96,47 +96,9 @@ class PSQLObjectRelation {
      */
     // TODO: Make this more maintainable
     resolveDepends() {
-        for (const dummyModelName in this.dummyModels) {
-            const dummyModel = this.dummyModels[dummyModelName];
 
-            if (!this.models[dummyModel.name]) {
-                Logger.Error(`Model ${dummyModel.name} does not exist, cannot resolve dependancies`);
-                continue;
-            }
+        
 
-            for (const propertyName in dummyModel.properties)
-            {
-                const property = dummyModel.properties[propertyName];
-
-                if (property.type !== DataTypes.INHERET) {
-                    continue;
-                }
-
-                if (property.referers.length === 0 || property.referers[0] === '') {
-                    Logger.Error(`Model ${dummyModel.name} has a property ${propertyName} with no referers`);
-                    continue;
-                }
-
-                for (const referer of property.referers) {
-                    if (!this.models[referer]) {
-                        Logger.Error(`Model ${dummyModel.name} has a property ${propertyName} with a referer ${referer} that does not exist`);
-                        continue;
-                    }
-                    
-                    // TODO: Make more generic
-                    const relaventConstraints = this.models[referer].properties[dummyModelName].constraints;
-                    for (const constraint in relaventConstraints) {
-                        if (typeof relaventConstraints[constraint] === 'object') {
-                            this.models[referer].properties[dummyModelName].constraints[constraint] = DataConstraints.FOREIGN_KEY_REF(dummyModel.name);
-                            Logger.Database(`Model ${referer} has a property ${dummyModel.name} which was resolved to a foreign key`);
-                            break;
-                        }
-                    }
-
-                    this.dummyModels.splice(this.dummyModels.indexOf(dummyModel), 1);
-                }
-            }
-        }
     }
 
     /**
