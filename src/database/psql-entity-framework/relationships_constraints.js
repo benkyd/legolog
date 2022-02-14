@@ -1,6 +1,6 @@
 class RelationshipTypes {
     static get PRIMARY_KEY() {
-        return "PRIMARY KEY";
+        return 'PRIMARY KEY';
     }
 
     static get UNIQUE() {
@@ -22,7 +22,7 @@ class RelationshipTypes {
 
     // ONE TO ONE RELATIONSHIP, again ER framework will handle this
     static FOREIGN_KEY_121(type, references) {
-        return { fk: { ref: references }, type: type, constraints: [ this.UNIQUE ] };
+        return { fk: { ref: references }, type, constraints: [this.UNIQUE] };
     }
 }
 

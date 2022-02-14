@@ -16,4 +16,4 @@ function init(databaseInstance) {
 
 module.exports = {
     Init: init,
-}
+};

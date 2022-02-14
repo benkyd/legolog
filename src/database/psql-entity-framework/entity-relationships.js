@@ -20,7 +20,7 @@ const Model = require('./model.js');
 class PSQLObjectRelation {
     constructor(psqlConnection) {
         Logger.Database('ORM Loading...');
-        this.connection = psqlConnection;;
+        this.connection = psqlConnection;
         this.models = [];
         // dummyModels are for models that have requested a model that doesn't exist
         // the model that doesn't exist will be added here, and once it is added, the
@@ -78,7 +78,7 @@ class PSQLObjectRelation {
             if (typeof model[key] !== 'object') {
                 const type = model[key];
                 model[key] = {
-                    type: type,
+                    type,
                     constraints: [],
                 };
             }
@@ -96,8 +96,6 @@ class PSQLObjectRelation {
      */
     // TODO: Make this more maintainable
     resolveDepends() {
-
-        
 
     }
 
