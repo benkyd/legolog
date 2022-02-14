@@ -14,9 +14,10 @@ class Model {
         this.properties = properties;
         this.dummy = dummy;
 
-        if (dummy)
+        if (dummy) {
             Logger.Database(`Model ${name} is dummy: ${dummy}`);
-        
+        }
+
         Logger.Database(`Model ${name} created, with properties: ${JSON.stringify(properties)}`);
     }
 
@@ -25,9 +26,8 @@ class Model {
      * @description Gets a property from the model
      * @param {string} name - The name of the target property
      */
-    property(name, referer = "") {
-        if (this.dummy)
-        {
+    property(name, referer = '') {
+        if (this.dummy) {
             if (this.properties[name]) {
                 this.properties[name].referers.push(referer);
             }
@@ -35,9 +35,9 @@ class Model {
                 type: DataTypes.INHERET,
                 referers: [referer],
                 constraints: [],
-                dummy: true
-            }
-            return "UNRESOVLED PROPERTY";
+                dummy: true,
+            };
+            return 'UNRESOVLED PROPERTY';
         }
         return this.property[name];
     }

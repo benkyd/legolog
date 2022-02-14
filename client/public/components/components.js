@@ -3,32 +3,25 @@ async function sideLoad(path) {
 }
 
 class Component extends HTMLElement {
-    constructor() {
-        super();
-    }
 }
 
 // other components with behaviour go here
 // non-generic components
 
 class LoadingComponent extends Component {
-    constructor() {
-        super();
-    }
-
     async connectedCallback() {
 
     }
 }
 
-customElements.define(`loading-component`, LoadingComponent);
+customElements.define('loading-component', LoadingComponent);
 
 // some not-so-scalable way to load all the generic template-like components
 async function loadComponents() {
     // because of "sECuRItY" i can't simply just find everything in the components folder
     // there is a way to sideload this with express and have it do all that stuff
     // TODO: implement this
-    const components = [ 
+    const components = [
         'navbar',
         'notification-bar',
     ];
@@ -44,20 +37,16 @@ async function loadComponents() {
         const scriptComponent = await sideLoad(scriptPath);
 
         const Template = class extends Component {
-            constructor() {
-                super();
-            }
-
-            async connectedCallback() {
+            connectedCallback() {
                 // TODO: THIS NEEDS DOCUMENTATION / REFACTORING
                 // make a kinda generic way to do this
                 // needs to be before the shadow dom is attatched
-                component = component.replace('${innerText}', this.innerText)
+                component = component.replace('${innerText}', this.innerText);
 
-                const shadow = this.attachShadow({mode: 'open'});
-                
+                const shadow = this.attachShadow({ mode: 'open '});
+
                 shadow.innerHTML = component;
-                
+
                 const script = document.createElement('script');
                 script.text = scriptComponent;
                 shadow.appendChild(script);
@@ -67,10 +56,9 @@ async function loadComponents() {
                 style.textContent = styleComponent;
                 shadow.appendChild(style);
             }
-        }
-        Object.defineProperty(Template, 'name', {value: components[i]});
+        };
+        Object.defineProperty(Template, 'name', { value: components[i] });
         customElements.define(`${components[i]}-component`, Template);
-
     }
 }
 
