@@ -7,7 +7,6 @@
     "test": "jest src/__test",
     "start": "node src/index.js",
     "dev": "nodemon src/index.js --watch src",
-    "gendoc": "jsdoc -r ./src/ ./client/ -c ./jsdoc.json -d ./jsdoc/",
     "lint": "eslint src --ext .js && eslint client --ext .js",
     "setup": "npm i"
   },

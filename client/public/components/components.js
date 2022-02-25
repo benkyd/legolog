@@ -43,7 +43,7 @@ async function loadComponents() {
                 // needs to be before the shadow dom is attatched
                 component = component.replace('${innerText}', this.innerText);
 
-                const shadow = this.attachShadow({ mode: 'open '});
+                const shadow = this.attachShadow({ mode: 'open' });
 
                 shadow.innerHTML = component;
 

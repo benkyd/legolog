@@ -90,3 +90,5 @@ CREATE TABLE IF NOT EXISTS set_descriptor (
 	FOREIGN KEY ( set_id ) REFERENCES lego_set( id ),
 	FOREIGN KEY ( brick_id ) REFERENCES lego_brick( id )
 );
+
+past transactions

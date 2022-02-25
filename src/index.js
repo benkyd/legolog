@@ -6,9 +6,15 @@ const Databse = require('./database/database.js');
 const ModelManager = require('./models/model-manager.js');
 
 async function main() {
-    Logger.Info('Pre-Init Loading...');
-    Logger.Init();
     Config.Load();
+    await Logger.Init({
+        logLevel: process.env.LOG_LEVEL,
+        logToConsole: process.env.LOG_CONSOLE,
+        logFile: process.env.LOG_FILE,
+        networkHost: process.env.LOG_NET_HOST,
+        networkPort: process.env.LOG_NET_PORT,
+    });
+    Logger.Info('Pre-Init Complete');
 
     const Database = new Databse.IDatabase();
     await Database.connect();
