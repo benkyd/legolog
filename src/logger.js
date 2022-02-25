@@ -1,105 +1,168 @@
-// Better than Log4J 2021TM
+// Better than Log4j2022 for now.
 
-const clc = require('cli-color');
-const moment = require('moment');
+const net = require('net');
 const fs = require('fs');
+const moment = require('moment');
+const clc = require('cli-color');
 
-let LogLevel = 0;
-let logPath = 'logs.log';
-let dateFormat = 'DD-MM-YY HH:mm:ss'
+const LEVEL_VERBOSE = 0;
+const LEVEL_DEBUG = 1;
+const LEVEL_INFO = 2;
+const LEVEL_WARN = 3;
+const LEVEL_STICK = 9; // regardless, will log
 
-// must be ran after the config is initalised
-// TODO: network logs
-module.exports.Init = function (path) {
-    if (path) logPath = path;
+let DoNetworkLogging = false;
 
-    // ALWAYS logs to console, others are aditionals
-    switch (process.env.LOG_TARGET) {
-    case 'console':
-    case 'file':
-    case 'network':
-    default:
+// default values
+let Options = {
+    logLevel: LEVEL_VERBOSE,
+    logToConsole: true,
+    logFile: null,
+    networkHost: null,
+    networkPort: null,
+};
+
+let Socket = null;
+
+
+function getFormatedTimeString() {
+    return `[${moment().format('YYYY-MM-DD HH:mm:ss.SSS')}]`;
+}
+
+// levelSource is the level that the source will log at ie, if levelSource is
+// LEVEL_WARN, it will only log if the current level is at or above LEVEL_WARN.
+function internalLog(type, message, cConsoleColour, levelSource) {
+    if (Options.logToConsole && (Options.logLevel <= levelSource)) {
+        console.log(`${getFormatedTimeString()} [${cConsoleColour(type)}] ${message}`);
+    }
+    const m = `${getFormatedTimeString()} [${type}] ${message}`;
+    if (Options.logFile) {
+        fs.appendFileSync(Options.logFile, m + '\n');
+    }
+    if (Options.networkHost && DoNetworkLogging) {
+        Socket.write(m + '\n');
+    }
+    if (type === 'PANIC') {
+        Destroy();
+        process.exit(1);
+    }
+}
+
+const Info = (...messages) => internalLog('INFO', messages.join(' '), clc.greenBright, LEVEL_INFO);
+const Warn = (...messages) => internalLog('WARN', messages.join(' '), clc.yellowBright, LEVEL_WARN);
+const Error = (...messages) => internalLog('ERROR', messages.join(' '), clc.redBright, LEVEL_STICK);
+const Panic = (...messages) => internalLog('PANIC', messages.join(' '), clc.bgRedBright, LEVEL_STICK);
+const Debug = (...messages) => internalLog('DEBUG', messages.join(' '), clc.cyanBright, LEVEL_DEBUG);
+const Module = (module, ...messages) => internalLog('MODULE', `[${module}] ${messages.join(' ')}`, clc.blue, LEVEL_INFO);
+const Database = (...messages) => internalLog('PSQL', `[DB] ${messages.join(' ')}`, clc.blue, LEVEL_INFO);
+const ExpressLogger = (req, res, next) => {
+    internalLog('HTTP', `[${req.method}] ${req.originalUrl} FROM ${req.headers['x-forwarded-for'] || req.socket.remoteAddress}`, clc.magenta, LEVEL_VERBOSE);
+    next();
+};
+
+
+function startReconnection() {
+    const x = setInterval(async () => {
+        if (Options.networkHost && Options.networkPort && !DoNetworkLogging) {
+            const success = await initNetworkLogger(Options.networkHost, Options.networkPort);
+            if (success) {
+                clearInterval(x);
+                Info('Logger Reonnected');
+            }
+        }
+    }, 30000);
+}
+
+function initNetworkLogger(host, port) {
+    return new Promise((resolve) => {
+        Socket = net.connect({
+            port,
+            host,
+            family: 4,
+            onread: {
+                // Reuses a 4KiB Buffer for every read from the socket.
+                buffer: Buffer.alloc(4 * 1024),
+                callback: function (nread, buf) {
+                    Warn(`LogSocket: ${buf.toString('utf8', 0, nread)}`);
+                },
+            },
+        }, () => {
+            Info('Logger Connected to Network');
+            DoNetworkLogging = true;
+            resolve(true);
+        }).on('error', (err) => {
+            Error('Logger Disconnected from Network: ', err);
+            DoNetworkLogging = false;
+            resolve(false);
+        });
+    });
+}
+
+function postInit() {
+    Socket.on('close', () => {
+        Error('Logger Network Connection Closed');
+        DoNetworkLogging = false;
+        startReconnection();
+    });
+
+    Socket.on('error', (err) => {
+        Error('Logger Disconnected from Network: ', err);
+        DoNetworkLogging = false;
+        startReconnection();
+    });
+}
+
+/**
+ * Initialises the logger
+ * Options:
+ * - logLevel: The level of logging to be used ONLY APPLIES TO CONSOLE.
+ * - logToConsole: Whether to log to the console.
+ * - logFile: The file to log to, if provided, will log.
+ * - networkHost: The address to log to, including port, if provided, will log.
+ * - networkPort: The port to log to, including port, if provided, will log.
+ * TODO: SSL
+ * @param {Object} options
+ */
+async function Init(options) {
+    Options = options;
+
+    if (Options.logFile) {
+        fs.openSync(Options.logFile, 'w');
+        fs.appendFileSync(Options.logFile, 'START OF SESSION' + '\n');
     }
 
-    if (!fs.existsSync(logPath)) {
-        fs.writeFileSync(logPath, '');
+    if (!Options.networkHost || !Options.networkPort) {
+        return;
     }
-    fs.appendFileSync(logPath, '[SYSTEM STARTING UP] \n');
+
+    await initNetworkLogger(Options.networkHost, Options.networkPort);
+    postInit();
 }
 
-module.exports.SetLevel = function(level) {
-    LogLevel = level;
+function Destroy() {
+    if (Options.logFile) {
+        fs.appendFileSync(Options.logFile, 'END OF SESSION' + '\n');
+        fs.closeSync(Options.logFile);
+    }
+
+    if (Options.networkHost) {
+        Socket.destroy();
+    }
 }
 
-module.exports.SetDateFormat = function(format) {
-    dateFormat = format;
-}
-
-module.exports.VERBOSE_LOGS = 0;
-module.exports.DEBUG_LOGS   = 1;
-module.exports.INFO_LOGS    = 2;
-module.exports.WARN_LOGS    = 3;
-
-module.exports.Middleware = function(origin, ...message) {
-    let d = moment().format(dateFormat);
-    fs.appendFileSync(logPath, `[${d.toLocaleString()}] [MIDDLEWARE: ${origin}] ${message} \n`);
-    if (LogLevel > 0) return; 
-    console.log('[' + d.toLocaleString() + '] [' 
-        + clc.yellow(`MIDDLEWARE: ${origin}`) + '] ' + message);
-}
-
-module.exports.Database = function(...message) {
-    let d = moment().format(dateFormat);
-    fs.appendFileSync(logPath, `[${d.toLocaleString()}] [POSTGRES: SQL] ${message} \n`);
-    if (LogLevel > 0) return; 
-    console.log('[' + d.toLocaleString() + '] [' 
-        + clc.magentaBright(`POSTGRES: SQL`) + '] ' + message);
-}
-
-module.exports.Debug = function(...message) {
-    let d = moment().format(dateFormat);
-    fs.appendFileSync(logPath, `[${d.toLocaleString()}] [DEBUG] ${message} \n`);
-    if (LogLevel > 1) return; 
-    console.log('[' + d.toLocaleString() + '] [' 
-        + clc.cyan('DEBUG') + '] ' + message);
-}
-
-module.exports.Ready = function() {
-    let d = moment().format(dateFormat);
-    fs.appendFileSync(logPath, `[${d.toLocaleString()}] [READY] \n`);
-    console.log('[' + d.toLocaleString() + '] ['
-        + clc.rainbow('READY') + ']');
-}
-    
-module.exports.Info = function(...message) {
-    let d = moment().format(dateFormat);
-    fs.appendFileSync(logPath, `[${d.toLocaleString()}] [INFO] ${message} \n`);
-    if (LogLevel > 2) return; 
-    console.log('[' + d.toLocaleString() + '] [' 
-        + clc.green('INFO') + '] ' + message);
-}
-
-module.exports.Warn = function(...message) {
-    let d = moment().format(dateFormat);
-    fs.appendFileSync(logPath, `[${d.toLocaleString()}] [WARN] ${message} \n`);
-    if (LogLevel > 3) return; 
-    console.warn('[' + d.toLocaleString() + '] [' 
-        + clc.yellow('WARN') + '] ' + message);
-}
-
-module.exports.Error = function(...message) {
-    let d = moment().format(dateFormat);
-    fs.appendFileSync(logPath, `[${d.toLocaleString()}] [ERROR] ${message} \n`);
-    console.error('[' + d.toLocaleString() + '] [' 
-        + clc.red('ERROR') + '] ' + message);
-}
-
-module.exports.Panic = function(...message) {
-    let d = moment().format(dateFormat);
-    fs.appendFileSync(logPath, `[${d.toLocaleString()}] [PANIC] ${message} \n`);
-    console.error('[' + d.toLocaleString() + '] [' 
-        + clc.red('PANIC') + '] ' + message);
-    console.error('[' + d.toLocaleString() + '] [' 
-        + clc.red('PANIC') + '] ABORTING...');
-    process.exit();
-}
+module.exports = {
+    LEVEL_VERBOSE,
+    LEVEL_DEBUG,
+    LEVEL_INFO,
+    LEVEL_WARN,
+    Init,
+    Destroy,
+    Info,
+    Warn,
+    Error,
+    Panic,
+    Debug,
+    Module,
+    Database,
+    ExpressLogger,
+};
