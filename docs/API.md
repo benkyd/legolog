@@ -10,6 +10,7 @@ automatically every request
 
 | Type | Route | Queries | Auth? | Notes |
 | --- | --- | --- | -- | --- |
+| GET   | /api/search/          | query, page   | no  | |
 | GET   | /api/bricks/          | query, page   | no  | |
 | GET   | /api/sets/            | query, page   | no  | |
 | GET   | /api/brick/:id/       |               | no  | | 
@@ -22,6 +23,19 @@ automatically every request
 | PUT   | /api/auth/basket/:id  | quantity      | yes | |
 | POST  | /api/auth/basket/:id  |               | yes | manipulate basket content |
 | DEL   | /api/auth/basket/:id  | quantity      | yes | if no id, delete whole |
+
+## Query structure
+
+### /api/search/
+### /api/bricks/
+### /api/sets/
+### /api/brick/:id/
+### /api/set/:id/
+### /api/cdn/:id/
+### /api/auth/login/
+### /api/auth/signup/
+### /api/auth/orders/
+### /api/auth/basket/
 
 ## Response Structure
 
