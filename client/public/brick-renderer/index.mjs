@@ -1,4 +1,4 @@
-import * as glm from './glm.mjs';
+import { mat4, vec3 } from './glm/glm.mjs';
 import Shader from './shader.mjs';
 import Box from './box.mjs';
 
@@ -33,21 +33,21 @@ export class BrickRenderer extends BaseRenderer {
 
         const boxObj = new Box(this.gl, { dimensions: [0.5, 0.6, 0.5] });
 
-        const projMatrix = glm.mat4.create();
-        glm.mat4.perspective(projMatrix, Math.PI / 2, this.gl.drawingBufferWidth / this.gl.drawingBufferHeight, 0.1, 10.0);
+        const projMatrix = mat4.create();
+        mat4.perspective(projMatrix, Math.PI / 2, this.gl.drawingBufferWidth / this.gl.drawingBufferHeight, 0.1, 10.0);
 
-        const viewMatrix = glm.mat4.create();
-        const eyePosition = glm.vec3.fromValues(1, 1, 1);
-        glm.mat4.lookAt(viewMatrix, eyePosition, glm.vec3.fromValues(0, 0, 0), glm.vec3.fromValues(0, 1, 0));
+        const viewMatrix = mat4.create();
+        const eyePosition = vec3.fromValues(1, 1, 1);
+        mat4.lookAt(viewMatrix, eyePosition, vec3.fromValues(0, 0, 0), vec3.fromValues(0, 1, 0));
 
-        const viewProjMatrix = glm.mat4.create();
-        glm.mat4.multiply(viewProjMatrix, projMatrix, viewMatrix);
+        const viewProjMatrix = mat4.create();
+        mat4.multiply(viewProjMatrix, projMatrix, viewMatrix);
 
-        const lightPosition = glm.vec3.fromValues(1, 1, 0.5);
+        const lightPosition = vec3.fromValues(1, 1, 0.5);
 
-        const modelMatrix = glm.mat4.create();
-        const rotateXMatrix = glm.mat4.create();
-        const rotateYMatrix = glm.mat4.create();
+        const modelMatrix = mat4.create();
+        const rotateXMatrix = mat4.create();
+        const rotateYMatrix = mat4.create();
         const sceneUniformData = new Float32Array(24);
         sceneUniformData.set(viewProjMatrix);
         sceneUniformData.set(eyePosition, 16);
@@ -64,9 +64,9 @@ export class BrickRenderer extends BaseRenderer {
             angleX += 0.01;
             angleY += 0.015;
 
-            glm.mat4.fromXRotation(rotateXMatrix, angleX);
-            glm.mat4.fromYRotation(rotateYMatrix, angleY);
-            glm.mat4.multiply(modelMatrix, rotateXMatrix, rotateYMatrix);
+            mat4.fromXRotation(rotateXMatrix, angleX);
+            mat4.fromYRotation(rotateYMatrix, angleY);
+            mat4.multiply(modelMatrix, rotateXMatrix, rotateYMatrix);
 
             this.gl.uniformMatrix4fv(modelMatrixLocation, false, modelMatrix);
 
