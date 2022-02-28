@@ -60,7 +60,6 @@ export class BrickRenderer extends BaseRenderer {
         let angleX = 0;
         let angleY = 0;
 
-
         function draw() {
             angleX += 0.01;
             angleY += 0.015;
