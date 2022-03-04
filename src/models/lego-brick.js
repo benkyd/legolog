@@ -2,7 +2,7 @@ const Models = require('./model-manager.js');
 const { DataTypes, DataConstraints } = require('../database/database.js');
 const { ORM } = Models.Database;
 
-function init() {
+function Init() {
     ORM.addModel('lego_brick', {
         id: {
             type: DataTypes.VARCHAR(50),
@@ -20,5 +20,5 @@ function init() {
 }
 
 module.exports = {
-    Init: init,
+    Init,
 };

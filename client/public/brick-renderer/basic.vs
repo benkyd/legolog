@@ -1,7 +1,5 @@
 #version 300 es
 
-layout(std140, column_major) uniform;
-
 layout(location=0) in vec4 position;
 layout(location=1) in vec4 normal;
 
@@ -9,7 +7,7 @@ uniform SceneUniforms {
     mat4 viewProj;
     vec4 eyePosition;
     vec4 lightPosition;
-} uScene;       
+} uView;       
 
 uniform mat4 uModel;
 
@@ -20,5 +18,5 @@ void main() {
     vec4 worldPosition = uModel * position;
     vPosition = worldPosition.xyz;
     vNormal = (uModel * normal).xyz;
-    gl_Position = uScene.viewProj * worldPosition;
+    gl_Position = uView.viewProj * worldPosition;
 }

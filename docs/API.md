@@ -23,6 +23,7 @@ automatically every request
 | PUT   | /api/auth/basket/:id  | quantity      | yes | |
 | POST  | /api/auth/basket/:id  |               | yes | manipulate basket content |
 | DEL   | /api/auth/basket/:id  | quantity      | yes | if no id, delete whole |
+| DEL   | /api/auth/basket/     |               | yes | if no id, delete whole |
 
 ## Query structure
 

@@ -14,24 +14,26 @@ export default class Box {
 
     bind() {
         this.gl.bindVertexArray(this.vao);
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.normalBuffer);
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertexBuffer);
     }
 
     create(options) {
         const { positions, normals } = this.boxVerticies(options);
         this.verticies = positions.length / 3;
 
+        this.positionBuffer = this.gl.createBuffer();
         this.gl.bindVertexArray(this.vao);
-
-        const positionBuffer = this.gl.createBuffer();
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, positionBuffer);
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
         this.gl.bufferData(this.gl.ARRAY_BUFFER, positions, this.gl.STATIC_DRAW);
         this.gl.vertexAttribPointer(0, 3, this.gl.FLOAT, false, 0, 0);
         this.gl.enableVertexAttribArray(0);
 
-        const normalBuffer = this.gl.createBuffer();
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, normalBuffer);
+        this.normalBuffer = this.gl.createBuffer();
+        this.gl.bindVertexArray(this.vao);
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.normalBuffer);
         this.gl.bufferData(this.gl.ARRAY_BUFFER, normals, this.gl.STATIC_DRAW);
-        this.gl.vertexAttribPointer(2, 3, this.gl.FLOAT, false, 0, 0);
+        this.gl.vertexAttribPointer(1, 3, this.gl.FLOAT, false, 0, 0);
         this.gl.enableVertexAttribArray(1);
     }
 
