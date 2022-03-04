@@ -1,12 +1,18 @@
 import { mat4, vec3 } from './glm/glm.mjs';
 import Shader from './shader.mjs';
 import Box from './box.mjs';
+import LoadObj from './wavefront-obj.mjs';
 
 let BasicVsource, BasicFSource;
+
+let LegoStudObjSource, LegoStudObjParseResult;
 
 export async function RendererPreInit() {
     BasicFSource = await fetch('./brick-renderer/basic.fs').then(r => r.text());
     BasicVsource = await fetch('./brick-renderer/basic.vs').then(r => r.text());
+    LegoStudObjSource = await fetch('./res/lego_stud.obj').then(r => r.text());
+    LegoStudObjParseResult = LoadObj(LegoStudObjSource);
+    console.log(LegoStudObjParseResult);
 }
 
 class BaseRenderer {
@@ -15,11 +21,12 @@ class BaseRenderer {
         this.gl = canvas.getContext('webgl2');
         this.gl.viewport(0, 0, canvas.width, canvas.height);
         this.gl.clearColor(0.84313, 0.76078, 1.0, 1.0);
-        this.gl.clear(this.gl.COLOR_BUFFER_BIT);
         this.gl.enable(this.gl.DEPTH_TEST);
 
         this.shader = new Shader(this.gl, BasicVsource, BasicFSource);
         this.shader.link();
+
+        WebGLDebugUtils.init(this.gl);
     }
 }
 
@@ -27,11 +34,46 @@ export class BrickRenderer extends BaseRenderer {
     constructor(canvas, options) {
         super(canvas);
 
-        const sceneUniformLocation = this.shader.getUniformBlock('SceneUniforms');
-        const modelMatrixLocation = this.shader.getUniform('uModel');
+        this.angleX = 0;
+        this.angleY = 0;
+
+        // random number between 0 and 0.1
+        this.dx = Math.random() * 0.09;
+        this.dy = Math.random() * 0.09;
+
+
+        /////////////////////////
+        // TESTING LEGO STUDS //
+
+        this.VAO = this.gl.createVertexArray();
+        this.gl.bindVertexArray(this.VAO);
+
+        this.VBO = this.gl.createBuffer();
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.VBO);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, LegoStudObjParseResult.vertices, this.gl.STATIC_DRAW);
+        this.gl.vertexAttribPointer(0, 3, this.gl.FLOAT, false, 0, 0);
+        this.gl.enableVertexAttribArray(0);
+
+        const nVBO = this.gl.createBuffer();
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, nVBO);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, LegoStudObjParseResult.normals, this.gl.STATIC_DRAW);
+        this.gl.vertexAttribPointer(1, 3, this.gl.FLOAT, false, 0, 0);
+        this.gl.enableVertexAttribArray(1);
+
+        this.EBO = this.gl.createBuffer();
+        this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.EBO);
+        this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, LegoStudObjParseResult.indices, this.gl.STATIC_DRAW);
+
+        // TESTING LEGO STUDS //
+        /////////////////////////
+
+
+        this.sceneUniformLocation = this.shader.getUniformBlock('SceneUniforms');
+        this.modelMatrixLocation = this.shader.getUniform('uView');
         this.shader.attatch();
 
-        const boxObj = new Box(this.gl, { dimensions: [0.5, 0.6, 0.5] });
+        this.boxObj = new Box(this.gl, { dimensions: [0.5, 0.6, 0.5] });
+        this.boxObj.create();
 
         const projMatrix = mat4.create();
         mat4.perspective(projMatrix, Math.PI / 2, this.gl.drawingBufferWidth / this.gl.drawingBufferHeight, 0.1, 10.0);
@@ -45,9 +87,9 @@ export class BrickRenderer extends BaseRenderer {
 
         const lightPosition = vec3.fromValues(1, 1, 0.5);
 
-        const modelMatrix = mat4.create();
-        const rotateXMatrix = mat4.create();
-        const rotateYMatrix = mat4.create();
+        this.modelMatrix = mat4.create();
+        this.rotateXMatrix = mat4.create();
+        this.rotateYMatrix = mat4.create();
         const sceneUniformData = new Float32Array(24);
         sceneUniformData.set(viewProjMatrix);
         sceneUniformData.set(eyePosition, 16);
@@ -57,25 +99,32 @@ export class BrickRenderer extends BaseRenderer {
         this.gl.bindBufferBase(this.gl.UNIFORM_BUFFER, 0, sceneUniformBuffer);
         this.gl.bufferData(this.gl.UNIFORM_BUFFER, sceneUniformData, this.gl.STATIC_DRAW);
 
-        let angleX = 0;
-        let angleY = 0;
+        requestAnimationFrame(this.draw.bind(this));
+    }
 
-        function draw() {
-            angleX += 0.01;
-            angleY += 0.015;
+    draw() {
+        this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
-            mat4.fromXRotation(rotateXMatrix, angleX);
-            mat4.fromYRotation(rotateYMatrix, angleY);
-            mat4.multiply(modelMatrix, rotateXMatrix, rotateYMatrix);
+        this.angleX += this.dx;
+        this.angleY += this.dy;
 
-            this.gl.uniformMatrix4fv(modelMatrixLocation, false, modelMatrix);
+        mat4.fromXRotation(this.rotateXMatrix, this.angleX);
+        mat4.fromYRotation(this.rotateYMatrix, this.angleY);
+        mat4.multiply(this.modelMatrix, this.rotateXMatrix, this.rotateYMatrix);
 
-            this.gl.clear(this.gl.COLOR_BUFFER_BIT);
-            this.gl.drawArrays(this.gl.TRIANGLES, 0, boxObj.vertexCount);
+        this.gl.uniformMatrix4fv(this.modelMatrixLocation, false, this.modelMatrix);
 
-            requestAnimationFrame(draw);
+        this.gl.bindVertexArray(this.VAO);
+        this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.EBO);
+        this.gl.drawElements(this.gl.TRIANGLES, LegoStudObjParseResult.indices.length * 3, this.gl.UNSIGNED_SHORT, 0);
+
+        // this.boxObj.bind();
+        // this.gl.drawArrays(this.gl.TRIANGLES, 0, this.boxObj.vertexCount);
+
+        if (this.gl.getError() !== this.gl.NO_ERROR) {
+            console.error(WebGLDebugUtils.glEnumToString(this.gl.getError()));
         }
 
-        requestAnimationFrame(draw);
+        requestAnimationFrame(this.draw.bind(this));
     }
 }

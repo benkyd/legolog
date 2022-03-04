@@ -1,6 +1,6 @@
 const Logger = require('../../logger.js');
 const DataTypes = require('./types.js');
-const DataConstraints = require('./relationships_constraints.js');
+const DataConstraints = require('./relationships-constraints.js');
 const Model = require('./model.js');
 
 /**

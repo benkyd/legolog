@@ -2,7 +2,7 @@ const Models = require('./model-manager.js');
 const { DataTypes, DataConstraints } = require('../database/database.js');
 const { ORM } = Models.Database;
 
-function init() {
+function Init() {
     ORM.addModel('catagory', {
         id: {
             type: DataTypes.INTEGER,
@@ -13,5 +13,5 @@ function init() {
 }
 
 module.exports = {
-    Init: init,
+    Init,
 };

@@ -59,5 +59,5 @@ class Database {
 module.exports = {
     IDatabase: Database,
     DataTypes: require('./psql-entity-framework/types.js'),
-    DataConstraints: require('./psql-entity-framework/relationships_constraints.js'),
+    DataConstraints: require('./psql-entity-framework/relationships-constraints.js'),
 };

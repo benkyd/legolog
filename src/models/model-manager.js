@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-function init(databaseInstance) {
+function Init(databaseInstance) {
     module.exports.Database = databaseInstance;
     module.exports.Models = {};
 
@@ -15,5 +15,5 @@ function init(databaseInstance) {
 }
 
 module.exports = {
-    Init: init,
+    Init,
 };

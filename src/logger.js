@@ -53,7 +53,7 @@ const Warn = (...messages) => internalLog('WARN', messages.join(' '), clc.yellow
 const Error = (...messages) => internalLog('ERROR', messages.join(' '), clc.redBright, LEVEL_STICK);
 const Panic = (...messages) => internalLog('PANIC', messages.join(' '), clc.bgRedBright, LEVEL_STICK);
 const Debug = (...messages) => internalLog('DEBUG', messages.join(' '), clc.cyanBright, LEVEL_DEBUG);
-const Module = (module, ...messages) => internalLog('MODULE', `[${module}] ${messages.join(' ')}`, clc.blue, LEVEL_INFO);
+const Module = (module, ...messages) => internalLog(`MODULE [${module}]`, ` ${messages.join(' ')}`, clc.blue, LEVEL_INFO);
 const Database = (...messages) => internalLog('PSQL', `[DB] ${messages.join(' ')}`, clc.blue, LEVEL_INFO);
 const ExpressLogger = (req, res, next) => {
     internalLog('HTTP', `[${req.method}] ${req.originalUrl} FROM ${req.headers['x-forwarded-for'] || req.socket.remoteAddress}`, clc.magenta, LEVEL_VERBOSE);
