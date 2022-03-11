@@ -2,19 +2,41 @@ async function sideLoad(path) {
     return await fetch(path).then(response => response.text());
 }
 
-class Component extends HTMLElement {
+const Components = [];
+
+export function RegisterComponent(name, component) {
+    customElements.define(`${name}-component`, component);
+    Components[name] = component;
+}
+
+export function UpdateComponent(name) {
+    
+}
+
+export default class BaseComponent extends HTMLElement {
+    constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+    }
+
+
+    async attatchTemplate(path) {
+        const template = await sideLoad(path);
+        this.shadowRoot.innerHTML = template;
+    }
 }
 
 // other components with behaviour go here
 // non-generic components
 
-class LoadingComponent extends Component {
+class LoadingComponent extends BaseComponent {
     async connectedCallback() {
 
     }
 }
 
 customElements.define('loading-component', LoadingComponent);
+
 
 // some not-so-scalable way to load all the generic template-like components
 async function loadComponents() {
@@ -36,7 +58,7 @@ async function loadComponents() {
         const scriptPath = `./components/${components[i]}/${components[i]}.js`;
         const scriptComponent = await sideLoad(scriptPath);
 
-        const Template = class extends Component {
+        const Template = class extends HTMLElement {
             connectedCallback() {
                 // TODO: THIS NEEDS DOCUMENTATION / REFACTORING
                 // make a kinda generic way to do this
