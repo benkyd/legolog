@@ -8,7 +8,7 @@ const Auth0 = require('./auth0-router.js');
 
 function Init() {
     Server.App.get('/api/search/', []);
-    Server.App.get('/api/bricks/');
+    Server.App.get('/api/bricks/', Bricks.Query);
     Server.App.get('/api/sets/');
     Server.App.get('/api/brick/:id/');
     Server.App.get('/api/set/:id/');

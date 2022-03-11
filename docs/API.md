@@ -29,12 +29,37 @@ automatically every request
 
 ### /api/search/
 ### /api/bricks/
+
+GET
+
+Response Object
+```json
+{
+
+}
+```
+
 ### /api/sets/
 ### /api/brick/:id/
 ### /api/set/:id/
 ### /api/cdn/:id/
 ### /api/auth/login/
 ### /api/auth/signup/
+
+Request Body
+```json
+{
+
+}
+```
+
+Response Object
+```json
+{
+    
+}
+```
+
 ### /api/auth/orders/
 ### /api/auth/basket/
 
@@ -42,7 +67,6 @@ automatically every request
 
 ```js
 {
-    status: 200,
     error: false
     result: {
         // defined in the response description for each route
@@ -54,7 +78,6 @@ automatically every request
 
 ```js
 {
-    status: 400,
     error: {
         short: "Error doing x",
         long: "y needs to be z",
