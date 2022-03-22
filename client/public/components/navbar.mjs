@@ -1,18 +1,21 @@
-import { RenderComponent, BaseComponent, SideLoad } from './components.mjs';
+import { RegisterComponent, Component, SideLoad } from './components.mjs';
 
-class SearchBar extends BaseComponent {
-
-}
-
-class NavBar extends BaseComponent {
+class NavBar extends Component {
     static __IDENTIFY() { return 'navbar'; }
+
+    constructor() {
+        super(NavBar);
+    }
 
     Render() {
         return {
-            template: SideLoad('./components/navbar.html'),
+            template: SideLoad('./components/templates/navbar.html'),
             style: SideLoad('./components/css/navbar.css'),
         };
     }
+
+    OnceRendered() {
+    }
 }
 
-RenderComponent(NavBar);
+RegisterComponent(NavBar);

@@ -11,14 +11,12 @@
 
 	<script type="module" src="components/components.mjs"></script>
 	<script type="module" src="components/navbar.mjs"></script>
+	<script type="module" src="components/notificationbar.mjs"></script>
 
 	<script type="module" src="index.mjs"></script>
 </head>
 <body>
-	<loading-component></loading-component>
-	<notification-bar-component>
-		15:03:04 - New Limited Time Offer, Get Any Lego Set for £10 Using Code LEGO10
-	</notification-bar-component>
+	<notificationbar-component notification="15:03:04 - New Limited Time Offer, Get Any Lego Set for £10 Using Code LEGO10"></notificationbar-component>
 
 	<limited-margin>
 		<navbar-component></navbar-component>
