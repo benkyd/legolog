@@ -1,7 +1,7 @@
 import { RegisterComponent, Component, SideLoad } from './components.mjs';
 
 class CompactProductListing extends Component {
-    static __IDENTIFY => 'compact-listing';
+    static __IDENTIFY() { return 'compact-listing'; }
 
     constructor() {
         super(CompactProductListing);

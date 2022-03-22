@@ -1,5 +1,18 @@
-export async function SideLoad(path) {
-    return await fetch(path).then(response => response.text());
+// it is important that no more than content than
+// neccesary is fetched from the server
+const preLoadCache = [];
+export function SideLoad(path) {
+    console.log(preLoadCache);
+
+    return new Promise((resolve) => {
+        if (preLoadCache[path]) {
+            resolve(preLoadCache[path]);
+        } else {
+            const fetchPromise = fetch(path).then(response => response.text());
+            preLoadCache[path] = fetchPromise;
+            resolve(fetchPromise);
+        }
+    });
 }
 
 export function RegisterComponent(componentClass) {
@@ -24,7 +37,6 @@ export class Component extends HTMLElement {
     Render() { this.__WARN('Render'); }
     OnceRendered() { this.__WARN('Render'); }
     static __IDENTIFY() { this.__WARN('identify'); }
-
 
     connectedCallback() {
         // set up to watch all attributes for changes
