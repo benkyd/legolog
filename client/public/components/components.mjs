@@ -2,17 +2,6 @@ export async function SideLoad(path) {
     return await fetch(path).then(response => response.text());
 }
 
-let GlobalState = {};
-export function GetGlobalState() {
-    return GlobalState;
-}
-
-export function SetGlobalState(state) {
-    GlobalState = state;
-    // TODO: update all components with new state
-    // also, give components access to the "global state"
-}
-
 export function RegisterComponent(componentClass) {
     const name = componentClass.__IDENTIFY();
     console.log('registering component: ' + name);
@@ -30,6 +19,12 @@ export class Component extends HTMLElement {
         // TODO: Make this unique
         // Components[child.__IDENTIFY()] = this;
     }
+
+    // Override these
+    Render() { this.__WARN('Render'); }
+    OnceRendered() { this.__WARN('Render'); }
+    static __IDENTIFY() { this.__WARN('identify'); }
+
 
     connectedCallback() {
         // set up to watch all attributes for changes
@@ -68,10 +63,6 @@ export class Component extends HTMLElement {
         this.SetState({ ...this.state, [name]: newValue });
         this.__INVOKE_RENDER();
     }
-
-    // Override this
-    Render() { this.__WARN('Render'); }
-    OnceRendered() { this.__WARN('Render'); }
 
     get GetState() {
         return this.state;
@@ -127,8 +118,6 @@ export class Component extends HTMLElement {
 
         this.OnceRendered();
     }
-
-    static __IDENTIFY() { this.__WARN('identify'); }
 
     static __WARN(caller) {
         console.error(`WARNING: ${caller} is not implemented`);
