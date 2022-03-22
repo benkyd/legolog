@@ -39,11 +39,12 @@ export class Component extends HTMLElement {
         // be sure to include them in the state to be sure that
         // they can be resolved
         for (const attribute of this.attributes) {
-            console.log(attribute);
             this.SetState({ ...this.state, [attribute.name]: attribute.value });
         }
 
-        this.__INVOKE_RENDER();
+        if (this.attributes.length === 0) {
+            this.__INVOKE_RENDER();
+        }
     }
 
     disconnectedCallback() {
@@ -82,7 +83,6 @@ export class Component extends HTMLElement {
     }
 
     async __INVOKE_RENDER() {
-        console.log('invoking render');
         const res = this.Render(Object.bind(this));
 
         if (!res.template || !res.style) {
