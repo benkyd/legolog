@@ -5,7 +5,7 @@ class ProductList extends Component {
 
     constructor() {
         super(ProductList);
-    }
+    } 
 
     async Render() {
         const route = this.state.getroute;
@@ -13,20 +13,20 @@ class ProductList extends Component {
 
         return {
             template: `
-                <h1>{this.state.title}</h1>
+                <h2>{this.state.title}</h2>
                 <div class="product-list">
                     ${products.data.map(product => {
                         return `<compact-listing-component name="${product.name}"
                                     desc="${product.description}"
                                     image="${product.image}"
-                                    price="${product.price}"></compact-listing-component>`;
+                                    price="${product.price}"></compact-listing-component>
+                        `;
                     })}
                 </div>
             `,
             style: `
                 .product-list {
                     display: flex;
-                    flex-wrap: wrap;
                     margin: 0 auto;
                     max-width: 800px;
                 }
