@@ -37,13 +37,8 @@ content-margin {
 @media (pointer:none), (pointer:coarse), screen and (max-width: 900px) {
     limited-margin {
         width: 90%;
-        padding-left: 1em;
-        padding-right: 1em;
-    }
-    content-margin {
-        width: 90%;
-        padding-left: 2em;
-        padding-right: 2em;
+        /* padding-left: 1em;
+        padding-right: 1em; */
     }
 }
 

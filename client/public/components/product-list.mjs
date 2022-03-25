@@ -17,18 +17,19 @@ class ProductList extends Component {
                 <div class="product-list">
                     ${products.data.map(product => {
                         return `<compact-listing-component name="${product.name}"
-                                    desc="${product.description}"
                                     image="${product.image}"
-                                    price="${product.price}"></compact-listing-component>
+                                    price="${product.price}"
+                                    discount="${product.discount || ''}"></compact-listing-component>
                         `;
-                    })}
+                    }).join('')}
                 </div>
             `,
             style: `
                 .product-list {
                     display: flex;
+                    justify-content: space-evenly;
+                    flex-wrap: wrap;
                     margin: 0 auto;
-                    max-width: 800px;
                 }
             `,
             state: {
