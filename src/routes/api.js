@@ -10,6 +10,7 @@ function Init() {
     Server.App.get('/api/search/', []);
     Server.App.get('/api/bricks/', Bricks.Query);
     Server.App.get('/api/sets/');
+    Server.App.get('/api/sets/featured/', Sets.Featured);
     Server.App.get('/api/brick/:id/');
     Server.App.get('/api/set/:id/');
 

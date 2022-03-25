@@ -25,7 +25,7 @@ class MyComponent extends Component {
 
 That is the simplest form a component can be, it won't render but it
 will register it's self in the DOM and be accessable with the
-`<mycomponent-component></mycomponent-component>` tag within the DOM.
+`<mycomponent></mycomponent>` tag within the DOM.
 
 In order to get some stuff rendering in there, it is important to
 override the `Render` method, returning an object with a template
@@ -76,7 +76,7 @@ a given component has a state which can be user-defined `this.state.x=`
 or an attribute to the component tag in the HTML, or both. When the
 state changes, the component is re-renderered.
 
-State is updated with `SetState()`.
+State is updated with `setState()`.
 
 Within the HTML, any instance of `{this.state.}` will be replaced with
 the internal state of the component.

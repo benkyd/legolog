@@ -2,8 +2,6 @@
 // neccesary is fetched from the server
 const preLoadCache = [];
 export function SideLoad(path) {
-    console.log(preLoadCache);
-
     return new Promise((resolve) => {
         if (preLoadCache[path]) {
             resolve(preLoadCache[path]);
@@ -34,9 +32,9 @@ export class Component extends HTMLElement {
     }
 
     // Override these
-    Render() { this.__WARN('Render'); }
-    OnceRendered() { this.__WARN('Render'); }
-    static __IDENTIFY() { this.__WARN('identify'); }
+    Render() { Component.__WARN('Render'); }
+    OnceRendered() { Component.__WARN('Render'); }
+    static __IDENTIFY() { Component.__WARN('identify'); }
 
     connectedCallback() {
         // set up to watch all attributes for changes
@@ -45,9 +43,11 @@ export class Component extends HTMLElement {
         // if there are any attributes related to the element
         // be sure to include them in the state to be sure that
         // they can be resolved
+        let stateUpdateQueue = { ...this.state };
         for (const attribute of this.attributes) {
-            this.SetState({ ...this.state, [attribute.name]: attribute.value });
+            stateUpdateQueue = { ...stateUpdateQueue, [attribute.name]: attribute.value };
         }
+        this.setState(stateUpdateQueue);
 
         if (this.attributes.length === 0) {
             this.__INVOKE_RENDER();
@@ -72,25 +72,34 @@ export class Component extends HTMLElement {
 
     attributeChangedCallback(name, newValue) {
         console.log(`attribute changed: ${name} ${newValue}`);
-        this.SetState({ ...this.state, [name]: newValue });
+        this.setState({ ...this.state, [name]: newValue });
         this.__INVOKE_RENDER();
     }
 
-    get GetState() {
+    get getState() {
         return this.state;
     }
 
-    SetState(newState) {
+    setState(newState) {
         this.state = newState;
         this.__INVOKE_RENDER(Object.bind(this));
     }
 
     async __INVOKE_RENDER() {
-        const res = this.Render(Object.bind(this));
+        let res = this.Render(Object.bind(this));
 
-        if (!res.template || !res.style) {
-            this.__ERR('no template or style');
+        if (res instanceof Promise) {
+            res = await res;
+        }
+
+        if (res.template === undefined || res.style === undefined) {
+            Component.__ERR('no template or style');
             return;
+        }
+
+        // way to formally update state WITHOUT triggering a re-render
+        if (res.state) {
+            this.state = res.state;
         }
 
         // if res.template is a promise, we need to wait to resolve it
@@ -113,6 +122,7 @@ export class Component extends HTMLElement {
             if (m[1].startsWith('this.state')) {
                 const stateKey = m[1].substring(11);
                 const stateValue = this.state[stateKey];
+                console.log('attempting to replace', m[0], 'with', stateValue);
                 if (stateValue === undefined) {
                     continue;
                 }

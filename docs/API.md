@@ -13,6 +13,7 @@ automatically every request
 | GET   | /api/search/          | query, page   | no  | |
 | GET   | /api/bricks/          | query, page   | no  | |
 | GET   | /api/sets/            | query, page   | no  | |
+| GET   | /api/sets/featured    | page          | no  | |
 | GET   | /api/brick/:id/       |               | no  | | 
 | GET   | /api/set/:id/         |               | no  | |
 | GET   | /api/cdn/:id/         |               | no  | |
@@ -26,6 +27,8 @@ automatically every request
 | DEL   | /api/auth/basket/     |               | yes | if no id, delete whole |
 
 ## Query structure
+
+
 
 ### /api/search/
 ### /api/bricks/
