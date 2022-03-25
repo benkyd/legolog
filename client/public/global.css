@@ -3,7 +3,7 @@ body {
     /* all EM in the document is based off this DONT TOUCH */
     /* it's also kinda the default so you can touch it if you want */
     /* BODY TEXT SHOULD BE 1EM */
-    font-size: 16px;
+    font-size: 18px;
     color: #222;
     text-decoration: none;
     background-color: #D7C2FF;

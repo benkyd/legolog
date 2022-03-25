@@ -124,18 +124,16 @@
     z-index: 2;
 }
 
-@media (pointer:none), (pointer:coarse), screen and (max-width: 900px) {
-    .hamburger {
-        display: inline-block;
-   }
-}
-
 /* Make sure the thing doesnt move */
 /* .nav-menu {
     transform: translatey(-100%);
 } */
 
 @media (pointer:none), (pointer:coarse), screen and (max-width: 900px) {
+    .hamburger {
+        display: inline-block;
+    }
+
     .nav-menu {
         position: fixed;
         background: #e4d6ffde;
@@ -150,27 +148,29 @@
         text-align: center;
         z-index: 100;
    }
+   
+   .secondary-menu {
+       top: 0;
+       height: auto;
+   }
+
+   .nav-menu .menu-item a {
+       font-size: 1.5em;
+       margin: 8px;
+   }
+
     .menu-active .nav-menu {
         transform: translatey(0%);
         opacity: 1;
    }
-}
 
-@media (pointer:none), (pointer:coarse), screen and (max-width: 900px) {
-    .nav-menu .menu-item a {
-        font-size: 1.5em;
-        margin: 8px;
-    }
-}
-
-@media (pointer:none), (pointer:coarse), screen and (max-width: 900px) {
-    .sub-nav {
-        position: relative;
-        width: 100%;
-        display: none;
-        background-color: rgba(0, 0, 0, 0.20);
-        box-sizing: border-box;
-    }
+   .sub-nav {
+       position: relative;
+       width: 100%;
+       display: none;
+       background-color: rgba(0, 0, 0, 0.20);
+       box-sizing: border-box;
+   }
 }
 
 .nav-link:hover + .sub-nav {
