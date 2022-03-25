@@ -1,4 +1,4 @@
-import { RegisterComponent, Component, SideLoad } from './components.mjs';
+import { RegisterComponent, Component } from './components.mjs';
 
 class StoreFront extends Component {
     static __IDENTIFY() { return 'storefront'; }
@@ -9,18 +9,22 @@ class StoreFront extends Component {
 
     Render() {
         return {
-            template: SideLoad('./components/templates/storefront.html'),
-            style: SideLoad('./components/css/storefront.css'),
+            template: `
+                <product-list-component id="featured"
+                                        title="Featured Lego Sets"
+                                        getroute="/api/sets/featured">
+                </product-list-component>
+                `,
+            style: `
+                product-list-component {
+                    display: block;
+                    margin: 0 auto;
+                }`,
         };
     }
 
     OnceRendered() {
-        const items = ['item1', 'item2', 'item3', 'item4', 'item5', 'item6', 'item7', 'item8', 'item9', 'item10'];
-        for (const item of items) {
-            const itemElement = document.createElement('compact-listing-component');
-            itemElement.setAttribute('item', item);
-            this.root.appendChild(itemElement);
-        }
+
     }
 }
 

@@ -9,8 +9,17 @@ class CompactProductListing extends Component {
 
     Render() {
         return {
-            template: SideLoad('./components/templates/compact-listing.html'),
-            style: SideLoad('./components/css/compact-listing.css'),
+            template: `
+                {this.state.name}
+                {this.state.desc}
+                £{this.state.price}
+                <img src="{this.state.image}"></img>
+            `,
+            style: `
+                compact-listing-component {    
+                    display: flex;        
+                }
+            `,
         };
     }
 
