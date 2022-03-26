@@ -20,7 +20,9 @@
 }
 
 .push-down {
-    align-self: flex-end;
+    display: flex;
+    align-self: flex-start;
+    padding-inline-start: 0px;
     flex-basis: 100%;
     margin-top: auto;
 }
@@ -139,7 +141,7 @@
         background: #e4d6ffde;
         flex-direction: column;
         justify-content: center;
-        opacity: 0;
+        opacity: 50;
         top: 0;
         right: 0;
         bottom: 0;
@@ -148,15 +150,10 @@
         text-align: center;
         z-index: 100;
    }
-   
-   .secondary-menu {
-       top: 0;
-       height: auto;
-   }
 
    .nav-menu .menu-item a {
        font-size: 1.5em;
-       margin: 8px;
+       margin: 0.5em;
    }
 
     .menu-active .nav-menu {
@@ -196,7 +193,7 @@
 }
 
 .search-wrapper {
-    flex-basis: 75%;
+    flex-basis: 83%;
     height: 100%;
     position: relative;
     display: flex;
@@ -250,7 +247,7 @@
 
 #cart-wrapper {
     display: flex;
-    flex-basis: 10%;
+    flex-basis: 4%;
     justify-content: space-between;
     padding-bottom: 2px;
 }
@@ -261,6 +258,18 @@
 
 #cart-number {
     padding-top: 9px;
-    font-size: 1em;
+    font-size: 37px;
     font-weight: 100;
+}
+
+@media (pointer:none), (pointer:coarse), screen and (max-width: 900px) {
+    .search-wrapper {
+        flex-basis: 80%;
+    }
+
+    #search-bar {
+        width: 100%;
+        margin: 0;
+        height: 2em;
+    }
 }

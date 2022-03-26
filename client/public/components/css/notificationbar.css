@@ -18,7 +18,7 @@
     padding: 0px 1em;
     height: 100%;
     line-height: 35px;
-    font-size: 1.3em;
+    font-size: 1em;
     font-weight: bold;
     text-align: center;
 }
@@ -94,12 +94,12 @@
 
 /* move it further up the screen than the mobile toggler would */
 .notification-toggled {
-    transform: translatey(-200%);
+    transform: translatey(-300%);
 }
 
 /* don's show on mobile or 'small mode' */
 @media (pointer:none), (pointer:coarse), screen and (max-width: 900px) {
     .notification-bar {
-        transform: translatey(-200%);
+        transform: translatey(-300%);
     }
 }

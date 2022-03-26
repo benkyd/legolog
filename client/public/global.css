@@ -3,7 +3,7 @@ body {
     /* all EM in the document is based off this DONT TOUCH */
     /* it's also kinda the default so you can touch it if you want */
     /* BODY TEXT SHOULD BE 1EM */
-    font-size: 18px;
+    font-size: 16px;
     color: #222;
     text-decoration: none;
     background-color: #D7C2FF;
@@ -22,19 +22,13 @@ limited-margin {
     max-width: 1400px;
 }
 
-content-margin {
-    position: relative;
-    display: inherit;
-    margin-left: auto;
-    margin-right: auto;
-    width: 80%;
-    max-width: 1300px;
-}
-
-
 /* responsive sidebar stop scrolling */
 /* also making sure this is applied any time it's on a mobile device */
 @media (pointer:none), (pointer:coarse), screen and (max-width: 900px) {
+    body {
+        font-size: 25px;
+    }
+
     limited-margin {
         width: 90%;
         /* padding-left: 1em;

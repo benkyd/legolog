@@ -25,13 +25,10 @@ export class Component extends HTMLElement {
         this.root = this.attachShadow({ mode: 'open' });
         this.state = {};
         this.child = child;
-
-        // give components a unique identifier
-        // TODO: Make this unique
-        // Components[child.__IDENTIFY()] = this;
     }
 
     // Override these
+    Update() { }
     Render() { Component.__WARN('Render'); }
     OnceRendered() { Component.__WARN('Render'); }
     static __IDENTIFY() { Component.__WARN('identify'); }
@@ -48,6 +45,8 @@ export class Component extends HTMLElement {
             stateUpdateQueue = { ...stateUpdateQueue, [attribute.name]: attribute.value };
         }
         this.setState(stateUpdateQueue);
+
+        this.Update();
 
         if (this.attributes.length === 0) {
             this.__INVOKE_RENDER();
@@ -73,6 +72,7 @@ export class Component extends HTMLElement {
     attributeChangedCallback(name, newValue) {
         console.log(`attribute changed: ${name} ${newValue}`);
         this.setState({ ...this.state, [name]: newValue });
+        this.Update();
         this.__INVOKE_RENDER();
     }
 

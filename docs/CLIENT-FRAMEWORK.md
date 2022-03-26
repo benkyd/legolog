@@ -60,6 +60,15 @@ class MyComponent extends Component {
         super(MyComponent);
     }
 
+    Update() {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                this.state.name = 'Hello World';
+                resolve();
+            }, 1000);
+        });
+    }
+
     Render() {
         return {
             template: SideLoad('MyComponent.html'),
@@ -80,5 +89,9 @@ State is updated with `setState()`.
 
 Within the HTML, any instance of `{this.state.}` will be replaced with
 the internal state of the component.
+
+The `Update` method is called when the global state or the attribute
+state changes, and is expected to modify the internal state before
+rendering.
 
 TODO: Global state
