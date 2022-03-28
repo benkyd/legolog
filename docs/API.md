@@ -36,13 +36,20 @@ a subset for product listing pages
 For all endpoints that query, the following parameters are supported:
 
 tags: tags to include in search
+
 page: starting page
+
 pages: pages to return starting from page
+
 q: string to search for (fuzzy)
+
 brick: brick to search for (absolute)
+
 set: brick to search for (absolute)
 
 ### /api/search/
+
+GET /api/search?params
 
 
 

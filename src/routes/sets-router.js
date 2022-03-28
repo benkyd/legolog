@@ -33,7 +33,7 @@ function Featured(req, res, next) {
             },
             {
                 id: '3',
-                name: 'Arch 1 x 2 Inverted',
+                name: 'Train Wheel RC, Holder with 2 Black Train Wheel and Chrome Silver Train Wheel, Metal Axle with Slots (2878 / 2879 / bb0837)',
                 price: '3.00',
                 image: 'https://via.placeholder.com/320x320',
             },
