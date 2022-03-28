@@ -24,6 +24,7 @@
 }
 
 .notification-bar-close {
+    font-family: 'Open Sans', sans-serif;
     display: inline-block;
     padding: 0px 1em;
     height: 100%;
@@ -32,7 +33,6 @@
     font-size: 1.5em;
     font-weight: bold;
     text-align: center;
-    font-family: 'Open Sans', sans-serif;
 }
 
 .notification-bar-close:hover {
