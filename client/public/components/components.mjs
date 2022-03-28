@@ -28,6 +28,7 @@ export class Component extends HTMLElement {
     }
 
     // Override these
+    PostLoad() { }
     Update() { }
     Render() { Component.__WARN('Render'); }
     OnceRendered() { Component.__WARN('Render'); }
@@ -46,10 +47,12 @@ export class Component extends HTMLElement {
         }
         this.setState(stateUpdateQueue);
 
-        this.Update();
+        this.PostLoad(Object.bind(this));
+
+        this.Update(Object.bind(this));
 
         if (this.attributes.length === 0) {
-            this.__INVOKE_RENDER();
+            this.__INVOKE_RENDER(Object.bind(this));
         }
     }
 
@@ -122,12 +125,12 @@ export class Component extends HTMLElement {
             if (m[1].startsWith('this.state')) {
                 const stateKey = m[1].substring(11);
                 const stateValue = this.state[stateKey];
-                console.log('attempting to replace', m[0], 'with', stateValue);
+                // console.log('attempting to replace', m[0], 'with', stateValue);
                 if (stateValue === undefined) {
                     continue;
                 }
 
-                console.log('replacing', m[0], 'with', stateValue);
+                // console.log('replacing', m[0], 'with', stateValue);
                 resolved = resolved.replace(m[0], stateValue);
             }
         }

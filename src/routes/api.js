@@ -1,12 +1,15 @@
 const Logger = require('../logger.js');
 const Server = require('./server.js');
 
+const Helpers = require('./helpers.js');
 const Bricks = require('./bricks-router.js');
 const Sets = require('./sets-router.js');
 const Query = require('./query-router.js');
 const Auth0 = require('./auth0-router.js');
 
 function Init() {
+    Server.App.get('/api/special/', Helpers.Special);
+
     Server.App.get('/api/search/', []);
     Server.App.get('/api/bricks/', Bricks.Query);
     Server.App.get('/api/sets/');

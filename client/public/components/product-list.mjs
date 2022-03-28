@@ -27,7 +27,8 @@ class ProductList extends Component {
                 </div>
                 <!--Infinite Loading-->
                 <div class="product-list-loader">
-                <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                    <!-- https://loading.io/css/ -->
+                    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
                 </div>
             `,
             style: `
@@ -57,41 +58,72 @@ class ProductList extends Component {
                     border: none;
                 }
 
-                .lds-ring {
+                .product-list-loader {
+                    display: flex;
+                    justify-content: center;
+                }
+
+                .lds-ellipsis {
                     display: inline-block;
                     position: relative;
                     width: 80px;
                     height: 80px;
                 }
-                .lds-ring div {
-                    box-sizing: border-box;
-                    display: block;
+                .lds-ellipsis div {
                     position: absolute;
-                    width: 64px;
-                    height: 64px;
-                    margin: 8px;
-                    border: 8px solid #fff;
+                    top: 33px;
+                    width: 13px;
+                    height: 13px;
                     border-radius: 50%;
-                    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-                    border-color: #fff transparent transparent transparent;
+                    background: #7F5CFF;
+                    animation-timing-function: cubic-bezier(0, 1, 1, 0);
                 }
-                .lds-ring div:nth-child(1) {
-                    animation-delay: -0.45s;
+                .lds-ellipsis div:nth-child(1) {
+                    left: 8px;
+                    animation: lds-ellipsis1 0.6s infinite;
                 }
-                .lds-ring div:nth-child(2) {
-                    animation-delay: -0.3s;
+                .lds-ellipsis div:nth-child(2) {
+                    left: 8px;
+                    animation: lds-ellipsis2 0.6s infinite;
                 }
-                .lds-ring div:nth-child(3) {
-                    animation-delay: -0.15s;
+                .lds-ellipsis div:nth-child(3) {
+                    left: 32px;
+                    animation: lds-ellipsis2 0.6s infinite;
                 }
-                @keyframes lds-ring {
+                .lds-ellipsis div:nth-child(4) {
+                    left: 56px;
+                    animation: lds-ellipsis3 0.6s infinite;
+                }
+                @keyframes lds-ellipsis1 {
                     0% {
-                        transform: rotate(0deg);
+                        transform: scale(0);
                     }
                     100% {
-                        transform: rotate(360deg);
+                        transform: scale(1);
                     }
-                }               
+                }
+                @keyframes lds-ellipsis3 {
+                    0% {
+                        transform: scale(1);
+                    }
+                    100% {
+                        transform: scale(0);
+                    }
+                }
+                @keyframes lds-ellipsis2 {
+                    0% {
+                        transform: translate(0, 0);
+                    }
+                    100% {
+                        transform: translate(24px, 0);
+                    }
+                }
+                            
+                @media (pointer:none), (pointer:coarse), screen and (max-width: 900px) {
+                    .product-list {
+                        /*justify-content: space-between;*/
+                    }
+                }
             `,
             state: {
                 ...this.getState,

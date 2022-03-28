@@ -10,6 +10,8 @@ automatically every request
 
 | Type | Route | Queries | Auth? | Notes |
 | --- | --- | --- | -- | --- |
+| GET   | /api/special/         |               | no  | |
+| GET   | /api/type/:id         |               | no  | |
 | GET   | /api/search/          | query, page   | no  | Query endpoint |
 | GET   | /api/bricks/          | query, page   | no  | Query endpoint |
 | GET   | /api/sets/            | query, page   | no  | Query endpoint |
@@ -46,6 +48,33 @@ q: string to search for (fuzzy)
 brick: brick to search for (absolute)
 
 set: brick to search for (absolute)
+
+### /api/special/
+
+GET /api/special/
+
+Response Object
+```json
+{
+    "data": {
+        "title": "Special 1",
+        "end": "2020-01-31T00:00:00.000Z",
+    }
+}
+```
+
+### /api/type/:id
+
+GET /api/type/:id
+
+Response Object
+```json
+{
+    "data": {
+        "type": "brick", // or set
+    }
+}
+```
 
 ### /api/search/
 

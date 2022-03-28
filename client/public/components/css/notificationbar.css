@@ -44,11 +44,11 @@
 }
 
 .notification-bar-close:active {
-    color: #fff;
+    color: #F5F6F6;
 }
 
 .notification-bar-close:hover {
-    color: #fff;
+    color: #F5F6F6;
 }
 
 .notification-bar-close:focus {
