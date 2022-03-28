@@ -22,17 +22,21 @@ limited-margin {
     max-width: 1400px;
 }
 
-/* responsive sidebar stop scrolling */
-/* also making sure this is applied any time it's on a mobile device */
-@media (pointer:none), (pointer:coarse), screen and (max-width: 900px) {
+/* small screen */
+@media screen and (max-width: 900px) {
+    limited-margin {
+        width: 90%;
+    }
+}
+
+/* mobile */
+@media (pointer:none), (pointer:coarse) {
     body {
         font-size: 25px;
     }
 
     limited-margin {
-        width: 90%;
-        /* padding-left: 1em;
-        padding-right: 1em; */
+        width: 95%;
     }
 }
 
