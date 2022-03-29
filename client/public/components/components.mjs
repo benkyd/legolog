@@ -28,10 +28,10 @@ export class Component extends HTMLElement {
     }
 
     // Override these
-    PostLoad() { }
+    OnMount() { }
     Update() { }
     Render() { Component.__WARN('Render'); }
-    OnceRendered() { Component.__WARN('Render'); }
+    OnRender() { Component.__WARN('Render'); }
     static __IDENTIFY() { Component.__WARN('identify'); }
 
     connectedCallback() {
@@ -45,11 +45,13 @@ export class Component extends HTMLElement {
         for (const attribute of this.attributes) {
             stateUpdateQueue = { ...stateUpdateQueue, [attribute.name]: attribute.value };
         }
-        this.setState(stateUpdateQueue);
+        this.state = stateUpdateQueue;
 
-        this.PostLoad(Object.bind(this));
+        this.OnMount(Object.bind(this));
 
         this.Update(Object.bind(this));
+
+        this.setState(this.state);
 
         if (this.attributes.length === 0) {
             this.__INVOKE_RENDER(Object.bind(this));
@@ -141,7 +143,7 @@ export class Component extends HTMLElement {
         style.textContent = res.style;
         this.root.appendChild(style);
 
-        this.OnceRendered();
+        this.OnRender();
     }
 
     static __WARN(caller) {

@@ -23,7 +23,7 @@ class NotificationBar extends Component {
         };
     }
 
-    async PostLoad() {
+    async OnMount() {
         const data = await fetch('/api/special').then(response => response.json());
         const { days, hours, minutes, seconds } = this.daysHoursMinutesSecondsUntil(data.data.end);
 
@@ -51,12 +51,17 @@ class NotificationBar extends Component {
         };
     }
 
-    OnceRendered() {
+    OnRender() {
         // expect only one notification bar on the dom (otherwise this won't work)
         const notificationToggler = document.querySelector('notificationbar-component').shadowRoot.querySelector('.notification-toggler');
         const notificationBar = document.querySelector('notificationbar-component').shadowRoot.querySelector('.notification-bar');
 
         notificationToggler.addEventListener('click', () => {
+            this.setState({
+                ...this.getState,
+                isOpen: !this.getState.isOpen,
+            });
+
             notificationBar.classList.add('notification-toggled');
         });
     }

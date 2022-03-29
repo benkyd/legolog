@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest src/__test",
+    "test": "jest src/__test client/public/__test",
     "start": "node src/index.js",
     "dev": "nodemon src/index.js --watch src",
     "lint": "eslint src --ext .js && eslint client --ext .js",

@@ -12,7 +12,8 @@ class StoreFront extends Component {
             template: `
                 <product-list-component id="featured"
                                         title="Featured Lego Sets"
-                                        getroute="/api/sets/featured">
+                                        getroute="/api/sets/featured"
+                                        type="set">
                 </product-list-component>
                 `,
             style: `
@@ -23,7 +24,7 @@ class StoreFront extends Component {
         };
     }
 
-    OnceRendered() {
+    OnRender() {
 
     }
 }

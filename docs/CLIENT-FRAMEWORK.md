@@ -90,7 +90,7 @@ State is updated with `setState()`.
 Within the HTML, any instance of `{this.state.}` will be replaced with
 the internal state of the component.
 
-The `PostLoad` method is called once the component has been loaded and
+The `OnMount` method is called once the component has been loaded and
 attatched to the DOM. This is where you can do any post-load setup.
 It is only called once and it's return value becomes the state of the
 component.
