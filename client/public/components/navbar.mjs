@@ -14,7 +14,7 @@ class NavBar extends Component {
         };
     }
 
-    OnceRendered() {
+    OnRender() {
         const menuToggler = document.querySelector('navbar-component').shadowRoot.querySelector('#menu-toggler');
         const navMenu = document.querySelector('navbar-component').shadowRoot.querySelector('.navbar');
 

@@ -21,6 +21,7 @@ class ProductList extends Component {
                                     listing="${product.listing}"
                                     image="${product.image}"
                                     price="${product.price}"
+                                    type="${product.type}"
                                     discount="${product.discount || ''}"></compact-listing-component>
                         `;
                     }).join('')}
@@ -133,7 +134,7 @@ class ProductList extends Component {
     }
 
 
-    OnceRendered() {
+    OnRender() {
 
 
     }
