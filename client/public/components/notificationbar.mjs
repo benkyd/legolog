@@ -32,6 +32,7 @@ class NotificationBar extends Component {
             endTime: data.data.end,
             timePretty: `${days}d ${hours}h ${minutes}m ${seconds}s`,
         });
+        this.wasClosed = false;
     }
 
     Update() {
@@ -56,13 +57,13 @@ class NotificationBar extends Component {
         const notificationToggler = document.querySelector('notificationbar-component').shadowRoot.querySelector('.notification-toggler');
         const notificationBar = document.querySelector('notificationbar-component').shadowRoot.querySelector('.notification-bar');
 
-        notificationToggler.addEventListener('click', () => {
-            this.setState({
-                ...this.getState,
-                isOpen: !this.getState.isOpen,
-            });
-
+        if (this.wasClosed) {
             notificationBar.classList.add('notification-toggled');
+        }
+
+        notificationToggler.addEventListener('click', () => {
+            notificationBar.classList.add('notification-toggled');
+            this.wasClosed = true;
         });
     }
 }

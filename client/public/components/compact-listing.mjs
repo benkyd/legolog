@@ -28,15 +28,18 @@ class CompactProductListing extends Component {
             `,
             style: `
                 .product-listing {
+                    position: relative;
                     display: flex;
                     flex-direction: column;
                     margin: 7px;
                     max-width: 320px;
+                    z-index: 0;
                 }
                 
                 .product-listing-image {
                     display: block;
                     margin: 0 auto;
+                    margin-bottom: 7px;
                     max-width: 100%;
                 }
                 
@@ -103,7 +106,7 @@ class CompactProductListing extends Component {
         productListing.setAttribute('id', this.state.id);
         productListing.setAttribute('type', this.state.type);
         location.appendChild(productListing);
-        location.style.display = 'block';
+        location.style.display = 'flex';
     }
 
     OnRender() {

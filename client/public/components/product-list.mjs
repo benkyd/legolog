@@ -33,14 +33,12 @@ class ProductList extends Component {
                 </div>
             `,
             style: `
-                h2 {
-                    margin-block-start: 0;
-                }
                 .product-list {
                     display: flex;
                     justify-content: space-evenly;
                     flex-wrap: wrap;
                     margin: 0 auto;
+                    z-index: 0;
                 }
 
                 .product-list-buttons {
@@ -69,6 +67,7 @@ class ProductList extends Component {
                     position: relative;
                     width: 80px;
                     height: 80px;
+                    z-index: 0;
                 }
                 .lds-ellipsis div {
                     position: absolute;

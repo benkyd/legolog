@@ -1,5 +1,11 @@
 const Controller = require('../controllers/brick-controller.js');
 
+function Get(req, res) {
+    res.send(JSON.stringify({
+        message: 'Hello World!',
+    }));
+}
+
 function Query(req, res, next) {
     const query = req.query;
 
@@ -29,5 +35,6 @@ function Query(req, res, next) {
 }
 
 module.exports = {
+    Get,
     Query,
 };

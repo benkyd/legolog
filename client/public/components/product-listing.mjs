@@ -7,14 +7,17 @@ class ProductListing extends Component {
         super(ProductListing);
     }
 
-    OnMount() {
-        console.log(this.state);
+    async OnMount() {
+        const getURL = new URL(`/api/${this.state.type}/${this.state.id}`, document.baseURI);
+        const data = await fetch(getURL).then(response => response.json());
+        this.setState({
+            ...this.getState,
+            ...data.data[0],
+        });
+        console.log(this.getState);
     }
 
-    async Render() {
-        const route = this.getState.getroute;
-        // const productDetails = await fetch(route).then(response => response.json());
-
+    Render() {
         return {
             template: SideLoad('./components/templates/product-listing.html'),
             style: SideLoad('./components/css/product-listing.css'),
