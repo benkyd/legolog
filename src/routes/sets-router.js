@@ -1,6 +1,26 @@
 const Controller = require('../controllers/set-controller.js');
 
-function Featured(req, res, next) {
+function Get(req, res) {
+    res.send(JSON.stringify({
+        data: [
+            {
+                id: '1',
+                name: 'Tail 4 x 1 x 3',
+                description: 'Tail 4 x 1 x 3',
+                price: '1.00',
+                discount: '0.50',
+                stock: '10',
+                release_date: '2020-01-01',
+                tags: ['tail', '4', '1', '3', '2020'],
+                dimensions: { width: '1', height: '1', depth: '1' },
+                type: 'set',
+                image: 'https://via.placeholder.com/320x320',
+            },
+        ],
+    }));
+}
+
+function Featured(req, res) {
     const query = req.query;
 
     res.send(JSON.stringify({
@@ -82,5 +102,6 @@ function Featured(req, res, next) {
 }
 
 module.exports = {
+    Get,
     Featured,
 };

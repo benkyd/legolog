@@ -80,8 +80,6 @@ Response Object
 
 GET /api/search?params
 
-
-
 ### /api/bricks/
 
 GET
@@ -95,7 +93,13 @@ Response Object
 
 ### /api/sets/
 ### /api/brick/:id/
+
+
+
 ### /api/set/:id/
+
+
+
 ### /api/cdn/:id/
 ### /api/auth/login/
 ### /api/auth/signup/

@@ -18,6 +18,7 @@ class StoreFront extends Component {
                 `,
             style: `
                 product-list-component {
+                    z-index: 0;
                     display: block;
                     margin: 0 auto;
                 }`,

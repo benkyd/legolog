@@ -1,51 +1,53 @@
-<nav class="navbar">
-    <div class="logo"><a href="/"><img src="res/logo.svg" height="80em" alt="logo"></a></div>
-    
-    <div class="push-right">
-        <!-- https://jonsuh.com/hamburgers/ -->
-        <button id="menu-toggler" class="hamburger">
-            <span class="hamburger-line hamburger-line-top"></span>
-            <span class="hamburger-line hamburger-line-middle"></span>
-            <span class="hamburger-line hamburger-line-bottom"></span>
-        </button>
-
-        <ul class="primary-menu nav-menu">
-            <li class="menu-item current-menu-item"><a class="nav-link" href="#">New</a></li>
-            <li class="menu-item dropdown"><a class="nav-link" href="#">Sets▾</a>
-                <!-- TODO: Going to need to dynamically generate this -->
-                <ul class = "sub-nav">
-                    <li><a class="sub-nav-link" href="#">1</a></li>
-                    <li><a class="sub-nav-link" href="#">2</a></li>
-                    <li><a class="sub-nav-link" href="#">3</a></li>
-                </ul>
-            </li>
-            <li class="menu-item dropdown"><a class="nav-link"  href="#">Bricks▾</a>
-                <ul class="sub-nav" >
-                    <li><a class="sub-nav-link" href="#">1</a></li>
-                    <li><a class="sub-nav-link" href="#">2</a></li>
-                    <li><a class="sub-nav-link" href="#">3</a></li>
-                </ul>
-            </li>
-            <li class="menu-item"><a class="nav-link" href="#">My Account</a>
-            <li class="menu-item stock-mode" style="display: none;">
-                STOCK MODE
-                <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider round"></span>
-                </label>
-            </li>
-        </ul>
-    </div>
-    <ul class="secondary-menu push-down">
-        <span class="search-wrapper">
-            <input id="search-bar" class="menu-item" type="text" placeholder="search..."/>
-        </span>
-
-        <img id="fave-icon" class="menu-item" src="https://www.svgrepo.com/show/25921/heart.svg" width="45px" stroke="#222" stroke-width="2px" alt="">
+<div class="navbar-container">
+    <nav class="navbar">
+        <div class="logo"><a href="/"><img src="res/logo.svg" height="80em" alt="logo"></a></div>
         
-        <span id="cart-wrapper">
-            <img id="cart-icon" class="menu-item" src="https://www.svgrepo.com/show/343743/cart.svg" width="50px" stroke="#222" stroke-width="2px" alt="">
-            <span id="cart-number" class="menu-item">5</span>
-        </span>
-    </ul>
-</nav>
+        <div class="push-right">
+            <!-- https://jonsuh.com/hamburgers/ -->
+            <button id="menu-toggler" class="hamburger">
+                <span class="hamburger-line hamburger-line-top"></span>
+                <span class="hamburger-line hamburger-line-middle"></span>
+                <span class="hamburger-line hamburger-line-bottom"></span>
+            </button>
+
+            <ul class="primary-menu nav-menu">
+                <li class="menu-item current-menu-item"><a class="nav-link" href="#">New</a></li>
+                <li class="menu-item dropdown"><a class="nav-link" href="#">Sets▾</a>
+                    <!-- TODO: Going to need to dynamically generate this -->
+                    <ul class = "sub-nav">
+                        <li><a class="sub-nav-link" href="#">1</a></li>
+                        <li><a class="sub-nav-link" href="#">2</a></li>
+                        <li><a class="sub-nav-link" href="#">3</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item dropdown"><a class="nav-link"  href="#">Bricks▾</a>
+                    <ul class="sub-nav" >
+                        <li><a class="sub-nav-link" href="#">1</a></li>
+                        <li><a class="sub-nav-link" href="#">2</a></li>
+                        <li><a class="sub-nav-link" href="#">3</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item"><a class="nav-link" href="#">My Account</a>
+                <li class="menu-item stock-mode" style="display: none;">
+                    STOCK MODE
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </li>
+            </ul>
+        </div>
+        <ul class="secondary-menu push-down">
+            <span class="search-wrapper">
+                <input id="search-bar" class="menu-item" type="text" placeholder="search..."/>
+            </span>
+
+            <img id="fave-icon" class="menu-item" src="https://www.svgrepo.com/show/25921/heart.svg" width="45px" stroke="#222" stroke-width="2px" alt="">
+            
+            <span id="cart-wrapper">
+                <img id="cart-icon" class="menu-item" src="https://www.svgrepo.com/show/343743/cart.svg" width="50px" stroke="#222" stroke-width="2px" alt="">
+                <span id="cart-number" class="menu-item">5</span>
+            </span>
+        </ul>
+    </nav>
+</div>

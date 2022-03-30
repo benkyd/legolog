@@ -18,8 +18,9 @@ CREATE TABLE IF NOT EXISTS lego_brick_colour (
 
 CREATE TABLE IF NOT EXISTS lego_set (
 	id                   VARCHAR (50) NOT NULL PRIMARY KEY,
-	catagory             INT,
+	catagory             INT, // this needs to be "tags"
 	name                 VARCHAR (100),
+	description		  	 TEXT,
 	date_released        TIMESTAMP WITHOUT TIME ZONE,
 	dimensions_x         DECIMAL,
 	dimensions_y         DECIMAL,
