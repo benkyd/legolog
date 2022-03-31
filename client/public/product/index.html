@@ -3,7 +3,7 @@
 	<title>LegoLog Home!</title>
     <meta name="viewport">
 	<link rel="icon" type="image/svg+xml" href="/res/favicon.svg">
-	<link rel="stylesheet" type="text/css" href="global.css">
+	<link rel="stylesheet" type="text/css" href="/global.css">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Londrina+Solid&display=swap" rel="stylesheet">
@@ -19,17 +19,14 @@
 	<script type="module" src="/components/compact-listing.mjs"></script>
 	<script type="module" src="/components/product-listing.mjs"></script>
 
-	<script type="module" src="index.mjs"></script>
+	<script type="module" src="/index.mjs"></script>
 </head>
-<body>
+<body>	
 	<notificationbar-component></notificationbar-component>
-	
 	<navbar-component></navbar-component>
-	
 	<limited-margin>
-		
-		<storefront-component id="store"></storefront-component>
-		
+		<product-listing-component></product-listing-component>
+
 		<!-- <canvas id="webglviewer" width="300" height="300"></canvas> -->
 		<!-- <canvas id="webglviewer" width="300" height="300"></canvas>
 		<canvas id="webglviewer" width="300" height="300"></canvas>
@@ -42,7 +39,6 @@
 		<canvas id="webglviewer" width="300" height="300"></canvas>
 		<canvas id="webglviewer" width="300" height="300"></canvas>
 		<canvas id="webglviewer" width="300" height="300"></canvas> -->
-
 
 	</limited-margin>
 </body>

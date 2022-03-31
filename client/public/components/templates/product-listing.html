@@ -1,17 +1,17 @@
 <div class="product-page">
     <div class="back-button">
-        <img class="back-button-svg" src="res/back-arrow.svg" height="60em" alt="back-arrow">
+        <img class="back-button-svg" src="/res/back-arrow.svg" height="60em" alt="back-arrow">
     </div>
 
     <div class="product-display"> 
 
         <div class="product-image-container">
-            <img class="active-image" src="{this.state.image}" alt="product-image">
+            <img class="active-image" src="{this.state.image}" alt="Image of ${this.state.name}" title="Image of {this.state.name}">
         </div>
         
         <div class="product-info">
             <div class="product-name">{this.state.name}</div>
-            <div class="product-price">${this.state.price}</div>
+            <div class="product-price">£{this.state.price}</div>
             <div class="product-description">{this.state.description}</div>
             <div class="product-quantity">
                 <span class="quantity-label">Quantity:</span>

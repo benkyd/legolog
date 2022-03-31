@@ -9,8 +9,8 @@ class NavBar extends Component {
 
     Render() {
         return {
-            template: SideLoad('./components/templates/navbar.html'),
-            style: SideLoad('./components/css/navbar.css'),
+            template: SideLoad('/components/templates/navbar.html'),
+            style: SideLoad('/components/css/navbar.css'),
         };
     }
 

@@ -31,7 +31,7 @@ export class Component extends HTMLElement {
     OnMount() { }
     Update() { }
     Render() { Component.__WARN('Render'); }
-    OnRender() { Component.__WARN('Render'); }
+    OnRender() { }
     static __IDENTIFY() { Component.__WARN('identify'); }
 
     async connectedCallback() {
