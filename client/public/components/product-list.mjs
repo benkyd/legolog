@@ -7,15 +7,17 @@ class ProductList extends Component {
         super(ProductList);
     }
 
-    async Render() {
+    async OnMount() {
         const route = this.state.getroute;
-        const products = await fetch(route).then(response => response.json());
+        this.products = await fetch(route).then(response => response.json());
+    }
 
+    Render() {
         return {
             template: `
                 <h2>{this.state.title}</h2>
                 <div class="product-list">
-                    ${products.data.map(product => {
+                    ${this.products.data.map(product => {
                         return `<compact-listing-component name="${product.name}"
                                     id="${product.id}"
                                     listing="${product.listing}"
@@ -127,7 +129,7 @@ class ProductList extends Component {
             `,
             state: {
                 ...this.getState,
-                products,
+                ...this.products,
             },
         };
     }

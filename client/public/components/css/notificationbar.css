@@ -98,9 +98,23 @@
     transform: translatey(-300%);
 }
 
-/* don's show on mobile or 'small mode' */
-@media (pointer:none), (pointer:coarse), screen and (max-width: 900px) {
-    .notification-bar {
-        transform: translatey(-300%);
+@media (pointer:none), (pointer:coarse) {
+    .notification-bar-text {
+        padding-top: 10px;
     }
+
+    .notification-toggler {
+        position: absolute;
+        right: 6px;
+        top: 4px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        outline: none;
+        height: 3em;
+        width: 3em;
+        z-index: 50;
+        transition: all 0.2s ease-in;
+    }
+    
 }

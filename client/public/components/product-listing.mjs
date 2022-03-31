@@ -1,4 +1,5 @@
 import { RegisterComponent, Component, SideLoad } from './components.mjs';
+import * as Helpers from '../helpers.mjs';
 
 class ProductListing extends Component {
     static __IDENTIFY() { return 'product-listing'; }
@@ -25,7 +26,14 @@ class ProductListing extends Component {
     }
 
     OnRender() {
+        const backButton = this.root.querySelector('.back-button-svg');
 
+        backButton.addEventListener('click', async () => {
+            await Helpers.SwapActivePage('current-open-listing', 'store');
+            // clean up
+            const location = document.querySelector('#current-open-listing');
+            location.removeChild(location.lastChild);
+        });
     }
 }
 

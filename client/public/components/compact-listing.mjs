@@ -1,4 +1,5 @@
 import { RegisterComponent, Component } from './components.mjs';
+import * as Helpers from '../helpers.mjs';
 
 class CompactProductListing extends Component {
     static __IDENTIFY() { return 'compact-listing'; }
@@ -97,16 +98,14 @@ class CompactProductListing extends Component {
 
     OpenProductListing() {
         const location = document.querySelector('#current-open-listing');
-        // Make sure there is not already a product listing open
-        if (window.getComputedStyle(location).display !== 'none') {
-            return;
-        }
+
         // Open the product listing
         const productListing = document.createElement('product-listing-component');
         productListing.setAttribute('id', this.state.id);
         productListing.setAttribute('type', this.state.type);
         location.appendChild(productListing);
-        location.style.display = 'flex';
+
+        Helpers.SwapActivePage('store', 'current-open-listing');
     }
 
     OnRender() {
