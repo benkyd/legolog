@@ -40,6 +40,14 @@ limited-margin {
     }
 }
 
-#top-picks {
-    font-size: 1em;
+.slide-in {
+    display: inline;
+    transition: all 1s;
+    translate: translateX(-100%);
+}
+
+.slide-out {
+    display: inline;
+    transition: all 1s;
+    translate: translateX(100%);
 }

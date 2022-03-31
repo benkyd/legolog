@@ -34,7 +34,10 @@ export class Component extends HTMLElement {
     OnRender() { Component.__WARN('Render'); }
     static __IDENTIFY() { Component.__WARN('identify'); }
 
-    connectedCallback() {
+    async connectedCallback() {
+        if (!this.root.isConnected) {
+            return;
+        }
         // set up to watch all attributes for changes
         this.watchAttributeChange(this.attributeChangedCallback.bind(this));
 
@@ -47,7 +50,7 @@ export class Component extends HTMLElement {
         }
         this.state = stateUpdateQueue;
 
-        this.OnMount(Object.bind(this));
+        await this.OnMount(Object.bind(this));
 
         this.Update(Object.bind(this));
 

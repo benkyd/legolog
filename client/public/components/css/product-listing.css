@@ -1,27 +1,98 @@
 .product-page {
     display: flex;
-    position: fixed;
+    position: relative;
+    margin-block-start: 0.83em;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.back-button {
+    flex-grow: 1;
+}
+
+.back-button-svg {
+    cursor: pointer;
+}
+
+.product-display {
+    flex-grow: 100;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     margin-left: auto;
     margin-right: auto;
-    top: 10%;
-    width: 85%;
+}
+
+@media (pointer:none), (pointer:coarse), screen and (max-width: 900px) {
+    .product-page, .product-display {
+        flex-direction: column;
+    }
+}
+
+.product-image-container {
+    flex-grow: 2;
+}
+
+.active-image {
+    width: 100%;
     height: 100%;
-    max-width: 1400px;
-    background-color: #DFE2E2;
-    box-shadow: #748181 0px 0px 5px;
-    z-index: 1;
 }
 
-@media screen and (max-width: 900px) {
-    .product-page {
-        width: 90%;
-    }
+.product-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-/* mobile */
-@media (pointer:none), (pointer:coarse) {
-    .product-page {
-        width: 95%;
-    }
+.product-name {
+    font-size: 2em;
+    font-weight: bold;
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
 }
 
+.product-price {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+}
+
+.product-description {
+    font-size: 1.5em;
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+}
+
+.product-quantity {
+    font-size: 1.5em;
+}
+
+.quantity-input {
+    width: 5em;
+    text-align: center;
+}
+
+.add-to-cart-button {
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+    cursor: pointer;
+    background-color: #1A1A1A;
+    border: none;
+    color: #FFFFFF;
+    padding: 0.5em;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.add-to-cart-button:hover {
+    background-color: #FFFFFF;
+    color: #1A1A1A;
+}
+
+.add-to-cart-button:active {
+
+}
