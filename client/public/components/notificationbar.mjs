@@ -47,8 +47,8 @@ class NotificationBar extends Component {
 
     Render() {
         return {
-            template: SideLoad('./components/templates/notificationbar.html'),
-            style: SideLoad('./components/css/notificationbar.css'),
+            template: SideLoad('/components/templates/notificationbar.html'),
+            style: SideLoad('/components/css/notificationbar.css'),
         };
     }
 

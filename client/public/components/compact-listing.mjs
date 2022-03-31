@@ -97,15 +97,7 @@ class CompactProductListing extends Component {
     }
 
     OpenProductListing() {
-        const location = document.querySelector('#current-open-listing');
-
-        // Open the product listing
-        const productListing = document.createElement('product-listing-component');
-        productListing.setAttribute('id', this.state.id);
-        productListing.setAttribute('type', this.state.type);
-        location.appendChild(productListing);
-
-        Helpers.SwapActivePage('store', 'current-open-listing');
+        window.location.href = `/product/?type=${this.state.type}&id=${this.state.id}&name=${encodeURIComponent(this.state.name)}`;
     }
 
     OnRender() {

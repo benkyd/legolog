@@ -1,6 +1,6 @@
 <div class="navbar-container">
     <nav class="navbar">
-        <div class="logo"><a href="/"><img src="res/logo.svg" height="80em" alt="logo"></a></div>
+        <div class="logo"><a href="/"><img src="/res/logo.svg" height="80em" alt="logo"></a></div>
         
         <div class="push-right">
             <!-- https://jonsuh.com/hamburgers/ -->
@@ -15,16 +15,18 @@
                 <li class="menu-item dropdown"><a class="nav-link" href="#">Sets▾</a>
                     <!-- TODO: Going to need to dynamically generate this -->
                     <ul class = "sub-nav">
-                        <li><a class="sub-nav-link" href="#">1</a></li>
-                        <li><a class="sub-nav-link" href="#">2</a></li>
-                        <li><a class="sub-nav-link" href="#">3</a></li>
+                        <li><a class="sub-nav-link" href="#">Trending now</a></li>
+                        <li><a class="sub-nav-link" href="#">For you</a></li>
+                        <li><a class="sub-nav-link" href="#">Sets by theme</a></li>
+                        <li><a class="sub-nav-link" href="#">Sets by ages</a></li>
+                        <li><a class="sub-nav-link" href="#">Sets by price</a></li>
                     </ul>
                 </li>
                 <li class="menu-item dropdown"><a class="nav-link"  href="#">Bricks▾</a>
                     <ul class="sub-nav" >
-                        <li><a class="sub-nav-link" href="#">1</a></li>
-                        <li><a class="sub-nav-link" href="#">2</a></li>
-                        <li><a class="sub-nav-link" href="#">3</a></li>
+                        <li><a class="sub-nav-link" href="#">For you</a></li>
+                        <li><a class="sub-nav-link" href="#">Bricks by catagory</a></li>
+                        <li><a class="sub-nav-link" href="#">Bricks by price</a></li>
                     </ul>
                 </li>
                 <li class="menu-item"><a class="nav-link" href="#">My Account</a>
@@ -39,15 +41,12 @@
         </div>
         <ul class="secondary-menu push-down">
             <span class="search-wrapper">
-                <input id="search-bar" class="menu-item" type="text" placeholder="search..."/>
+                <search-component style="width: 100%;"></search-component>
             </span>
 
             <img id="fave-icon" class="menu-item" src="https://www.svgrepo.com/show/25921/heart.svg" width="45px" stroke="#222" stroke-width="2px" alt="">
             
-            <span id="cart-wrapper">
-                <img id="cart-icon" class="menu-item" src="https://www.svgrepo.com/show/343743/cart.svg" width="50px" stroke="#222" stroke-width="2px" alt="">
-                <span id="cart-number" class="menu-item">5</span>
-            </span>
+            <basket-component></basket-component>
         </ul>
     </nav>
 </div>

@@ -9,7 +9,11 @@ class ProductListing extends Component {
     }
 
     async OnMount() {
-        const getURL = new URL(`/api/${this.state.type}/${this.state.id}`, document.baseURI);
+        const urlParams = new URLSearchParams(window.location.search);
+        const type = urlParams.get('type');
+        const id = urlParams.get('id');
+
+        const getURL = new URL(`/api/${type}/${id}`, document.baseURI);
         const data = await fetch(getURL).then(response => response.json());
         this.setState({
             ...this.getState,
@@ -20,19 +24,16 @@ class ProductListing extends Component {
 
     Render() {
         return {
-            template: SideLoad('./components/templates/product-listing.html'),
-            style: SideLoad('./components/css/product-listing.css'),
+            template: SideLoad('/components/templates/product-listing.html'),
+            style: SideLoad('/components/css/product-listing.css'),
         };
     }
 
     OnRender() {
         const backButton = this.root.querySelector('.back-button-svg');
 
-        backButton.addEventListener('click', async () => {
-            await Helpers.SwapActivePage('current-open-listing', 'store');
-            // clean up
-            const location = document.querySelector('#current-open-listing');
-            location.removeChild(location.lastChild);
+        backButton.addEventListener('click', () => {
+            window.history.back();
         });
     }
 }
