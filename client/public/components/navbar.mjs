@@ -22,6 +22,9 @@ class NavBar extends Component {
             menuToggler.classList.toggle('menu-active');
             navMenu.classList.toggle('menu-active');
         });
+
+        // set up basket
+        const basketToggler = document.querySelector('#basket-count');
     }
 }
 
