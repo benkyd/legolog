@@ -1,5 +1,5 @@
 import { RegisterComponent, Component, SideLoad } from './components.mjs';
-import * as Helpers from '../helpers.mjs';
+import { AddProductToBasket } from './basket.mjs';
 
 class ProductListing extends Component {
     static __IDENTIFY() { return 'product-listing'; }
@@ -19,7 +19,6 @@ class ProductListing extends Component {
             ...this.getState,
             ...data.data[0],
         });
-        console.log(this.getState);
     }
 
     Render() {
@@ -34,6 +33,15 @@ class ProductListing extends Component {
 
         backButton.addEventListener('click', () => {
             window.history.back();
+        });
+
+        // add quantity to basket and then update the basket count
+        const addToBasket = this.root.querySelector('.add-to-cart-button');
+        const basketCount = this.root.querySelector('.quantity-input');
+
+        addToBasket.addEventListener('click', () => {
+            AddProductToBasket(this.state.id, Math.abs(parseInt(basketCount.value)));
+            basketCount.value = 1;
         });
     }
 }

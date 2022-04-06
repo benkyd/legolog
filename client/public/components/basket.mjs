@@ -17,6 +17,7 @@ import { RegisterComponent, Component } from './components.mjs';
 
 let basketCallback = null;
 
+
 // TODO: Does the localstorage have a problem with mutual exclusion?
 // TODO: Should the basket be persisted to the server?
 export function AddProductToBasket(product, amount) {
@@ -28,19 +29,15 @@ export function AddProductToBasket(product, amount) {
     }
 
     const basket = JSON.parse(localStorage.getItem('basket'));
-    console.log(basket);
 
     if (basket.items.product) {
         basket.items.product += amount;
     } else {
         basket.items.product = amount;
     }
-    console.log(basket);
 
     basket.total += amount;
-    console.log(basket);
 
-    console.log(JSON.stringify(basket, null, 4));
     localStorage.setItem('basket', JSON.stringify(basket));
 
     if (basketCallback) {
@@ -168,7 +165,8 @@ class Basket extends Component {
 
                 #basket-popup {
                     position: absolute;
-                    background-color: #EC914B;
+                    background-color: #AB8FFF;
+                    right: 0;
                     width: 200px;
                     height: 200px;
                     flex-direction: column;
@@ -176,7 +174,6 @@ class Basket extends Component {
                     align-items: center;
                     z-index: 100;
                 }
-
             `,
         };
     }
@@ -188,6 +185,19 @@ class Basket extends Component {
         basketToggler.addEventListener('click', () => {
             const popup = this.root.querySelector('.popup');
             popup.classList.toggle('show');
+
+            popup.addEventListener('click', (e) => {
+                if (e.target.classList.contains('popup-close')) {
+                    popup.classList.remove('show');
+                }
+            });
+
+            // allow "click off to close"
+            // document.addEventListener('click', (e) => {
+            //     if (!popup.contains(e.target)) {
+            //         popup.classList.remove('show');
+            //     }
+            // });
         });
     }
 }

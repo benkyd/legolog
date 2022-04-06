@@ -1,5 +1,5 @@
 // 15 days from now
-const EndDate = new Date(Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000);
+const EndDate = new Date(1651269600 * 1000);
 
 function Special(req, res, next) {
     res.send({

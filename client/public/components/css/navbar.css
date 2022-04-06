@@ -7,7 +7,7 @@
     margin-top:-10px!important;
     margin-bottom:0px!important;
     width: 100%;
-    background-color: #EFAE4F;
+    background-color: #D7C2FF;
     box-shadow: #222 0px 0px 5px;
     background-size: 100% 100%;
     z-index: 1;
@@ -148,8 +148,10 @@
 .sub-nav {
     display: none;
     position: absolute;
-    background-color: #EC914B;
-    padding: 5px 5px;
+    background-color: #AB8FFF;
+    font-size: 0.8em;
+    text-align: center;
+    padding: 10px 10px;
     list-style: none;
     left: parent;
     max-width: 300px;
@@ -168,7 +170,7 @@
 
     .nav-menu {
         position: fixed;
-        background: #efaf4fbb;
+        background: #d7c2ffe0;
         flex-direction: column;
         justify-content: center;
         opacity: 50;
