@@ -19,7 +19,7 @@ function Init() {
 
     Server.App.get('/api/cdn/:id/');
 
-    Server.App.put('/api/auth/login/');
+    Server.App.get('/api/auth/login', Auth0.JWTMiddleware, Auth0.LoginCheck);
     Server.App.get('/api/auth/orders/');
     Server.App.get('/api/auth/order/:id/');
 

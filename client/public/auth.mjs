@@ -22,9 +22,9 @@ async function CheckRedirect() {
             window.alert(e.message || 'authentication error, sorry');
             Signout();
         }
-  
+
         // remove the query parameters
-        window.history.replaceState({}, document.title, '/');  
+        window.history.replaceState({}, document.title, '/');
     }
 }
 
@@ -39,12 +39,31 @@ export async function InitAuth0() {
     const isAuthenticated = await auth0.isAuthenticated();
     if (isAuthenticated) {
         const user = await auth0.getUser();
-        console.log(user);
         NotifyNavbar('login', user);
+
+        // tell the server about the logon, so that it can make the proper
+        // entry in the database, if there is for example an address
+        // associated with the user
+        const token = await auth0.getTokenSilently();
+
+        const fetchOptions = {
+            credentials: 'same-origin',
+            method: 'GET',
+            headers: { Authorization: 'Bearer ' + token },
+        };
+        const res = await fetch('/api/auth/login', fetchOptions);
+        if (!res.ok) {
+            throw new Error('failed to login with the server');
+        }
     }
 }
 
-export async function LoginSignup(context) {
+export async function GetToken() {
+    const token = await auth0.getTokenSilently();
+    return token;
+}
+
+export async function LoginSignup() {
     const isAuthenticated = await auth0.isAuthenticated();
     if (isAuthenticated) {
         return;
