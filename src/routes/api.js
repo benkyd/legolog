@@ -20,7 +20,6 @@ function Init() {
     Server.App.get('/api/cdn/:id/');
 
     Server.App.put('/api/auth/login/');
-    Server.App.post('/api/auth/signup/');
     Server.App.get('/api/auth/orders/');
     Server.App.get('/api/auth/order/:id/');
 

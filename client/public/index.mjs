@@ -1,7 +1,10 @@
 // import { RendererPreInit, BrickRenderer } from './brick-renderer/index.mjs';
-import { AddProductToBasket, RemoveProductFromBasket } from '/components/basket.mjs';
+
+import { InitAuth0 } from './auth.mjs';
 
 function main() {
+    InitAuth0();
+
 //     await RendererPreInit();
 
 //     const canvas = document.querySelectorAll('#webglviewer');

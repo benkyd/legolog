@@ -125,6 +125,9 @@ class Basket extends Component {
                                 <span class="popup-content-item-value">{this.state.items}</span>
                             </div>
                         </div>
+                        <div class="popup-footer">
+                            <button class="popup-footer-button">View Basket</button>
+                        </div
                     </div>
                 </span>
             `,
