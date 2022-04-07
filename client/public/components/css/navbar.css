@@ -158,6 +158,14 @@
     z-index: 5;
 }
 
+.nav-link:hover + .sub-nav {
+    display: block;
+}
+
+.sub-nav:hover {
+    display: block;
+}
+
 /* Make sure the thing doesnt move */
 /* .nav-menu {
     transform: translatey(-100%);
@@ -181,7 +189,7 @@
         transform: translatey(-100%);
         text-align: center;
         z-index: 100;
-   }
+    }
 
    .nav-menu .menu-item a {
        font-size: 1.5em;
@@ -191,7 +199,7 @@
     .menu-active .nav-menu {
         transform: translatey(0%);
         opacity: 1;
-   }
+    }
 
    .sub-nav {
        position: relative;
@@ -200,15 +208,7 @@
        display: none;
        background-color: rgba(0, 0, 0, 0.20);
        box-sizing: border-box;
-   }
-}
-
-.nav-link:hover + .sub-nav {
-    display: block;
-}
-
-.sub-nav:hover {
-    display: block;
+    }
 }
 
 /* search bar */
