@@ -4,7 +4,8 @@ const Server = require('./routes/server.js');
 const API = require('./routes/api.js');
 
 const Databse = require('./database/database.js');
-const ModelManager = require('./models/model-manager.js');
+
+// TODO: The first time running needs to populate the database with the bricks and sets.
 
 async function main() {
     Config.Load();
@@ -17,11 +18,8 @@ async function main() {
     });
     Logger.Info('Pre-Init Complete');
 
-    // const Database = new Databse.IDatabase();
-    // await Database.connect();
-
-    // ModelManager.Init(Database);
-    // await Database.ORMReady();
+    const Database = new Databse.IDatabase();
+    await Database.connect();
 
     Server.Listen(process.env.PORT);
     API.Init();

@@ -7,6 +7,7 @@ const Sets = require('./sets-router.js');
 const Query = require('./query-router.js');
 const Auth0 = require('./auth0-router.js');
 
+// CRUD is implemented where it makes sense.
 function Init() {
     Server.App.get('/api/special/', Helpers.Special);
 

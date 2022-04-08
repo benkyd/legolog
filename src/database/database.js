@@ -1,5 +1,4 @@
 const Logger = require('../logger.js');
-const EntityFramework = require('./psql-entity-framework/entity-relationships.js');
 
 const { Client } = require('pg');
 
@@ -43,21 +42,10 @@ class Database {
         });
 
         await con;
-        this.ORM = new EntityFramework(this.connection);
         return this.connection;
-    }
-
-    async ORMReady() {
-        await this.ORM.syncModels();
-    }
-
-    get getORM() {
-        return this.ORM;
     }
 }
 
 module.exports = {
     IDatabase: Database,
-    DataTypes: require('./psql-entity-framework/types.js'),
-    DataConstraints: require('./psql-entity-framework/relationships-constraints.js'),
 };
