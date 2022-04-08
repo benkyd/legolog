@@ -3,6 +3,7 @@ import { NotifyNavbar } from './components/navbar.mjs';
 const AUTH0CONFIG = {
     domain: 'benkyd.eu.auth0.com',
     clientId: 'WAOkscCNYD4FzXrm6pEQi3oNKNfa8l1F',
+    audience: 'localhost:8080/api',
 };
 
 let auth0 = null;
@@ -32,6 +33,7 @@ export async function InitAuth0() {
     auth0 = await window.createAuth0Client({
         domain: AUTH0CONFIG.domain,
         client_id: AUTH0CONFIG.clientId,
+        audience: AUTH0CONFIG.audience,
     });
 
     await CheckRedirect();
@@ -47,9 +49,8 @@ export async function InitAuth0() {
         const token = await auth0.getTokenSilently();
 
         const fetchOptions = {
-            credentials: 'same-origin',
             method: 'GET',
-            headers: { Authorization: 'Bearer ' + token },
+            headers: { Authorization: `Bearer ${token}` },
         };
         const res = await fetch('/api/auth/login', fetchOptions);
         if (!res.ok) {
