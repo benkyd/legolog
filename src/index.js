@@ -5,10 +5,9 @@ const API = require('./routes/api.js');
 
 const Databse = require('./database/database.js');
 
-// TODO: The first time running needs to populate the database with the bricks and sets.
-
 async function main() {
     Config.Load();
+
     await Logger.Init({
         logLevel: process.env.LOG_LEVEL,
         logToConsole: process.env.LOG_CONSOLE,

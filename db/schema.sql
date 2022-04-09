@@ -1,3 +1,6 @@
+CREATE DATABASE IF NOT EXISTS `legolog`;
+USE `legolog`;
+
 CREATE TABLE IF NOT EXISTS tag (
 	id                   INT NOT NULL PRIMARY KEY,
 	name                 VARCHAR (100)   
@@ -49,14 +52,13 @@ CREATE TABLE IF NOT EXISTS lego_brick_tag (
 
 CREATE TABLE IF NOT EXISTS lego_set_tag (
 	id                   VARCHAR (50) NOT NULL PRIMARY KEY,
-	set_id             VARCHAR (50) NOT NULL
+	set_id             	 VARCHAR (50) NOT NULL
 	tag                  INT NOT NULL,
 	FOREIGN KEY ( set_id ) REFERENCES lego_set( id ),
 	FOREIGN KEY ( tag ) REFERENCES tag( id ),
 )
 
 CREATE TABLE IF NOT EXISTS set_descriptor (
-	id                   VARCHAR (50) NOT NULL PRIMARY KEY,
 	set_id               VARCHAR (50) NOT NULL,
 	brick_id             VARCHAR (50) NOT NULL,
 	amount               INT,
@@ -82,7 +84,6 @@ CREATE TABLE IF NOT EXISTS lego_set_inventory (
 	FOREIGN KEY ( id ) REFERENCES lego_set( id )
 );
 
-
 CREATE TABLE IF NOT EXISTS users (
 	id 					VARCHAR (50) NOT NULL PRIMARY KEY,
 	email				text NOT NULL,
@@ -92,4 +93,21 @@ CREATE TABLE IF NOT EXISTS users (
 	postcode			text NOT NULL,	
 	date_created		TIMESTAMP WITHOUT TIME ZONE NOT NULL,
 	date_updated		TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+);
+
+CREATE TABLE IF NOT EXISTS orders (
+	id 					VARCHAR (50) NOT NULL PRIMARY KEY,
+	user_id				VARCHAR (50) NOT NULL,
+	date_placed			TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+	FOREIGN KEY ( user_id ) REFERENCES users( id )
+);
+
+CREATE TABLE IF NOT EXISTS order_items (
+	order_id			VARCHAR (50) NOT NULL,
+	brick_id			VARCHAR (50),
+	set_id				VARCHAR (50),
+	amount				INT NOT NULL,
+	FOREIGN KEY ( order_id ) REFERENCES orders( id ),
+	FOREIGN KEY ( brick_id ) REFERENCES lego_brick( id )
+	FOREIGN KEY ( set_id ) REFERENCES lego_set( id )
 );

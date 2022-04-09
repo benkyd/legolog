@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "jest src/__test client/public/__test",
+    "setup": "npm i && node src/first-time-run.js",
     "start": "node src/index.js",
     "dev": "nodemon src/index.js --watch src",
-    "lint": "eslint src --ext .js && eslint client --ext .js",
-    "setup": "npm i"
+    "lint": "eslint src --ext .js && eslint client --ext .js"
   },
   "author": "Ben Kyd <benjaminkyd@gmail.com> (https://benkyd.co.uk)",
   "license": "MIT",
