@@ -3,7 +3,7 @@ const Config = require('./config.js');
 const Server = require('./routes/server.js');
 const API = require('./routes/api.js');
 
-const Databse = require('./database/database.js');
+const Database = require('./database/database.js');
 
 async function main() {
     Config.Load();
@@ -17,8 +17,8 @@ async function main() {
     });
     Logger.Info('Pre-Init Complete');
 
-    const Database = new Databse.IDatabase();
-    await Database.connect();
+    const db = new Database.IDatabase();
+    await db.connect();
 
     Server.Listen(process.env.PORT);
     API.Init();
