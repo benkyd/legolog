@@ -44,6 +44,22 @@ class Database {
         await con;
         return this.connection;
     }
+
+    async query(query, params, callback) {
+        if (!this.connection) {
+            await this.connect();
+        }
+
+        // debug moment
+        Logger.Database(`PSQL Query: ${query.substring(0, 100)}...`);
+        const result = await this.connection.query(query, params, callback);
+        return result;
+    }
+
+    async destroy() {
+        await this.connection.end();
+        this.connection = null;
+    }
 }
 
 module.exports = {

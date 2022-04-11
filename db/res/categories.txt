@@ -1,5 +1,3 @@
-Category ID	Category Name
-
 143	(Other)
 318	12V
 628	1950

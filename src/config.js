@@ -2,7 +2,7 @@ const Logger = require('./logger.js');
 
 const dotenv = require('dotenv');
 
-function load() {
+function Load() {
     Logger.Info('Loading Config...');
     const res = dotenv.config();
     Logger.Debug(`CONFIG: ${JSON.stringify(res.parsed)}`);
@@ -21,6 +21,7 @@ function load() {
     }
 }
 
+
 module.exports = {
-    Load: load,
+    Load,
 };
