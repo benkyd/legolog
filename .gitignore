@@ -2,3 +2,4 @@ node_modules/
 logs.log
 db/image/
 db/img/
+db/*.tar.gz
