@@ -63,7 +63,9 @@ async function main() {
                 resolve();
                 return;
             }
-            // console.log(res);
+            for (const result of res) {
+                Logger.Database(result.command);
+            }
             resolve();
         });
     });

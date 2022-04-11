@@ -1,5 +1,3 @@
-Color ID	Color Name	RGB	Type	Parts	In Sets	Wanted	For Sale	Year From	Year To
-
 0	(Not Applicable)		N/A	4587	12360	62547	10990	1954	2022
 41	Aqua	BCE5DC	Solid	82	60	1233	116	1998	2006
 11	Black	212121	Solid	10925	11692	15454	11229	1957	2022
