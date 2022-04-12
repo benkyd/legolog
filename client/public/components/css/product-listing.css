@@ -32,7 +32,6 @@
 .active-image {
     display: block;
     width: 100%;
-    height: 100%;
 }
 
 @media (pointer:none), (pointer:coarse), screen and (max-width: 900px) {
@@ -47,7 +46,6 @@
     }
 
     .product-image-container {
-        aspect-ratio: 1;
         flex-grow: 2;
         width: 90%;
     }

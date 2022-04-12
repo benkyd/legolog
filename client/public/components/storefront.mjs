@@ -19,13 +19,13 @@ class StoreFront extends Component {
                         </div>
                     </div>
                     <div class="carousel-cell">
-                        <img src="/api/cdn/1010.png" alt="">
+                        <img class="carousel-image" src="res/warehouse.png" alt="">
                     </div>
                     <div class="carousel-cell">
-                        <img src="/api/cdn/10240-1.png" alt="">
+                        <img class="carousel-image" src="res/space.png" alt="">
                     </div>
                     <div class="carousel-cell">
-                        <img src="/api/cdn/71040-1.png" alt="">
+                        <img class="carousel-image" src="res/builder.png" alt="">
                     </div>
                 </div>
 
@@ -45,10 +45,9 @@ class StoreFront extends Component {
                 }
 
                 .carousel-image {
-                    object-fit: none;
-                    /* center image */
-                    display: block;
-                    margin: 0 auto;
+                    object-fit: cover;
+                    object-position: center;
+
                     width: 100%;
                     height: 100%;
                 }
@@ -56,7 +55,6 @@ class StoreFront extends Component {
                 .carousel-cell {
                     height: 533px;
                     width: 800px;
-                    object-fit: fill;
                     margin-right : 10px;
                 }
 
