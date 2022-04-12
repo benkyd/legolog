@@ -12,8 +12,8 @@ async function main() {
         logLevel: process.env.LOG_LEVEL,
         logToConsole: process.env.LOG_CONSOLE,
         logFile: process.env.LOG_FILE,
-        networkHost: process.env.LOG_NET_HOST,
-        networkPort: process.env.LOG_NET_PORT,
+        // networkHost: process.env.LOG_NET_HOST,
+        // networkPort: process.env.LOG_NET_PORT,
     });
     Logger.Info('Pre-Init Complete');
 

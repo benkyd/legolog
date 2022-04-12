@@ -20,12 +20,24 @@ class StoreFront extends Component {
                     </div>
                     <div class="carousel-cell">
                         <img class="carousel-image" src="res/warehouse.png" alt="">
+                        <div class="carousel-caption">
+                            <h1>Our state of the art warehouse ensures your speedy delivery</h1>
+                            <button>Find Out More</button>
+                        </div>
                     </div>
                     <div class="carousel-cell">
                         <img class="carousel-image" src="res/space.png" alt="">
+                        <div class="carousel-caption">
+                            <h1>NASA's Shuttle Discovery</h1>
+                            <button>Shop Space Now</button>
+                        </div>
                     </div>
                     <div class="carousel-cell">
                         <img class="carousel-image" src="res/builder.png" alt="">
+                        <div class="carousel-caption">
+                            <h1>Our Featured Bonsai Tree Set</h1>
+                            <button>Get It Now</button>
+                        </div>
                     </div>
                 </div>
 

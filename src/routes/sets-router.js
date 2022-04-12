@@ -40,36 +40,17 @@ async function Get(req, res) {
 
 async function Featured(req, res) {
     // query all sets and return all of them
-    const dbres = await Database.Query(`SELECT 
-        id, name, price, new_price AS "discount"
-        FROM lego_set
-            LEFT JOIN lego_set_inventory as inv ON lego_set.id = inv.set_id
-        ORDER BY id ASC;
-    `);
-    const sets = dbres.rows;
-
-    for (const set of sets) {
-        set.image = `/api/cdn/${set.id}.png`;
-        set.type = 'set';
-    }
+    const { sets } = await Controller.GetSets(0, 8);
 
     res.send(JSON.stringify({
         data: [...sets],
+        page: {
+            total_sent: sets.length,
+            per_page: 8,
+            current_page: 1,
+            last_page: 1,
+        },
     }));
-
-    // Validation
-    // const validation = Controller.ValidateQuery(query);
-    // if (!validation.isValid) {
-    //     return res.status(400).json({
-    //         error: {
-    //             short: validation.error,
-    //             long: validation.longError,
-    //         },
-    //     });
-    // }
-
-
-    // next();
 }
 
 module.exports = {

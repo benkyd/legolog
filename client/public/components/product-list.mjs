@@ -9,15 +9,37 @@ class ProductList extends Component {
 
     async OnMount() {
         const route = this.state.getroute;
-        this.products = await fetch(route).then(response => response.json());
+        const products = await fetch(route).then(response => response.json());
+        this.setState({
+            ...this.getState,
+            products: products.data,
+            current_page: products.page.current_page,
+            last_page: products.page.last_page,
+            total: products.page.total,
+        });
     }
 
     Render() {
+        this.keepLoading = false;
+        if (this.state.current_page >= this.state.last_page) {
+            this.keepLoading = false;
+            this.loadingBar = '';
+        } else {
+            this.keepLoading = true;
+            this.loadingBar = `
+            <!--Infinite Loading-->
+            <div class="product-list-loader">
+                <!-- https://loading.io/css/ -->
+                <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+            </div>
+            `;
+        }
+
         return {
             template: `
                 <h2>{this.state.title}</h2>
                 <div class="product-list">
-                    ${this.products.data.map(product => {
+                    ${this.state.products.data.map(product => {
                         return `<compact-listing-component name="${product.name}"
                                     id="${product.id}"
                                     listing="${product.listing}"
@@ -28,11 +50,7 @@ class ProductList extends Component {
                         `;
                     }).join('')}
                 </div>
-                <!--Infinite Loading-->
-                <div class="product-list-loader">
-                    <!-- https://loading.io/css/ -->
-                    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-                </div>
+                ${this.loadingBar}
             `,
             style: `
                 .product-list {
@@ -136,8 +154,14 @@ class ProductList extends Component {
 
 
     OnRender() {
-
-
+        // scroll to bottom event listener
+        if (this.keepLoading) {
+            window.addEventListener('scroll', () => {
+                if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+                    console.log('scrolled to bottom');
+                }
+            });
+        }
     }
 }
 

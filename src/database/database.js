@@ -45,7 +45,7 @@ async function connectToDatabase() {
 
 async function Query(query, params, callback) {
     if (!connection) {
-        await connect();
+        await Connect();
     }
 
     // debug moment
@@ -58,7 +58,6 @@ async function Destroy() {
     await connection.end();
     connection = null;
 }
-
 
 module.exports = {
     Connect,
