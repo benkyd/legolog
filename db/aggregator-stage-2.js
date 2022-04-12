@@ -10,7 +10,7 @@ function addLine(line) {
 }
 
 // first categories
-addLine('-- categories\n');
+addLine('-- tags\n');
 const newcategory = (category, name) => `INSERT INTO tag (id, name) VALUES ('${category}', '${name}');`;
 const categories = fs.readFileSync('db/res/categories.txt').toString().split('\n');
 
@@ -86,20 +86,155 @@ for (let i = 0; i < brickIds.length; i++) {
 
 // then sets
 addLine('\n-- sets\n');
-const newSet = (id, name, category, colour, bricks) => `INSERT INTO lego_set (id, name, category, colour, bricks) VALUES ('${id}', '${name}', '${category}', '${colour}', '${bricks}');`;
-const sets = fs.readFileSync('db/res/Sets.txt').toString().split('\n');
+const newSet = (id, name, weight, description, date, dx, dy, dz) => `INSERT INTO lego_set (id, name, description, date_released, weight, dimensions_x, dimensions_y, dimensions_z) VALUES ('${id}', '${name}', '${description}', '${date}', '${weight}', '${dx}', '${dy}', '${dz}');`;
+const allSets = fs.readFileSync('db/res/Sets.txt').toString().split('\n');
 const setIds = JSON.parse(fs.readFileSync('db/sets-to-include'));
 
 for (let i = 0; i < setIds.length; i++) {
-    
+    const setId = setIds[i];
+    // find ID in allBricks
+    const set = allSets.find(set => set.split('\t')[2] === setId);
+    if (!set) {
+        console.log(`ERROR: set ${setId} not found`);
+        continue;
+    }
+    const setData = set.split('\t');
+    const name = setData[3].replace(/'/g, '');
+    const desc = setData[3].replace(/'/g, '') + ' ' + setData[1].replace(' / ', ', ').replace(/'/g, '');
+    const date = setData[4];
+    const weight = setData[5];
+    const dx = setData[6].split('x')[0].trim();
+    const dy = setData[6].split('x')[1].trim();
+    const dz = setData[6].split('x')[2].trim();
+    addLine(newSet(setId, name, weight, desc, date, dx, dy, dz));
+    console.log(`NEW set ${i} ${setId}`);
 }
 
 // then brick tags
+addLine('\n-- brick tags\n');
+const newBrickTag = (brickId, tagId) => `INSERT INTO lego_brick_tag (brick_id, tag) VALUES ('${brickId}', '${tagId}');`;
+
+for (let i = 0; i < brickIds.length; i++) {
+    const brickId = brickIds[i];
+    let tagId = allBricks.find(brick => brick.split('\t')[2] === brickId);
+    if (!tagId) {
+        console.log(`ERROR: brick at ${i} not found`);
+        continue;
+    }
+    tagId = tagId.split('\t')[0];
+    addLine(newBrickTag(brickId, tagId));
+    console.log(`NEW brick tag ${i} ${brickId}`);
+}
 
 // then set tags
+addLine('\n-- set tags\n');
+const newSetTag = (setId, tagId) => `INSERT INTO lego_set_tag (set_id, tag) VALUES ('${setId}', '${tagId}');`;
+
+for (let i = 0; i < setIds.length; i++) {
+    const setId = setIds[i];
+    const set = allSets.find(set => set.split('\t')[2] === setId);
+    if (!set) {
+        console.log(`ERROR: set ${setId} not found`);
+        continue;
+    }
+    const tagId = set.split('\t')[0];
+    addLine(newSetTag(setId, tagId));
+    console.log(`NEW set tag ${i} ${setId}`);
+}
 
 // then pieces in sets
+addLine('\n-- pieces in sets\n');
+const newPieceInSet = (setId, brickId, quantity) => `INSERT INTO set_descriptor (set_id, brick_id, amount) VALUES ('${setId}', '${brickId}', '${quantity}');`;
+const setDescriptors = JSON.parse(fs.readFileSync('db/res/sets.json'));
+
+for (const setId of setIds) {
+    const set = setDescriptors[setId];
+
+    for (const [brickId, quantity] of Object.entries(set)) {
+        console.log(`NEW piece in set ${setId} ${brickId}`);
+        addLine(newPieceInSet(setId, brickId, quantity));
+    }
+}
 
 // then make up some random data for brick inventory
+addLine('\n-- piece inventory\n');
+const newBrickInventory = (brickId, stock, price, newPrice) => `INSERT INTO lego_brick_inventory (brick_id, stock, price, new_price, last_updated) VALUES ('${brickId}', '${stock}', '${price}', '${newPrice || ''}', now());`;
+const newBrickInventoryWNULL = (brickId, stock, price) => `INSERT INTO lego_brick_inventory (brick_id, stock, price, last_updated) VALUES ('${brickId}', '${stock}', '${price}', now());`;
+
+for (const brickId of brickIds) {
+    const brick = allBricks.find(brick => brick.split('\t')[2] === brickId);
+    if (!brick) {
+        console.log(`ERROR: brick at ${brickId} not found`);
+        continue;
+    }
+    // between 0 and 100000
+    const stock = Math.floor(Math.random() * 100000);
+    // between 0.09 and 2 as a float
+    let price = Math.random() * 4.99 + 0.09;
+    // 20% chance of not being null, must be less than price and greater than 0
+    let newPrice = Math.random() < 0.2 ? Math.random() * 2.99 + 0.09 : null;
+
+    // if newPrice is more than price, swap them
+    if (newPrice && newPrice > price) {
+        const temp = newPrice;
+        newPrice = price;
+        price = temp;
+    }
+
+    // round to 2 decimal places
+    price = Math.round(price * 100) / 100;
+    newPrice = Math.round(newPrice * 100) / 100;
+
+    console.log(`NEW brick inventory ${brickId}`);
+    if (newPrice) {
+        addLine(newBrickInventory(brickId, stock, price, newPrice));
+    } else {
+        addLine(newBrickInventoryWNULL(brickId, stock, price));
+    }
+}
 
 // then make up some random data for set inventory
+addLine('\n-- set inventory\n');
+const newSetInventory = (setId, stock, price, newPrice) => `INSERT INTO lego_set_inventory (set_id, stock, price, new_price, last_updated) VALUES ('${setId}', '${stock}', '${price}', '${newPrice || ''}', now());`;
+const newSetInventoryWNULL = (setId, stock, price) => `INSERT INTO lego_set_inventory (set_id, stock, price, last_updated) VALUES ('${setId}', '${stock}', '${price}', now());`;
+
+for (const setId of setIds) {
+    const set = allSets.find(set => set.split('\t')[2] === setId);
+    if (!set) {
+        console.log(`ERROR: set ${setId} not found`);
+        continue;
+    }
+    // between 0 and 100
+    const stock = Math.floor(Math.random() * 100);
+    // between 10 and 2000 as a float, biased towards numbers from 50 to 200
+    let price = Math.random() * 1000 + 50;
+
+    // 20% chance of not being null, must be less than price and greater than 0
+    let newPrice = Math.random() < 0.5 ? Math.random() * 1000 + 50 : null;
+
+    // if newPrice is more than price, swap them
+    if (newPrice && newPrice > price) {
+        const temp = newPrice;
+        newPrice = price;
+        price = temp;
+    }
+
+    // round to 2 decimal places
+    price = Math.round(price * 100) / 100;
+    newPrice = Math.round(newPrice * 100) / 100;
+
+    console.log(`NEW set inventory ${setId}`);
+    if (newPrice) {
+        addLine(newSetInventory(setId, stock, price, newPrice));
+    } else {
+        addLine(newSetInventoryWNULL(setId, stock, price));
+    }
+}
+
+// add bonsai tree
+addLine('\n-- bonsai tree\n');
+addLine(newSet('1010', 'Lego Bonsai Tree', 100, 'Lego Bonsai Tree by Matthew Dennis, Rich Boakes and Jacek Kopecky', 2022, 100, 100, 100));
+addLine(newSetTag('1010', '1201'));
+addLine(newSetTag('1010', '323'));
+addLine(newPieceInSet('1010', '95228', 1000));
+addLine(newSetInventory('1010', 5, 1000.69, 50.00));

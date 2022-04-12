@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "jest src/__test client/public/__test",
+    "setup": "npm i && node src/first-time-run.js",
     "start": "node src/index.js",
     "dev": "nodemon src/index.js --watch src",
-    "lint": "eslint src --ext .js && eslint client --ext .js",
-    "setup": "npm i"
+    "lint": "eslint src --ext .js && eslint client --ext .js"
   },
   "author": "Ben Kyd <benjaminkyd@gmail.com> (https://benkyd.co.uk)",
   "license": "MIT",
@@ -35,6 +35,7 @@
     "express-oauth2-jwt-bearer": "^1.1.0",
     "jest": "^27.4.5",
     "jsdoc": "^3.6.10",
+    "md5": "^2.3.0",
     "moment": "^2.29.1",
     "npm": "^8.6.0",
     "pg": "^8.7.3",

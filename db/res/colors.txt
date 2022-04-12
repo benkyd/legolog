@@ -184,4 +184,4 @@
 131	Mx Tile Brown	330000	Modulex			111			
 127	Mx Tile Gray	6B5A5A	Modulex			41			
 147	Mx Violet	BD7D85	Modulex			18	8		
-123	Mx White	FFFFFF	Modulex			419	411		
+123	Mx White	FFFFFF	Modulex			419	411

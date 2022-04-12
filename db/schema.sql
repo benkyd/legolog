@@ -30,14 +30,14 @@ CREATE TABLE IF NOT EXISTS lego_set (
 	id                   VARCHAR (50) NOT NULL PRIMARY KEY,
 	name                 VARCHAR (100),
 	description		  	 TEXT,
-	date_released        TIMESTAMP WITHOUT TIME ZONE,
+	date_released        VARCHAR (4),
+	weight               VARCHAR (10),
 	dimensions_x         VARCHAR (10),
 	dimensions_y         VARCHAR (10),
 	dimensions_z         VARCHAR (10)
 );
 
 CREATE TABLE IF NOT EXISTS lego_brick_tag (
-	id                   VARCHAR (50) NOT NULL PRIMARY KEY,
 	brick_id             VARCHAR (50) NOT NULL,
 	tag                  INT NOT NULL,
 	FOREIGN KEY ( brick_id ) REFERENCES lego_brick( id ),
@@ -45,7 +45,6 @@ CREATE TABLE IF NOT EXISTS lego_brick_tag (
 );
 
 CREATE TABLE IF NOT EXISTS lego_set_tag (
-	id                   VARCHAR (50) NOT NULL PRIMARY KEY,
 	set_id             	 VARCHAR (50) NOT NULL,
 	tag                  INT NOT NULL,
 	FOREIGN KEY ( set_id ) REFERENCES lego_set( id ),
@@ -61,21 +60,21 @@ CREATE TABLE IF NOT EXISTS set_descriptor (
 );
 
 CREATE TABLE IF NOT EXISTS lego_brick_inventory (
-	id                  VARCHAR (50) NOT NULL PRIMARY KEY,
+	brick_id            VARCHAR (50) NOT NULL PRIMARY KEY,
 	stock				INT NOT NULL,
 	price				DECIMAL NOT NULL,
-	new_price			DECIMAL NOT NULL,
+	new_price			DECIMAL,
 	last_updated		TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-	FOREIGN KEY ( id ) REFERENCES lego_brick( id )
+	FOREIGN KEY ( brick_id ) REFERENCES lego_brick( id )
 );
 
 CREATE TABLE IF NOT EXISTS lego_set_inventory (
-	id                  VARCHAR (50) NOT NULL PRIMARY KEY,
+	set_id              VARCHAR (50) NOT NULL PRIMARY KEY,
 	stock				INT NOT NULL,
 	price				DECIMAL NOT NULL,
-	new_price			DECIMAL NOT NULL,
+	new_price			DECIMAL,
 	last_updated		TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-	FOREIGN KEY ( id ) REFERENCES lego_set( id )
+	FOREIGN KEY ( set_id ) REFERENCES lego_set( id )
 );
 
 CREATE TABLE IF NOT EXISTS users (
