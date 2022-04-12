@@ -17,8 +17,7 @@ async function main() {
     });
     Logger.Info('Pre-Init Complete');
 
-    const db = new Database.IDatabase();
-    await db.connect();
+    await Database.Connect();
 
     Server.Listen(process.env.PORT);
     API.Init();

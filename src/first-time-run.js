@@ -23,8 +23,7 @@ async function main() {
     Logger.Info('DECOMPRESSING - DO NOT CLOSE, THIS MAY TAKE A WHILE...');
 
     // connect to database
-    const db = new Database.IDatabase();
-    await db.connect();
+    await Database.Connect();
 
     // unzip images ASYNC
     decompress('db/img.tar.gz', 'db/', {

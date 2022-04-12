@@ -19,7 +19,7 @@ class CompactProductListing extends Component {
                             src="{this.state.image}">
                     </div>
                     <div class="product-listing-info">
-                        <div class="product-listing-name">{this.state.name}</div>
+                        <div class="product-listing-name">{this.state.name} {this.state.id}</div>
                         </a>
                         ${this.state.discount
                             ? '<span class="product-listing-price-full">£{this.state.price}</span><span class="product-listing-price-new">£{this.state.discount}</span>'
@@ -42,6 +42,13 @@ class CompactProductListing extends Component {
                     margin: 0 auto;
                     margin-bottom: 7px;
                     max-width: 100%;
+                }
+
+                .product-image {
+                    width: 320px;
+                    height: 320px;
+                    object-fit: scale-down;
+                    object-position: center;
                 }
                 
                 .product-image:hover {
