@@ -16,6 +16,18 @@ function ValidateQuery(query) {
     };
 }
 
+async function GetSet(setId) {
+    await Database.Query('BEGIN TRANSACTION;');
+    const dbres = await Database.Query(`
+        SELECT id, name, price, new_price AS "discount", inv.stock
+        FROM lego_set
+            LEFT JOIN lego_set_inventory AS inv ON inv.set_id = lego_set.id
+        WHERE id = $1::int;
+    `);
+    console.log(dbres);
+    await Database.Query('END TRANSACTION;');
+}
+
 async function GetSets(page, resPerPage) {
     // query for the set
     await Database.Query('BEGIN TRANSACTION;');
@@ -44,5 +56,6 @@ async function GetSets(page, resPerPage) {
 
 module.exports = {
     ValidateQuery,
+    GetSet,
     GetSets,
 };

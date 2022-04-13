@@ -12,7 +12,7 @@ class ProductList extends Component {
         const products = await fetch(route).then(response => response.json());
         this.setState({
             ...this.getState,
-            products: products.data,
+            products,
             current_page: products.page.current_page,
             last_page: products.page.last_page,
             total: products.page.total,
