@@ -12,6 +12,11 @@
         <div class="product-info">
             <div class="product-name">{this.state.name}</div>
             <div class="product-price">£{this.state.price}</div>
+            <script>
+                if ({this.state.discount}) {
+                    document.querySelector('.product-price').innerHTML = `<span class="discount-price">£{this.state.price}</span> £{this.state.discount}`;
+                }
+            </script>
             <div class="product-description">{this.state.description}</div>
             <div class="product-quantity">
                 <span class="quantity-label">Quantity:</span>

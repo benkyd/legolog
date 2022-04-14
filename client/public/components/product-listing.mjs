@@ -15,9 +15,10 @@ class ProductListing extends Component {
 
         const getURL = new URL(`/api/${type}/${id}`, document.baseURI);
         const data = await fetch(getURL).then(response => response.json());
+        console.log(data);
         this.setState({
             ...this.getState,
-            ...data.data[0],
+            ...data.data,
         });
     }
 

@@ -126,9 +126,10 @@ Response Object
 ```js
 {
     error: false
-    result: {
+    data: {
         // defined in the response description for each route
     }
+    // other important data, or metadata for the data can be added here
 }
 ```
 
@@ -136,10 +137,8 @@ Response Object
 
 ```js
 {
-    error: {
-        short: "Error doing x",
-        long: "y needs to be z",
-    }
+    error: "Error doing x",
+    long: "y needs to be z",
 }
 ```
 
