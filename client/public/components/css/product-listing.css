@@ -111,13 +111,44 @@
     margin-block-end: 0.83em;
 }
 
-.product-quantity {
-    font-size: 1.5em;
+.product-quantity-selector {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 1em;
+}
+
+.product-quantity-button {
+    cursor: pointer;
+    font-size: 1.7em;
+    border: #1A1A1A solid 1px;
+    background-color: #F5F6F6;
+    border-radius: 0.2em;
+    width: 1.5em;
+    height: 1.5em;
+}
+
+/* https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
 .quantity-input {
-    width: 5em;
+    height: 2.2em;
+    width: 3.7em;
+    background-color: #F5F6F6;
+    border-top: #1A1A1A solid 1px;
+    border-bottom: #1A1A1A solid 1px;
+    border-right: none;
+    border-left: none;
     text-align: center;
+    font-size: 1.2em;
 }
 
 .product-add-to-basket {

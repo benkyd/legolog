@@ -50,9 +50,10 @@ class ProductListing extends Component {
                             <div class="product-description">{this.state.description}</div>
 
                             <div class="product-quantity-selector">
-                                <button class="product-quantity-button" type="button">-</button>
-                                <input class="quantity-input" type="number" value="1" min="1" max="{this.state.quantity}">
-                                <button class="product-quantity-button" type="button">+</button>
+                                <button class="product-quantity-button reduce-quantity" type="button">-</button>
+                                <input class="quantity-input" type="number" value="1" min="1" max="{this.state.stock}">
+                                <button class="product-quantity-button increase-quantity" type="button">+</button>
+                                <span class="product-quantity">&nbsp;{this.state.stock} in stock</span>
                             </div>
 
                             <div class="product-add-to-basket">
@@ -105,6 +106,34 @@ class ProductListing extends Component {
         });
 
         // TODO: add event listeners for quantity buttons
+        const quantityInput = this.root.querySelector('.quantity-input');
+        const increaseQuantityButton = this.root.querySelector('.increase-quantity');
+        const reduceQuantityButton = this.root.querySelector('.reduce-quantity');
+
+        quantityInput.value = 1;
+
+        quantityInput.addEventListener('change', () => {
+            if (typeof quantityInput.value !== 'number') {
+                quantityInput.value = 1;
+            }
+            if (quantityInput.value > this.state.stock) {
+                quantityInput.value = this.state.stock;
+            }
+        });
+
+        increaseQuantityButton.addEventListener('click', () => {
+            const quantity = parseInt(quantityInput.value);
+            if (quantity < this.state.stock) {
+                quantityInput.value = quantity + 1;
+            }
+        });
+
+        reduceQuantityButton.addEventListener('click', () => {
+            const quantity = parseInt(quantityInput.value);
+            if (quantity > 1) {
+                quantityInput.value = quantity - 1;
+            }
+        });
 
         // product details, collapsable
         const collapseButton = this.root.querySelector('.product-details-header');
@@ -118,11 +147,10 @@ class ProductListing extends Component {
 
         // add quantity to basket and then update the basket count
         const addToBasket = this.root.querySelector('.add-to-basket-button');
-        const basketCount = this.root.querySelector('.quantity-input');
 
         addToBasket.addEventListener('click', () => {
-            AddProductToBasket(this.state.id, Math.abs(parseInt(basketCount.value)));
-            basketCount.value = 1;
+            AddProductToBasket(this.state.id, Math.abs(parseInt(quantityInput.value)));
+            quantityInput.value = 1;
         });
     }
 }
