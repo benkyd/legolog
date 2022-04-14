@@ -16,10 +16,14 @@ function ValidateQuery(query) {
 async function GetSet(setId) {
     await Database.Query('BEGIN TRANSACTION;');
     const dbres = await Database.Query(`
-        SELECT id, name, description, inv.price, date_released, weight, dimensions_x, dimensions_y, dimensions_z, new_price AS "discount", inv.stock, inv.last_updated AS "last_stock_update"
+        SELECT lego_set.id, lego_set.name, description, tag.name AS "tag", inv.price,
+            date_released, weight, dimensions_x, dimensions_y, dimensions_z,
+            new_price AS "discount", inv.stock, inv.last_updated AS "last_stock_update"
         FROM lego_set
             LEFT JOIN lego_set_inventory AS inv ON inv.set_id = lego_set.id
-        WHERE id = $1;
+            LEFT JOIN lego_set_tag AS tags ON tags.set_id = lego_set.id
+            LEFT JOIN tag AS tag ON tags.tag = tag.id
+        WHERE lego_set.id = $1;
     `, [setId]);
     await Database.Query('END TRANSACTION;');
 
@@ -31,9 +35,18 @@ async function GetSet(setId) {
         };
     }
 
+    const tags = dbres.rows.reduce((acc, cur) => {
+        acc.push(cur.tag);
+        return acc;
+    }, []);
+
     const set = dbres.rows[0];
+    delete set.tag;
+    set.tags = tags;
     set.image = `/api/cdn/${set.id}.png`;
     set.type = 'set';
+
+    console.log(set)
 
     return set;
 }
@@ -44,13 +57,13 @@ async function GetSets(page, resPerPage) {
     const countRes = await Database.Query('SELECT COUNT (*) FROM lego_set;');
     const total = parseInt(countRes.rows[0].count);
     const dbres = await Database.Query(`
-            SELECT
-                id, name, price, new_price AS "discount"
-            FROM lego_set
-                LEFT JOIN lego_set_inventory as inv ON lego_set.id = inv.set_id
-            ORDER BY id ASC
-            LIMIT $1
-            OFFSET $2;`,
+        SELECT
+            id, name, price, new_price AS "discount"
+        FROM lego_set
+            LEFT JOIN lego_set_inventory as inv ON lego_set.id = inv.set_id
+        ORDER BY id ASC
+        LIMIT $1
+        OFFSET $2;`,
     [resPerPage, page * resPerPage]);
     await Database.Query('END TRANSACTION;');
 
