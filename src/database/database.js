@@ -49,7 +49,7 @@ async function Query(query, params, callback) {
     }
 
     // debug moment
-    Logger.Database(`PSQL Query: ${query.substring(0, 100)}...`);
+    Logger.Database(`PSQL Query: ${query.substring(0, 500).trim()}...`);
     const result = await connection.query(query, params, callback);
     return result;
 }

@@ -9,7 +9,7 @@ class StoreFront extends Component {
 
     Render() {
         return {
-            template: `
+            template: /* html */`
                 <div class="main-carousel">
                     <div class="carousel-cell">
                         <img class="carousel-image" src="/res/lego-image1.jpg" alt="">

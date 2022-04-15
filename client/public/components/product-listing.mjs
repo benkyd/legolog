@@ -13,18 +13,64 @@ class ProductListing extends Component {
         const type = urlParams.get('type');
         const id = urlParams.get('id');
 
-        const getURL = new URL(`/api/${type}/${id}`, document.baseURI);
-        const data = await fetch(getURL).then(response => response.json());
-        console.log(data);
+        const getProductURL = new URL(`/api/${type}/${id}`, document.baseURI);
+        const productData = await fetch(getProductURL).then(response => response.json());
+
+        let setContents = [];
+        if (productData.data.type === 'set') {
+            const allPieces = [];
+            Object.keys(productData.data.includedPieces).forEach(key => {
+                allPieces.push(key);
+            });
+
+            const bulkSets = await fetch('/api/bulk/brick', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    ids: allPieces,
+                }),
+            }).then(response => response.json());
+            setContents = bulkSets.data;
+        }
+
         this.setState({
             ...this.getState,
-            ...data.data,
-        });
+            ...productData.data,
+            setContents,
+        }, false);
     }
 
     Render() {
+        let setContents = '';
+        console.log(this.state)
+        if (this.state.type === 'set') {
+            setContents = /* html */`
+            <div class="collapsible-menu">
+                <div class="menu-header"> 
+                    <span class="menu-header-text">Set Contents</span>
+                    <img class="menu-header-arrow" src="/res/back-arrow.svg" height="30em" alt="down-arrow">
+                </div>
+                <div class="menu-content scrollable-container">
+                    ${this.state.setContents.map(piece => /* html */`
+                        <div class="set-piece-container">
+                            <span class="set-piece-amount">x${this.state.includedPieces[piece.id]}</span>
+                            <super-compact-listing-component class="sc-listing" id="${piece.id}"
+                                                             name="${piece.name}"
+                                                             tag="${piece.tag}"
+                                                             type="piece"
+                                                             price="${piece.price || piece.discount}">
+                            </super-compact-listing-component>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            `;
+        }
+
         return {
-            template: `
+            template: /* html */`
                 <div class="product-page">
                     <div class="back-button">
                         <img class="back-button-svg" src="/res/back-arrow.svg" height="60em" alt="back-arrow">
@@ -39,11 +85,11 @@ class ProductListing extends Component {
                         <div class="product-info">
                             <div class="product-tags">
                                 ${this.state.tags.map(tag => {
-                                    return `<span class="tag">${tag}</span>`;
+                                    return `<tag-component name="${tag}"></tag-component>`;
                                 }).join('')}
                             </div>
 
-                            <div class="product-name">{this.state.name} [{this.state.date_released}]</div>
+                            <div class="product-name">{this.state.name} {this.state.id}</div>
                             ${this.state.discount
                                 ? '<span class="product-listing-price-full">£{this.state.price}</span><span class="product-listing-price-new">£{this.state.discount}</span>'
                                 : '<span class="product-listing-price">£{this.state.price}</span>'}
@@ -61,34 +107,21 @@ class ProductListing extends Component {
                                 <img class="add-to-favorites-button" src="https://www.svgrepo.com/show/25921/heart.svg" width="45px" stroke="#222" stroke-width="2px" alt="Add to Favorites" title="Add to Favorites">
                             </div>
 
-                            <div class="product-details-collapsible">
-                                <div class="product-details-header">
-                                    <span class="product-details-header-text">Product Details</span>
-                                    <img class="product-details-header-arrow" src="/res/back-arrow.svg" height="30em" alt="down-arrow">
+                            <div class="collapsible-menu">
+                                <div class="menu-header">
+                                    <span class="menu-header-text">Product Details</span>
+                                    <img class="menu-header-arrow" src="/res/back-arrow.svg" height="30em" alt="down-arrow">
                                 </div>
-                                <div class="product-details-content">
-                                    <div class="product-details-content-item">
-                                        <span class="product-details-date">Released in {this.state.date_released}</span>
-                                    </div>
-                                    <div class="product-details-content-item">
-                                        <span class="product-details-dimensions">Dimensions:&nbsp;</span>
-                                        <span class="product-details-dimensions-value">
-                                            {this.state.dimensions_x} x {this.state.dimensions_y} x {this.state.dimensions_z}
-                                        </span>
-                                    </div>
-                                    <div class="product-details-content-item">
-                                        <span class="product-details-weight">Weight:&nbsp;</span>
-                                        <span class="product-details-weight-value">{this.state.weight}</span>
-                                        <span class="product-details-weight-unit">g</span>
-                                    </div>
-                                    <div class="product-details-content-item">
-                                        Not suitable for children under the age of 3 years old, small parts are a choking hazard.
-                                    </div>
-                                    <div class="product-details-content-item">
-                                        Not for individual resale.
-                                    </div>
+                                <div class="menu-content">
+                                    <div class="product-details-content-item">Released in {this.state.date_released}</div>
+                                    <div class="product-details-content-item">Dimensions: {this.state.dimensions_x} x {this.state.dimensions_y} x {this.state.dimensions_z}</div>
+                                    <div class="product-details-content-item">Weight: {this.state.weight}g</div>
+                                    <div class="product-details-content-item">Not suitable for children under the age of 3 years old, small parts are a choking hazard.</div>
+                                    <div class="product-details-content-item">Not for individual resale.</div>
                                 </div>
                             </div>
+
+                            ${setContents}
                         </div>
                     
                     </div>
@@ -136,14 +169,15 @@ class ProductListing extends Component {
         });
 
         // product details, collapsable
-        const collapseButton = this.root.querySelector('.product-details-header');
-        const collapseContent = this.root.querySelector('.product-details-content');
-        const collapseArrow = this.root.querySelector('.product-details-header-arrow');
+        const collapseButton = this.root.querySelectorAll('.menu-header');
 
-        collapseButton.addEventListener('click', () => {
+        collapseButton.forEach(el => el.addEventListener('click', (e) => {
+            const parent = e.path[2].querySelector('.collapsible-menu') ? e.path[1] : e.path[2];
+            const collapseContent = parent.querySelector('.menu-content');
+            const collapseArrow = parent.querySelector('.menu-header-arrow');
             collapseContent.classList.toggle('details-open');
-            collapseArrow.classList.toggle('product-details-header-arrow-down');
-        });
+            collapseArrow.classList.toggle('menu-header-arrow-down');
+        }));
 
         // add quantity to basket and then update the basket count
         const addToBasket = this.root.querySelector('.add-to-basket-button');

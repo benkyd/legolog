@@ -17,6 +17,7 @@ function Init() {
     Server.App.get('/api/sets/');
     Server.App.get('/api/sets/featured/', Sets.Featured);
     Server.App.get('/api/brick/:id', Bricks.Get);
+    Server.App.post('/api/bulk/brick', Bricks.GetMultiple);
     Server.App.get('/api/set/:id', Sets.Get);
 
     Server.App.get('/api/cdn/:id', CDN.Get);

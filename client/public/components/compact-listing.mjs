@@ -1,5 +1,4 @@
 import { RegisterComponent, Component } from './components.mjs';
-import * as Helpers from '../helpers.mjs';
 
 class CompactProductListing extends Component {
     static __IDENTIFY() { return 'compact-listing'; }
@@ -10,13 +9,13 @@ class CompactProductListing extends Component {
 
     Render() {
         return {
-            template: `
+            template: /* html */`
                 <div class="product-listing">
                     <div class="product-listing-image">
                         <img class="product-image" 
                             title="Image of {this.state.name}" 
                             alt="Image of {this.state.name}"     
-                            src="{this.state.image}">
+                            src="/api/cdn/${this.state.id}.png">
                     </div>
                     <div class="product-listing-info">
                         <div class="product-listing-name">{this.state.name} {this.state.id}</div>

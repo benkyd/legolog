@@ -44,7 +44,7 @@ class MyComponent extends Component {
 
     Render() {
         return {
-            template: `<div>{this.state.name}</div>`,
+            template: /* html */`<div>{this.state.name}</div>`,
             style: `div { text-color: red }`,
         };
     }

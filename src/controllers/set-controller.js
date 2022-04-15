@@ -16,13 +16,15 @@ function ValidateQuery(query) {
 async function GetSet(setId) {
     await Database.Query('BEGIN TRANSACTION;');
     const dbres = await Database.Query(`
-        SELECT lego_set.id, lego_set.name, description, tag.name AS "tag", inv.price,
+        SELECT lego_set.id, lego_set.name, description, tag.name AS "tag",
+            set_contents.brick_id, set_contents.amount, inv.price,
             date_released, weight, dimensions_x, dimensions_y, dimensions_z,
             new_price AS "discount", inv.stock, inv.last_updated AS "last_stock_update"
         FROM lego_set
             LEFT JOIN lego_set_inventory AS inv ON inv.set_id = lego_set.id
             LEFT JOIN lego_set_tag AS tags ON tags.set_id = lego_set.id
             LEFT JOIN tag AS tag ON tags.tag = tag.id
+            LEFT JOIN set_descriptor AS set_contents ON set_contents.set_id = lego_set.id
         WHERE lego_set.id = $1;
     `, [setId]);
     await Database.Query('END TRANSACTION;');
@@ -36,17 +38,21 @@ async function GetSet(setId) {
     }
 
     const tags = dbres.rows.reduce((acc, cur) => {
-        acc.push(cur.tag);
+        acc.add(cur.tag);
         return acc;
-    }, []);
+    }, new Set());
+
+    const pieces = dbres.rows.reduce((acc, cur) => {
+        acc[cur.brick_id] = cur.amount;
+        return acc;
+    }, {});
 
     const set = dbres.rows[0];
     delete set.tag;
-    set.tags = tags;
+    set.includedPieces = pieces;
+    set.tags = Array.from(tags);
     set.image = `/api/cdn/${set.id}.png`;
     set.type = 'set';
-
-    console.log(set)
 
     return set;
 }
@@ -78,7 +84,6 @@ async function GetSets(page, resPerPage) {
     const sets = dbres.rows;
 
     for (const set of sets) {
-        set.image = `/api/cdn/${set.id}.png`;
         set.type = 'set';
     }
 

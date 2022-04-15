@@ -6,35 +6,33 @@ function Get(req, res) {
     }));
 }
 
-function Query(req, res, next) {
-    const query = req.query;
-
-    // Validation
-    const validation = Controller.ValidateQuery(query);
-    if (!validation.isValid) {
-        return res.status(400).json({
-            error: {
-                short: validation.error,
-                long: validation.longError,
-            },
-        });
+async function GetMultiple(req, res) {
+    if (req.body.ids.length === 0) {
+        res.send(JSON.stringify({
+            error: 'No ids provided',
+            long: 'No ids provided',
+        }));
+        return;
     }
 
-    // Query
-    Controller.Query(query, (err, data) => {
-        if (err) {
-            return res.status(500).json({
-                error: err,
-            });
-        }
+    const bricks = await Controller.GetBulkBricks(req.body.ids);
 
-        res.json(data);
-    });
+    if (bricks.error) {
+        res.send(JSON.stringify(bricks));
+        return;
+    }
 
+    res.send(JSON.stringify({
+        data: bricks,
+    }));
+}
+
+function Query(req, res, next) {
     next();
 }
 
 module.exports = {
     Get,
+    GetMultiple,
     Query,
 };

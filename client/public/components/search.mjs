@@ -9,7 +9,7 @@ class Search extends Component {
 
     Render() {
         return {
-            template: `
+            template: /* html */`
                 <input id="search-bar" class="menu-item" type="text" placeholder="search..."/>
             `,
             style: `

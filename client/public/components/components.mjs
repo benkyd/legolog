@@ -54,11 +54,8 @@ export class Component extends HTMLElement {
 
         this.Update(Object.bind(this));
 
-        this.setState(this.state);
-
-        if (this.attributes.length === 0) {
-            this.__INVOKE_RENDER(Object.bind(this));
-        }
+        this.setState(this.state, false);
+        this.__INVOKE_RENDER(Object.bind(this));
     }
 
     disconnectedCallback() {
@@ -88,8 +85,9 @@ export class Component extends HTMLElement {
         return this.state;
     }
 
-    setState(newState) {
+    setState(newState, doRender = true) {
         this.state = newState;
+        if (!doRender) return;
         this.__INVOKE_RENDER(Object.bind(this));
     }
 

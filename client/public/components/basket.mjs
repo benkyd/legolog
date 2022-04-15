@@ -103,7 +103,7 @@ class Basket extends Component {
 
     Render() {
         return {
-            template: `
+            template: /* html */`
                 <span id="basket-wrapper">
                     <div class="basket">
                         <img id="basket-icon" class="menu-item" src="https://www.svgrepo.com/show/343743/cart.svg" width="50px" stroke="#222" stroke-width="2px" alt="">

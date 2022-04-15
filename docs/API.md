@@ -16,9 +16,10 @@ automatically every request
 | GET   | /api/bricks/          | query, page   | no  | Query endpoint |
 | GET   | /api/sets/            | query, page   | no  | Query endpoint |
 | GET   | /api/sets/featured    | page          | no  | Query endpoint |
-| GET   | /api/brick/:id/       |               | no  | |
-| GET   | /api/set/:id/         |               | no  | |
-| GET   | /api/cdn/:id/         |               | no  | |
+| GET   | /api/brick/:id        |               | no  | |
+| POST  | /api/bulk/brick       | array         | no  | POST due to bulk nature |
+| GET   | /api/set/:id          |               | no  | |
+| GET   | /api/cdn/:id          |               | no  | |
 | PUT   | /api/auth/login/      |               | yes | |
 | POST  | /api/auth/signup/     |               | yes | |
 | GET   | /api/auth/orders/     |               | yes | |

@@ -36,14 +36,13 @@ class ProductList extends Component {
         }
 
         return {
-            template: `
+            template: /* html */`
                 <h2>{this.state.title}</h2>
                 <div class="product-list">
                     ${this.state.products.data.map(product => {
                         return `<compact-listing-component name="${product.name}"
                                     id="${product.id}"
                                     listing="${product.listing}"
-                                    image="${product.image}"
                                     price="${product.price}"
                                     type="${product.type}"
                                     discount="${product.discount || ''}"></compact-listing-component>
