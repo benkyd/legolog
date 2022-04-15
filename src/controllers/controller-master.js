@@ -50,7 +50,12 @@ function LevenshteinDistance(s, t) {
     return d[n][m];
 }
 
+function SanatiseQuery(query) {
+    return query.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase();
+}
+
 module.exports = {
+    SanatiseQuery,
     LevenshteinDistance,
     ResultsPerPage: 16,
 };

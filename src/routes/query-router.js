@@ -5,14 +5,24 @@ const SetController = require('../controllers/set-controller.js');
 async function Search(req, res) {
     const q = req.query.q;
 
+    // sanatise query
+    const sanatisedQuery = ControllerMaster.SanatiseQuery(q);
+    if (sanatisedQuery.trim() === '') {
+        res.send(JSON.stringify({
+            error: 'Invalid query',
+            long: 'The query you have entered is invalid',
+        }));
+        return;
+    }
+
     const pageRequested = req.query.page || 1;
     const perPage = req.query.per_page || 16;
 
     // TODO: it is tricky to do a database offset / limit here
     // due to the fact that we have to combine the results of
     // the two queries, look into me (maybe merging the queries)
-    const brickResults = await BrickController.Search(q);
-    const setResults = await SetController.Search(q);
+    const brickResults = await BrickController.Search(sanatisedQuery);
+    const setResults = await SetController.Search(sanatisedQuery);
 
     if (brickResults.error && setResults.error) {
         return res.send(JSON.stringify({
@@ -55,7 +65,7 @@ async function Search(req, res) {
         }));
     }
 
-    // organise into the most relevant 10 results
+    // organise into the most relevant n results
     const results = [...brickResults, ...setResults];
     results.sort((a, b) => {
         const aName = a.name.toLowerCase();
