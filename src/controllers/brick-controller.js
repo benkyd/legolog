@@ -1,5 +1,66 @@
+const ControllerMaster = require('./controller-master.js');
 const Database = require('../database/database.js');
+
 const PgFormat = require('pg-format');
+
+async function Search(fuzzyString) {
+    await Database.Query('BEGIN TRANSACTION;');
+    const dbres = await Database.Query(`
+        SELECT lego_brick.id, lego_brick.name, tag.name AS "tag", inv.price, inv.new_price AS "discount"
+        FROM lego_brick
+            LEFT JOIN lego_brick_tag AS tags ON tags.brick_id = lego_brick.id
+            LEFT JOIN tag AS tag ON tags.tag = tag.id
+            LEFT JOIN lego_brick_inventory AS inv ON inv.brick_id = lego_brick.id
+        WHERE lego_brick.id ~* $1 OR lego_brick.name ~* $1 OR tag.name ~* $1
+    `, [fuzzyString]);
+    await Database.Query('END TRANSACTION;');
+
+    // validate database response
+    if (dbres.rows.length === 0) {
+        return {
+            error: 'Bricks not found',
+            long: 'The bricks you are looking for do not exist',
+        };
+    }
+
+    // order by levenshtine distance
+    const bricks = dbres.rows;
+    bricks.sort((a, b) => {
+        const aName = a.name.toLowerCase();
+        const bName = b.name.toLowerCase();
+        const aTag = a.tag.toLowerCase();
+        const bTag = b.tag.toLowerCase();
+        const aFuzzy = fuzzyString.toLowerCase();
+        const bFuzzy = fuzzyString.toLowerCase();
+
+        const aDist = ControllerMaster.LevenshteinDistance(aName, aFuzzy);
+        const bDist = ControllerMaster.LevenshteinDistance(bName, bFuzzy);
+        const aTagDist = ControllerMaster.LevenshteinDistance(aTag, aFuzzy);
+        const bTagDist = ControllerMaster.LevenshteinDistance(bTag, bFuzzy);
+
+        if (aDist < bDist) {
+            return -1;
+        } else if (aDist > bDist) {
+            return 1;
+        } else {
+            if (aTagDist < bTagDist) {
+                return -1;
+            } else if (aTagDist > bTagDist) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    });
+
+    // combine tags into a single array
+    for (const brick of bricks) {
+        brick.type = 'brick';
+        brick.tags = brick.tag.split(',');
+    }
+
+    return bricks;
+}
 
 async function GetBulkBricks(bricksArr) {
     await Database.Query('BEGIN TRANSACTION;');
@@ -24,6 +85,7 @@ async function GetBulkBricks(bricksArr) {
     const bricks = dbres.rows;
     // combine tags into a single array
     for (const brick of bricks) {
+        brick.type = 'brick';
         brick.tags = brick.tag.split(',');
     }
 
@@ -78,6 +140,7 @@ async function GetBrick(brickId) {
 }
 
 module.exports = {
+    Search,
     GetBulkBricks,
     GetBrick,
 };

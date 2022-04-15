@@ -1,4 +1,4 @@
-// 15 days from now
+// AppEng Deadline
 const EndDate = new Date(1651269600 * 1000);
 
 function Special(req, res, next) {

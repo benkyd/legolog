@@ -28,10 +28,9 @@ async function Featured(req, res) {
     res.send(JSON.stringify({
         data: [...sets],
         page: {
-            total_sent: sets.length,
+            total: sets.length,
             per_page: 8,
-            current_page: 1,
-            last_page: 1,
+            page: 1,
         },
     }));
 }

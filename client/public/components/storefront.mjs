@@ -15,21 +15,21 @@ class StoreFront extends Component {
                         <img class="carousel-image" src="/res/lego-image1.jpg" alt="">
                         <div class="carousel-caption">
                             <h1>Welcome to LegoLog!</h1>
-                            <button>Shop LEGO® Now</button>
+                            <a href="/featured/"><button>Shop LEGO® Now</button></a>
                         </div>
                     </div>
                     <div class="carousel-cell">
                         <img class="carousel-image" src="res/warehouse.png" alt="">
                         <div class="carousel-caption">
                             <h1>Our state of the art warehouse ensures your speedy delivery</h1>
-                            <button>Find Out More</button>
+                            <a href="/about/"><button>Find Out More</button></a>
                         </div>
                     </div>
                     <div class="carousel-cell">
                         <img class="carousel-image" src="res/space.png" alt="">
                         <div class="carousel-caption">
                             <h1>NASA's Shuttle Discovery</h1>
-                            <button>Shop Space Now</button>
+                            <a href="/search/?q=nasa"><button>Shop Space Now</button></a>
                         </div>
                     </div>
                     <div class="carousel-cell">

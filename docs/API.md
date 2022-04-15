@@ -40,17 +40,17 @@ For all endpoints that query, the following parameters are supported:
 
 tags: tags to include in search
 
+total: total results (not pageified)
+
 per_page: results to include per page
 
-page: starting page
-
-pages: pages to return starting from page
+page: page requested
 
 q: string to search for (fuzzy)
 
-brick: brick to search for (absolute)
+brick: brick to search for (absolute type, fuzzy string)
 
-set: brick to search for (absolute)
+set: brick to search for (absolute, fuzzy string)
 
 ### /api/special/
 

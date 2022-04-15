@@ -7,21 +7,31 @@ class ProductList extends Component {
         super(ProductList);
     }
 
-    async OnMount() {
-        const route = this.state.getroute;
-        const products = await fetch(route).then(response => response.json());
+    async FetchListings(from) {
+        const products = await fetch(from).then(response => response.json());
+        const productsList = this.state.products || [];
+        // concat the new products to the existing products
+        const newProducts = productsList.concat(products.data);
         this.setState({
             ...this.getState,
-            products,
-            current_page: products.page.current_page,
-            last_page: products.page.last_page,
+            products: newProducts,
+            page: products.page.page,
+            per_page: products.page.per_page,
             total: products.page.total,
         });
     }
 
-    Render() {
+    OnMount() {
+        this.loading = false;
         this.keepLoading = false;
-        if (this.state.current_page >= this.state.last_page) {
+
+        const route = this.state.getroute;
+        this.FetchListings(route);
+        this.state.products = [];
+    }
+
+    Render() {
+        if (this.state.page * this.state.per_page >= this.state.total) {
             this.keepLoading = false;
             this.loadingBar = '';
         } else {
@@ -39,7 +49,7 @@ class ProductList extends Component {
             template: /* html */`
                 <h2>{this.state.title}</h2>
                 <div class="product-list">
-                    ${this.state.products.data.map(product => {
+                    ${this.state.products.map(product => {
                         return `<compact-listing-component name="${product.name}"
                                     id="${product.id}"
                                     listing="${product.listing}"
@@ -151,13 +161,31 @@ class ProductList extends Component {
         };
     }
 
-
     OnRender() {
+        this.loading = false;
         // scroll to bottom event listener
         if (this.keepLoading) {
-            window.addEventListener('scroll', () => {
-                if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-                    console.log('scrolled to bottom');
+            window.addEventListener('scroll', async () => {
+                // start loading 200px before the bottom of the page
+                if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300) {
+                    if (this.loading) return;
+                    if (this.state.page * this.state.per_page >= this.state.total) {
+                        this.keepLoading = false;
+                        this.loadingBar = '';
+                        return;
+                    }
+
+                    this.loading = true;
+
+                    // parse the getRoute as a query string
+                    const getRoute = this.state.getroute;
+                    // split into query and location
+                    const [locationStr, queryStr] = getRoute.split('?');
+
+                    const query = new URLSearchParams(queryStr);
+                    query.append('page', parseInt(this.state.page) + 1);
+
+                    await this.FetchListings(`${locationStr}?${query.toString()}`);
                 }
             });
         }

@@ -63,8 +63,16 @@ class Search extends Component {
                     background-color: #AB8FFF;
                     flex-wrap: wrap;
                     font-size: 0.6em;
-                    position: fixed;
-                    width: 65%;
+                    position: absolute;
+                    width: 100%;
+                }
+
+                @media (pointer:none), (pointer:coarse), screen and (max-width: 900px) {
+                    .search-results {
+                        position: fixed;
+                        left: 0;
+                        width: 100%;
+                    }
                 }
 
                 #search-bar:focus + .search-results {
@@ -104,15 +112,28 @@ class Search extends Component {
         }
     }
 
-    OnRender() {
-        const searchBar = this.root.querySelector('#search-bar');
-        searchBar.value = localStorage.getItem('search-bar');
-        const route = `/api/search?q=${searchBar.value}&per_page=10`;
+    GetSearch(value) {
+        if (value === '') {
+            this.AppendSearchResults([], true);
+            return;
+        }
+
+        const route = `/api/search?q=${value}&per_page=10`;
         fetch(route).then((response) => {
             return response.json();
         }).then((data) => {
+            if (data.error) {
+                this.AppendSearchResults([], true);
+                return;
+            }
             this.AppendSearchResults(data.data);
         });
+    }
+
+    OnRender() {
+        const searchBar = this.root.querySelector('#search-bar');
+        searchBar.value = localStorage.getItem('search-bar');
+        this.GetSearch(searchBar.value);
 
         searchBar.addEventListener('keyup', (e) => {
             localStorage.setItem('search-bar', e.target.value);
@@ -123,15 +144,10 @@ class Search extends Component {
             }
 
             // we want this to happen async
-            const route = `/api/search?q=${e.target.value}&per_page=10`;
-            fetch(route).then((response) => {
-                return response.json();
-            }).then((data) => {
-                this.AppendSearchResults(data.data);
-            });
+            this.GetSearch(e.target.value);
 
             if (e.keyCode === 13) {
-                const searchTerm = searchBar.value;
+                const searchTerm = e.target.value;
                 if (searchTerm.length > 0) {
                     window.location.href = `/search?q=${searchTerm}`;
                 }
