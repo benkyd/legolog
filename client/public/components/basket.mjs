@@ -7,8 +7,8 @@ import { RegisterComponent, Component } from './components.mjs';
 // {
 //     "basket": {
 //         "items": {
-//             "item1": amount,
-//             "item2": amount,
+//             "item1~modifier": { quantity, type },
+//             "item2": { quantity, type },
 //             ...
 //         },
 //         "total": total
@@ -20,7 +20,7 @@ let basketCallback = null;
 
 // TODO: Does the localstorage have a problem with mutual exclusion?
 // TODO: Should the basket be persisted to the server?
-export function AddProductToBasket(product, type, amount) {
+export function AddProductToBasket(product, type, amount, brickModifier = 'none') {
     if (localStorage.getItem('basket') === null || !localStorage.getItem('basket')) {
         localStorage.setItem('basket', JSON.stringify({
             items: {},
@@ -29,6 +29,10 @@ export function AddProductToBasket(product, type, amount) {
     }
 
     const basket = JSON.parse(localStorage.getItem('basket'));
+
+    if (type === 'brick') {
+        product += '~' + brickModifier;
+    }
 
     if (basket.items[product]) {
         basket.items[product].quantity += amount;
@@ -48,11 +52,15 @@ export function AddProductToBasket(product, type, amount) {
     }
 }
 
-export function RemoveProductFromBasket(product, amount) {
+export function RemoveProductFromBasket(product, type, amount, brickModifier = 'none') {
     if (localStorage.getItem('basket') === null || !localStorage.getItem('basket')) {
         return;
     }
     const basket = JSON.parse(localStorage.getItem('basket'));
+
+    if (type === 'brick') {
+        product += '~' + brickModifier;
+    }
 
     if (basket.items[product] > amount) {
         basket.items[product] -= amount;

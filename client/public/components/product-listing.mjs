@@ -50,6 +50,7 @@ class ProductListing extends Component {
     }
 
     Render() {
+        // set contents for sets
         let setContents = '';
         if (this.state.type === 'set') {
             setContents = /* html */`
@@ -66,11 +67,49 @@ class ProductListing extends Component {
                                                              name="${brick.name}"
                                                              tag="${brick.tag}"
                                                              type="brick"
-                                                             price="${brick.price || brick.discount}">
+                                                             price="${brick.discount || brick.price}">
                             </super-compact-listing-component>
                         </div>
                     `).join('')}
                 </div>
+            </div>
+            `;
+        }
+
+        console.log(this.state)
+
+        // brick colour availability for bricks
+        let brickColourAvailability = '';
+        let brickColourSelector = '';
+        if (this.state.type === 'brick') {
+            brickColourAvailability = /* html */`
+            <div class="collapsible-menu">
+                <div class="menu-header"> 
+                    <span class="menu-header-text">Colour Availability</span>
+                    <img class="menu-header-arrow" src="/res/back-arrow.svg" height="30em" alt="down-arrow">
+                </div>
+                <div class="menu-content scrollable-container">
+                    ${this.state.colours.map(colour => /* html */`
+                        <div class="brick-colour-container">
+                            <span class="brick-colour-demonstrator" style="background-color: #${colour.hexrgb}"></span>
+                            <span class="brick-colour-name">${colour.name}</span>
+                            <span class="brick-colour-types">&nbsp;In: ${colour.type}</span>
+                            </span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            `;
+            brickColourSelector = /* html */`
+            <div class="brick-colour-selector">
+                Select Brick Colour&nbsp;   
+                <select class="brick-colour-selector-select">
+                    ${this.state.colours.map(colour => /* html */`
+                        <option value="${colour.name}">
+                            ${colour.type} ${colour.name}
+                        </option>
+                    `).join('')}
+                </select>
             </div>
             `;
         }
@@ -101,6 +140,8 @@ class ProductListing extends Component {
                                 : `<span class="product-listing-price">£${parseFloat(this.state.price).toFixed(2)}</span>`}
                             <div class="product-description">${this.state.description || this.state.name + ' ' + this.state.tag}</div>
 
+                            ${brickColourSelector}
+
                             <div class="product-quantity-selector">
                                 <button class="product-quantity-button reduce-quantity" type="button">-</button>
                                 <input class="quantity-input" type="number" value="1" min="1" max="{this.state.stock}">
@@ -128,6 +169,7 @@ class ProductListing extends Component {
                             </div>
 
                             ${setContents}
+                            ${brickColourAvailability}
                         </div>
                     
                     </div>
@@ -152,9 +194,8 @@ class ProductListing extends Component {
         quantityInput.value = 1;
 
         quantityInput.addEventListener('change', () => {
-            if (typeof quantityInput.value !== 'number') {
-                quantityInput.value = 1;
-            }
+            quantityInput.value = parseInt(quantityInput.value);
+
             if (quantityInput.value > this.state.stock) {
                 quantityInput.value = this.state.stock;
             }

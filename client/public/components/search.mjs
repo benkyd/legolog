@@ -11,6 +11,7 @@ class Search extends Component {
         return {
             template: /* html */`
                 <input id="search-bar" class="menu-item" type="text" placeholder="search..."/>
+                <div class="search-results"></div>
             `,
             style: `
                 /* Modified version of https://codepen.io/mihaeltomic/pen/vmwMdm */
@@ -56,8 +57,86 @@ class Search extends Component {
                         margin: 0;
                     }
                 }
+
+                .search-results {
+                    display: none;
+                    background-color: #AB8FFF;
+                    flex-wrap: wrap;
+                    font-size: 0.6em;
+                    position: fixed;
+                    width: 65%;
+                }
+
+                #search-bar:focus + .search-results {
+                    display: flex;
+                }
+
+                .search-results:hover {
+                    display: flex;
+                }
+
+                .sc-listing {
+                    margin: 0;
+                    padding: 0;
+                    width: 100%;
+                }
             `,
         };
+    }
+
+    AppendSearchResults(results, empty = false) {
+        const searchResults = this.root.querySelector('.search-results');
+        searchResults.innerHTML = '';
+        if (empty) {
+            return;
+        }
+
+        for (const result of results) {
+            const res = /* html */`
+                <super-compact-listing-component class="sc-listing" id="${result.id}"
+                                                         name="${result.name}"
+                                                         tag="${result.tag}"
+                                                         type="${result.type}"
+                                                         price="${result.discount || result.price}">
+                </super-compact-listing-component>
+            `;
+            searchResults.innerHTML += res;
+        }
+    }
+
+    OnRender() {
+        const searchBar = this.root.querySelector('#search-bar');
+        searchBar.value = localStorage.getItem('search-bar');
+        const route = `/api/search?q=${searchBar.value}&per_page=10`;
+        fetch(route).then((response) => {
+            return response.json();
+        }).then((data) => {
+            this.AppendSearchResults(data.data);
+        });
+
+        searchBar.addEventListener('keyup', (e) => {
+            localStorage.setItem('search-bar', e.target.value);
+
+            if (e.target.value === '') {
+                this.AppendSearchResults([], true);
+                return;
+            }
+
+            // we want this to happen async
+            const route = `/api/search?q=${e.target.value}&per_page=10`;
+            fetch(route).then((response) => {
+                return response.json();
+            }).then((data) => {
+                this.AppendSearchResults(data.data);
+            });
+
+            if (e.keyCode === 13) {
+                const searchTerm = searchBar.value;
+                if (searchTerm.length > 0) {
+                    window.location.href = `/search?q=${searchTerm}`;
+                }
+            }
+        });
     }
 }
 

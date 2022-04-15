@@ -36,7 +36,7 @@ class StoreFront extends Component {
                         <img class="carousel-image" src="res/builder.png" alt="">
                         <div class="carousel-caption">
                             <h1>Our Featured Bonsai Tree Set</h1>
-                            <button>Get It Now</button>
+                            <a href="/product/?type=set&id=1010&name=Lego%20Bonsai%20Tree"><button>Get It Now</button></a>
                         </div>
                     </div>
                 </div>

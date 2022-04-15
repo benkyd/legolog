@@ -16,13 +16,13 @@ function Get(req, res) {
         id = id.replace('-thumb', '');
     }
 
-    // work out hash from id
-    const hash = md5(id.split('.png')[0]);
-    const bucket = hash.substring(0, 4);
-    const file = `${process.cwd()}\\db\\img\\${bucket[0]}\\${bucket[1]}\\${bucket[2]}\\${bucket[3]}\\${id}`;
-
     // this very randomly fails sometimes
     try {
+        // work out hash from id
+        const hash = md5(id.split('.png')[0]);
+        const bucket = hash.substring(0, 4);
+        const file = `${process.cwd()}\\db\\img\\${bucket[0]}\\${bucket[1]}\\${bucket[2]}\\${bucket[3]}\\${id}`;
+
         if (fs.existsSync(file)) {
             if (thumbnail) {
                 // generate thumbnail
@@ -34,13 +34,17 @@ function Get(req, res) {
                     .then(data => {
                         res.set('Content-Type', 'image/png');
                         res.send(data);
+                    })
+                    .catch(err => {
+                        Logger.Error(err);
+                        res.sendStatus(404);
                     });
                 return;
             }
             res.sendFile(file);
         } else {
             if (thumbnail) {
-                sharp(`${process.cwd()}\\res\\default.png`)
+                sharp(`${process.cwd()}\\db\\img\\default.png`)
                     .resize({
                         height: 50,
                     }) // keep aspect ratio
@@ -48,6 +52,10 @@ function Get(req, res) {
                     .then(data => {
                         res.set('Content-Type', 'image/png');
                         res.send(data);
+                    })
+                    .catch(err => {
+                        Logger.Error(err);
+                        res.sendStatus(404);
                     });
                 return;
             }

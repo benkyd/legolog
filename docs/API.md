@@ -10,24 +10,24 @@ automatically every request
 
 | Type | Route | Queries | Auth? | Notes |
 | --- | --- | --- | -- | --- |
-| GET   | /api/special/         |               | no  | |
-| GET   | /api/type/:id         |               | no  | |
-| GET   | /api/search/          | query, page   | no  | Query endpoint |
-| GET   | /api/bricks/          | query, page   | no  | Query endpoint |
-| GET   | /api/sets/            | query, page   | no  | Query endpoint |
-| GET   | /api/sets/featured    | page          | no  | Query endpoint |
-| GET   | /api/brick/:id        |               | no  | |
-| POST  | /api/bulk/brick       | array         | no  | POST due to bulk nature |
-| GET   | /api/set/:id          |               | no  | |
-| GET   | /api/cdn/:id          |               | no  | |
-| PUT   | /api/auth/login/      |               | yes | |
-| POST  | /api/auth/signup/     |               | yes | |
-| GET   | /api/auth/orders/     |               | yes | |
-| GET   | /api/auth/basket/     |               | yes | |
-| PUT   | /api/auth/basket/:id  | quantity      | yes | |
-| POST  | /api/auth/basket/:id  |               | yes | manipulate basket content |
-| DEL   | /api/auth/basket/:id  | quantity      | yes | if no id, delete whole |
-| DEL   | /api/auth/basket/     |               | yes | if no id, delete whole |
+| GET   | /api/special/         |                 | no  | |
+| GET   | /api/type/:id         |                 | no  | |
+| GET   | /api/search/          | query (q), page | no  | Query endpoint |
+| GET   | /api/bricks/          | query (q), page | no  | Query endpoint |
+| GET   | /api/sets/            | query (q), page | no  | Query endpoint |
+| GET   | /api/sets/featured    | page            | no  | Query endpoint |
+| GET   | /api/brick/:id        |                 | no  | |
+| POST  | /api/bulk/brick       | array           | no  | POST due to bulk nature |
+| GET   | /api/set/:id          |                 | no  | |
+| GET   | /api/cdn/:id          |                 | no  | |
+| PUT   | /api/auth/login/      |                 | yes | |
+| POST  | /api/auth/signup/     |                 | yes | |
+| GET   | /api/auth/orders/     |                 | yes | |
+| GET   | /api/auth/basket/     |                 | yes | |
+| PUT   | /api/auth/basket/:id  | quantity        | yes | |
+| POST  | /api/auth/basket/:id  |                 | yes | manipulate basket content |
+| DEL   | /api/auth/basket/:id  | quantity        | yes | if no id, delete whole |
+| DEL   | /api/auth/basket/     |                 | yes | if no id, delete whole |
 
 Query endpoints do not return the full data on a brick/set, they return
 a subset for product listing pages
@@ -39,6 +39,8 @@ a subset for product listing pages
 For all endpoints that query, the following parameters are supported:
 
 tags: tags to include in search
+
+per_page: results to include per page
 
 page: starting page
 

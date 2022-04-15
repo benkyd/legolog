@@ -31,10 +31,13 @@ class SuperCompactProductListing extends Component {
             style: `
                 .product-listing {
                     width: 95%;
+                    background-color: #F5F6F6;
                     position: relative;
                     display: flex;
                     flex-direction: row;
                     align-items: center;
+                    padding-left: 10px;
+                    padding-right: 15px;
                     margin: 7px;
                     z-index: 0;
                     cursor: pointer;

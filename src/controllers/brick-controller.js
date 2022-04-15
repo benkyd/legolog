@@ -59,8 +59,18 @@ async function GetBrick(brickId) {
         };
     }
 
+    const colours = [];
+    for (const colour of colDbres.rows) {
+        colours[colour.name] = {
+            id: colour.id,
+            name: colour.name,
+            hexrgb: colour.hexrgb,
+            type: colour.colour_type,
+        };
+    }
+
     const brick = dbres.rows[0];
-    brick.colours = colDbres.rows;
+    brick.colours = Object.values(colours);
     brick.tags = brick.tag.split(',');
     brick.type = 'brick';
 

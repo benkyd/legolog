@@ -14,12 +14,12 @@ class Tag extends Component {
             `,
             style: `
                 .tag {
-                    padding: 0.3em 1em;
-                    margin-right: 0.3em;
-                    margin-top: 0.3em;
-                    margin-bottom: 0.3em;
-                    line-height: 1.5em;
                     font-size: 0.8em;
+                    padding: 0.2em 0.5em;
+                    margin-right: 0.3em;
+                    margin-top: 0.2em;
+                    margin-bottom: 0.2em;
+                    line-height: 1.3em;
                     font-weight: bold;
                     background-color: #F2CA52;
                     cursor: pointer;

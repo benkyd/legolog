@@ -12,7 +12,7 @@ const Auth0 = require('./auth0-router.js');
 function Init() {
     Server.App.get('/api/special/', Helpers.Special);
 
-    Server.App.get('/api/search/', []);
+    Server.App.get('/api/search/', Query.Search);
     Server.App.get('/api/bricks/', Bricks.Query);
     Server.App.get('/api/sets/');
     Server.App.get('/api/sets/featured/', Sets.Featured);
