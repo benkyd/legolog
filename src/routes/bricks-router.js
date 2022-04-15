@@ -1,8 +1,16 @@
 const Controller = require('../controllers/brick-controller.js');
 
-function Get(req, res) {
+async function Get(req, res) {
+    const id = req.params.id;
+    const brick = await Controller.GetBrick(id);
+
+    if (brick.error) {
+        res.send(JSON.stringify(brick));
+        return;
+    }
+
     res.send(JSON.stringify({
-        message: 'Hello World!',
+        data: brick,
     }));
 }
 

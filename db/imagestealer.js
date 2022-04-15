@@ -49,7 +49,7 @@ async function main() {
     for (let i = 0; i < parts.length; i++) {
         const part = parts[i];
         // for sets use https://img.bricklink.com/ItemImage/SL/${part[2]}.png
-        // for for pieces use https://img.bricklink.com/ItemImage/PL/${part[2]}.png
+        // for for bricks use https://img.bricklink.com/ItemImage/PL/${part[2]}.png
         // https://img.bricklink.com/ItemImage/PL/3962a.png
         const url = `https://img.bricklink.com/ItemImage/PL/${part[2]}.png`;
         const filename = `res/image/${part[2]}.png`;

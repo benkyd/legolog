@@ -1,4 +1,4 @@
-// scrapes bricklink for the every piece and amounts in a set of lego
+// scrapes bricklink for the every brick and amounts in a set of lego
 
 const fs = require('fs');
 const axios = require('axios');
@@ -6,7 +6,7 @@ const axios = require('axios');
 const sets = fs.readFileSync('res/Sets.txt', 'utf8').toString().split('\n').map((i) => i.split('\t'));
 
 // output format:
-// setid: { pieceid: amount, pieceid: amount, ... }
+// setid: { brickid: amount, brickid: amount, ... }
 
 async function post(url) {
     // axios return HTML from website
@@ -32,18 +32,18 @@ async function main() {
 
         output[set[2]] = {};
 
-        let pieceCount = 0;
+        let brickCount = 0;
         let m;
         while ((m = regex.exec(data)) !== null) {
             if (m.index === regex.lastIndex) {
                 regex.lastIndex++;
             }
 
-            pieceCount += parseInt(m[2]);
+            brickCount += parseInt(m[2]);
             output[set[2]] = { ...output[set[2]], [m[1]]: parseInt(m[2]) };
         }
 
-        console.log(`${i}/${sets.length} ${set[2]} has ${pieceCount} pieces`);
+        console.log(`${i}/${sets.length} ${set[2]} has ${brickCount} bricks`);
         fs.writeFileSync('res/sets.json', JSON.stringify(output));
     }
 }

@@ -21,8 +21,8 @@ class CompactProductListing extends Component {
                         <div class="product-listing-name">{this.state.name} {this.state.id}</div>
                         </a>
                         ${this.state.discount
-                            ? '<span class="product-listing-price-full">£{this.state.price}</span><span class="product-listing-price-new">£{this.state.discount}</span>'
-                            : '<span class="product-listing-price">£{this.state.price}</span>'}
+                            ? `<span class="product-listing-price-full">£${parseFloat(this.state.price).toFixed(2)}</span><span class="product-listing-price-new">£${parseFloat(this.state.discount).toFixed(2)}</span>`
+                            : `<span class="product-listing-price">£${parseFloat(this.state.price).toFixed(2)}</span>`}
                     </div>
                 </div>
             `,

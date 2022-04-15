@@ -142,22 +142,22 @@ for (let i = 0; i < setIds.length; i++) {
     console.log(`NEW set tag ${i} ${setId}`);
 }
 
-// then pieces in sets
-addLine('\n-- pieces in sets\n');
-const newPieceInSet = (setId, brickId, quantity) => `INSERT INTO set_descriptor (set_id, brick_id, amount) VALUES ('${setId}', '${brickId}', '${quantity}');`;
+// then bricks in sets
+addLine('\n-- bricks in sets\n');
+const newBrickInSet = (setId, brickId, quantity) => `INSERT INTO set_descriptor (set_id, brick_id, amount) VALUES ('${setId}', '${brickId}', '${quantity}');`;
 const setDescriptors = JSON.parse(fs.readFileSync('db/res/sets.json'));
 
 for (const setId of setIds) {
     const set = setDescriptors[setId];
 
     for (const [brickId, quantity] of Object.entries(set)) {
-        console.log(`NEW piece in set ${setId} ${brickId}`);
-        addLine(newPieceInSet(setId, brickId, quantity));
+        console.log(`NEW brick in set ${setId} ${brickId}`);
+        addLine(newBrickInSet(setId, brickId, quantity));
     }
 }
 
 // then make up some random data for brick inventory
-addLine('\n-- piece inventory\n');
+addLine('\n-- brick inventory\n');
 const newBrickInventory = (brickId, stock, price, newPrice) => `INSERT INTO lego_brick_inventory (brick_id, stock, price, new_price, last_updated) VALUES ('${brickId}', '${stock}', '${price}', '${newPrice || ''}', now());`;
 const newBrickInventoryWNULL = (brickId, stock, price) => `INSERT INTO lego_brick_inventory (brick_id, stock, price, last_updated) VALUES ('${brickId}', '${stock}', '${price}', now());`;
 
@@ -236,5 +236,5 @@ addLine('\n-- bonsai tree\n');
 addLine(newSet('1010', 'Lego Bonsai Tree', 100, 'Lego Bonsai Tree by Matthew Dennis, Rich Boakes and Jacek Kopecky', 2022, 100, 100, 100));
 addLine(newSetTag('1010', '1201'));
 addLine(newSetTag('1010', '323'));
-addLine(newPieceInSet('1010', '95228', 1000));
+addLine(newBrickInSet('1010', '95228', 1000));
 addLine(newSetInventory('1010', 5, 1000.69, 50.00));

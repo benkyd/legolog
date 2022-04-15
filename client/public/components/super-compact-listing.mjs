@@ -1,5 +1,7 @@
 import { RegisterComponent, Component } from './components.mjs';
 
+// super compact listing is interoperable through types which makes it exteremeely poggers and also portable
+
 class SuperCompactProductListing extends Component {
     static __IDENTIFY() { return 'super-compact-listing'; }
 
@@ -22,7 +24,7 @@ class SuperCompactProductListing extends Component {
                         <tag-component name="{this.state.tag}"></tag-component>
                     </span>
                     <span class="product-pricing">
-                        £{this.state.price}
+                        £${parseFloat(this.state.price).toFixed(2)}
                     </span>
                 </span>
             `,

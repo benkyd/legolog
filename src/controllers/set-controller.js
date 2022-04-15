@@ -1,18 +1,6 @@
 const ControllerMaster = require('./controller-master.js');
 const Database = require('../database/database.js');
 
-function ValidateQuery(query) {
-    const validation = ControllerMaster.ValidateQuery(query);
-    if (!validation.isValid) {
-        return {
-            error: validation.error,
-            long: validation.longError,
-        };
-    }
-
-    return true;
-}
-
 async function GetSet(setId) {
     await Database.Query('BEGIN TRANSACTION;');
     const dbres = await Database.Query(`
@@ -42,16 +30,15 @@ async function GetSet(setId) {
         return acc;
     }, new Set());
 
-    const pieces = dbres.rows.reduce((acc, cur) => {
+    const bricks = dbres.rows.reduce((acc, cur) => {
         acc[cur.brick_id] = cur.amount;
         return acc;
     }, {});
 
     const set = dbres.rows[0];
     delete set.tag;
-    set.includedPieces = pieces;
+    set.includedBricks = bricks;
     set.tags = Array.from(tags);
-    set.image = `/api/cdn/${set.id}.png`;
     set.type = 'set';
 
     return set;
@@ -91,7 +78,6 @@ async function GetSets(page, resPerPage) {
 }
 
 module.exports = {
-    ValidateQuery,
     GetSet,
     GetSets,
 };

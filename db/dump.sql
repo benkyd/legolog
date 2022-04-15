@@ -5635,7 +5635,7 @@ INSERT INTO lego_set_tag (set_id, tag) VALUES ('41325-1', '771');
 INSERT INTO lego_set_tag (set_id, tag) VALUES ('75969-1', '227');
 INSERT INTO lego_set_tag (set_id, tag) VALUES ('42123-1', '36');
 
--- pieces in sets
+-- bricks in sets
 
 INSERT INTO set_descriptor (set_id, brick_id, amount) VALUES ('76023-1', '476', '2');
 INSERT INTO set_descriptor (set_id, brick_id, amount) VALUES ('76023-1', '2357', '6');
@@ -14320,7 +14320,7 @@ INSERT INTO set_descriptor (set_id, brick_id, amount) VALUES ('42123-1', '32523p
 INSERT INTO set_descriptor (set_id, brick_id, amount) VALUES ('42123-1', '11946pb057', '1');
 INSERT INTO set_descriptor (set_id, brick_id, amount) VALUES ('42123-1', '11947pb057', '1');
 
--- piece inventory
+-- brick inventory
 
 INSERT INTO lego_brick_inventory (brick_id, stock, price, last_updated) VALUES ('476', '32985', '0.71', now());
 INSERT INTO lego_brick_inventory (brick_id, stock, price, new_price, last_updated) VALUES ('2357', '24825', '5.01', '0.6', now());

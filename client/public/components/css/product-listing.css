@@ -233,7 +233,7 @@ input[type=number] {
     height: 400px;
 }
 
-.set-piece-container {
+.set-brick-container {
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -249,7 +249,7 @@ input[type=number] {
     min-width: 0;
 }
 
-.set-piece-amount {
+.set-brick-amount {
     flex-grow: 1;
     font-size: 2.3em;
     font-weight: bold;

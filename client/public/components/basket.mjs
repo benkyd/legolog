@@ -20,7 +20,7 @@ let basketCallback = null;
 
 // TODO: Does the localstorage have a problem with mutual exclusion?
 // TODO: Should the basket be persisted to the server?
-export function AddProductToBasket(product, amount) {
+export function AddProductToBasket(product, type, amount) {
     if (localStorage.getItem('basket') === null || !localStorage.getItem('basket')) {
         localStorage.setItem('basket', JSON.stringify({
             items: {},
@@ -30,10 +30,13 @@ export function AddProductToBasket(product, amount) {
 
     const basket = JSON.parse(localStorage.getItem('basket'));
 
-    if (basket.items.product) {
-        basket.items.product += amount;
+    if (basket.items[product]) {
+        basket.items[product].quantity += amount;
     } else {
-        basket.items.product = amount;
+        basket.items[product] = {
+            quantity: amount,
+            type,
+        };
     }
 
     basket.total += amount;
@@ -45,16 +48,16 @@ export function AddProductToBasket(product, amount) {
     }
 }
 
-export function RemoveProductFromBasket(item, amount) {
+export function RemoveProductFromBasket(product, amount) {
     if (localStorage.getItem('basket') === null || !localStorage.getItem('basket')) {
         return;
     }
     const basket = JSON.parse(localStorage.getItem('basket'));
 
-    if (basket.items.item > amount) {
-        basket.items.item -= amount;
+    if (basket.items[product] > amount) {
+        basket.items[product] -= amount;
     } else {
-        delete basket.items.item;
+        delete basket.items[product];
     }
 
     basket.total -= amount;

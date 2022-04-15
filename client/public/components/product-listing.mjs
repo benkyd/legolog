@@ -16,25 +16,32 @@ class ProductListing extends Component {
         const getProductURL = new URL(`/api/${type}/${id}`, document.baseURI);
         const productData = await fetch(getProductURL).then(response => response.json());
 
-        let setContents = [];
-        if (productData.data.type === 'set') {
-            const allPieces = [];
-            Object.keys(productData.data.includedPieces).forEach(key => {
-                allPieces.push(key);
-            });
+        this.state.image = `/api/cdn/${productData.data.id}.png`;
 
-            const bulkSets = await fetch('/api/bulk/brick', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    ids: allPieces,
-                }),
-            }).then(response => response.json());
-            setContents = bulkSets.data;
+        if (productData.data.type !== 'set') {
+            this.setState({
+                ...this.getState,
+                ...productData.data,
+            }, false);
+            return;
         }
 
+        let setContents = [];
+        const allBricks = [];
+        Object.keys(productData.data.includedBricks).forEach(key => {
+            allBricks.push(key);
+        });
+
+        const bulkSets = await fetch('/api/bulk/brick', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                ids: allBricks,
+            }),
+        }).then(response => response.json());
+        setContents = bulkSets.data;
         this.setState({
             ...this.getState,
             ...productData.data,
@@ -44,7 +51,6 @@ class ProductListing extends Component {
 
     Render() {
         let setContents = '';
-        console.log(this.state)
         if (this.state.type === 'set') {
             setContents = /* html */`
             <div class="collapsible-menu">
@@ -53,14 +59,14 @@ class ProductListing extends Component {
                     <img class="menu-header-arrow" src="/res/back-arrow.svg" height="30em" alt="down-arrow">
                 </div>
                 <div class="menu-content scrollable-container">
-                    ${this.state.setContents.map(piece => /* html */`
-                        <div class="set-piece-container">
-                            <span class="set-piece-amount">x${this.state.includedPieces[piece.id]}</span>
-                            <super-compact-listing-component class="sc-listing" id="${piece.id}"
-                                                             name="${piece.name}"
-                                                             tag="${piece.tag}"
-                                                             type="piece"
-                                                             price="${piece.price || piece.discount}">
+                    ${this.state.setContents.map(brick => /* html */`
+                        <div class="set-brick-container">
+                            <span class="set-brick-amount">x${this.state.includedBricks[brick.id]}</span>
+                            <super-compact-listing-component class="sc-listing" id="${brick.id}"
+                                                             name="${brick.name}"
+                                                             tag="${brick.tag}"
+                                                             type="brick"
+                                                             price="${brick.price || brick.discount}">
                             </super-compact-listing-component>
                         </div>
                     `).join('')}
@@ -91,9 +97,9 @@ class ProductListing extends Component {
 
                             <div class="product-name">{this.state.name} {this.state.id}</div>
                             ${this.state.discount
-                                ? '<span class="product-listing-price-full">£{this.state.price}</span><span class="product-listing-price-new">£{this.state.discount}</span>'
-                                : '<span class="product-listing-price">£{this.state.price}</span>'}
-                            <div class="product-description">{this.state.description}</div>
+                                ? `<span class="product-listing-price-full">£${parseFloat(this.state.price).toFixed(2)}</span><span class="product-listing-price-new">£${parseFloat(this.state.discount).toFixed(2)}</span>`
+                                : `<span class="product-listing-price">£${parseFloat(this.state.price).toFixed(2)}</span>`}
+                            <div class="product-description">${this.state.description || this.state.name + ' ' + this.state.tag}</div>
 
                             <div class="product-quantity-selector">
                                 <button class="product-quantity-button reduce-quantity" type="button">-</button>
@@ -113,7 +119,7 @@ class ProductListing extends Component {
                                     <img class="menu-header-arrow" src="/res/back-arrow.svg" height="30em" alt="down-arrow">
                                 </div>
                                 <div class="menu-content">
-                                    <div class="product-details-content-item">Released in {this.state.date_released}</div>
+                                    ${this.state.date_released ? /* html */'<div class="product-details-content-item">Released in {this.state.date_released}</div>' : ''}
                                     <div class="product-details-content-item">Dimensions: {this.state.dimensions_x} x {this.state.dimensions_y} x {this.state.dimensions_z}</div>
                                     <div class="product-details-content-item">Weight: {this.state.weight}g</div>
                                     <div class="product-details-content-item">Not suitable for children under the age of 3 years old, small parts are a choking hazard.</div>
@@ -183,7 +189,7 @@ class ProductListing extends Component {
         const addToBasket = this.root.querySelector('.add-to-basket-button');
 
         addToBasket.addEventListener('click', () => {
-            AddProductToBasket(this.state.id, Math.abs(parseInt(quantityInput.value)));
+            AddProductToBasket(this.state.id, this.state.type, Math.abs(parseInt(quantityInput.value)));
             quantityInput.value = 1;
         });
     }
