@@ -1,3 +1,4 @@
+const escape = require('sql-escape');
 
 // http://stackoverflow.com/questions/11919065/sort-an-array-by-the-levenshtein-distance-with-best-performance-in-javascript
 function LevenshteinDistance(s, t) {
@@ -50,8 +51,10 @@ function LevenshteinDistance(s, t) {
     return d[n][m];
 }
 
+// TODO: get this working properly
+
 function SanatiseQuery(query) {
-    return query.replace(/[^a-zA-Z0-9 ]/g, '').toLowerCase();
+    return escape(query).toLowerCase().replace(/[()*]/g, '');
 }
 
 module.exports = {

@@ -1,5 +1,5 @@
 import { RegisterComponent, Component, SideLoad } from './components.mjs';
-import { AddProductToBasket } from './basket.mjs';
+import { AddProductToBasket } from './basket-popout.mjs';
 
 class ProductListing extends Component {
     static __IDENTIFY() { return 'product-listing'; }

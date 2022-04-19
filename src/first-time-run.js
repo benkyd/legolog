@@ -3,9 +3,6 @@ const Logger = require('./logger.js');
 const Config = require('./config.js');
 const Database = require('./database/database.js');
 
-const decompress = require('decompress');
-const decompressTargz = require('decompress-targz');
-
 const fs = require('fs');
 
 console.log('LegoLog Setting Up:tm:');
@@ -18,28 +15,14 @@ async function main() {
         logToConsole: process.env.LOG_CONSOLE,
         logFile: process.env.LOG_FILE,
     });
-
-    Logger.Info('DECOMPRESSING - DO NOT CLOSE, THIS MAY TAKE A WHILE...');
-    Logger.Info('DECOMPRESSING - DO NOT CLOSE, THIS MAY TAKE A WHILE...');
-
     // connect to database
     await Database.Connect();
-
-    // unzip images ASYNC
-    decompress('db/img.tar.gz', 'db/', {
-        plugins: [
-            decompressTargz(),
-        ],
-    }).then(() => {
-        console.log('Files decompressed');
-    });
-
 
     const tableQuery = fs.readFileSync('./db/schema.sql').toString();
     /* eslint-disable-next-line */
     await new Promise(async (resolve, reject) => {
         // run setup script to create schema
-        await db.query(tableQuery, [], (err, res) => {
+        await Database.query(tableQuery, [], (err, res) => {
             if (err) {
                 Logger.Error(err);
                 resolve();
@@ -56,7 +39,7 @@ async function main() {
     const dump = fs.readFileSync('./db/dump.sql').toString();
     /* eslint-disable-next-line */
     await new Promise(async (resolve, reject) => {
-        await db.query(dump, [], (err, res) => {
+        await Database.query(dump, [], (err, res) => {
             if (err) {
                 Logger.Error(err);
                 resolve();
@@ -69,10 +52,7 @@ async function main() {
         });
     });
 
-    await db.destroy();
-
-    Logger.Info('DECOMPRESSING - DO NOT CLOSE, THIS MAY TAKE A WHILE...');
-    Logger.Info('DECOMPRESSING - DO NOT CLOSE, THIS MAY TAKE A WHILE...');
+    await Database.destroy();
 }
 
 main();
