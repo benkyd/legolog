@@ -9,6 +9,21 @@ class SuperCompactProductListing extends Component {
         super(SuperCompactProductListing);
     }
 
+    async OnMount() {
+        if (!this.state.name || !this.state.price) {
+            const product = (await fetch(`/api/${this.state.type}/${this.state.id}`).then(res => res.json())).data;
+            const name = product.name;
+            const price = (product.discount || product.price) * this.state.quantity || 1;
+            const tag = product.tag;
+            this.setState({
+                ...this.getState,
+                name,
+                price,
+                tag,
+            }, false);
+        }
+    }
+
     Render() {
         return {
             template: /* html */`

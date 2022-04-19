@@ -95,7 +95,6 @@ async function GetSet(setId) {
     }, {});
 
     const set = dbres.rows[0];
-    delete set.tag;
     set.includedBricks = bricks;
     set.tags = Array.from(tags);
     set.type = 'set';

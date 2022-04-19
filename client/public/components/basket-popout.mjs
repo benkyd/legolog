@@ -135,18 +135,23 @@ class BasketPopout extends Component {
                                 <span class="popup-content-item-title">Items</span>
                                 ${Object.keys(this.state.items).map((key) => {
                                     const item = this.state.items[key];
-                                    console.log(item)
                                     return /* html */`
                                         <div class="popup-content-item">
-                                            <span class="popup-content-item-title">${item.quantity}x ${key}</span>
-                                            <span class="popup-content-item-value">${item.type}</span>
+                                            <span class="popup-content-item-title">X${item.quantity}</span>
+                                            <span class="popup-content-item-value">
+                                                <super-compact-listing-component class="sc-listing" 
+                                                                                 id="${key.split('~')[0]}"
+                                                                                 type="${item.type}"
+                                                                                 quantity="${item.quantity}">
+                                                </super-compact-listing-component>
+                                            </span>
                                         </div>
                                     `;
                                 }).join('')}
                             </div>
                         </div>
                         <div class="popup-footer">
-                            <button class="popup-footer-button">View Basket</button>
+                            <a href="/basket"><button class="popup-footer-button">View Basket</button></a>
                         </div>
                     </div>
                 </span>
@@ -187,16 +192,30 @@ class BasketPopout extends Component {
                 }
 
                 #basket-popup {
+                    font-size: 0.5em;
                     position: absolute;
                     background-color: #AB8FFF;
                     right: 0;
-                    width: 200px;
-                    height: 200px;
+                    width: 60%;
+                    padding-top: 20px;
+                    padding-bottom: 20px;
+                    height: auto;
+                    overflow-y: scroll;
+                    overflow-x: hidden;
                     flex-direction: column;
                     justify-content: center;
                     align-items: center;
                     z-index: 100;
                 }
+
+                @media (pointer:none), (pointer:coarse), screen and (max-width: 900px) {
+                    #basket-popup {
+                        position: fixed;
+                        left: 0;
+                        width: 100%;
+                    }
+                }
+
             `,
         };
     }
