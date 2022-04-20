@@ -10,9 +10,15 @@ PORT=port
 PORT_DEV=port
 
 LOG_LEVEL=verbose/debug/warn/info
-LOG_TARGET=console/filesystem/network
-LOG_PATH=network ip/path
+LOG_CONSOLE=true
+LOG_FILE=logs.log
+LOG_NET_HOST=xxx.xxx.xxx.xxx
+LOG_NET_PORT=xxxx
 
 DATABASE_HOST=host/path
 DATABASE_HOST_DEV=host/path
+DATABASE_PORT=5432
+DATABASE_DB=legolog
+DATABASE_USER=postgres
+DATABASE_PASSWORD=postgres
 ```

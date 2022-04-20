@@ -4,6 +4,7 @@ body {
     /* it's also kinda the default so you can touch it if you want */
     /* BODY TEXT SHOULD BE 1EM */
     font-size: 16px;
+    /* zoom: 80%; */
     color: #222;
     text-decoration: none;
     background-color: #F5F6F6;
@@ -32,6 +33,7 @@ limited-margin {
 /* mobile */
 @media (pointer:none), (pointer:coarse) {
     body {
+        zoom: 120%;
         font-size: 25px;
     }
 

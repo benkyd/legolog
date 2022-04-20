@@ -5,6 +5,9 @@ import { InitAuth0 } from './auth.mjs';
 function main() {
     InitAuth0();
 
+    // clear basket
+    // localStorage.removeItem('basket');
+
 //     await RendererPreInit();
 
 //     const canvas = document.querySelectorAll('#webglviewer');

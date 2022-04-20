@@ -99,6 +99,10 @@
 }
 
 @media (pointer:none), (pointer:coarse) {
+    .notification-bar {
+        height: 3.3em;
+    }
+
     .notification-bar-text {
         padding-top: 10px;
     }

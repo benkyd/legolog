@@ -22,7 +22,7 @@ async function main() {
     /* eslint-disable-next-line */
     await new Promise(async (resolve, reject) => {
         // run setup script to create schema
-        await Database.query(tableQuery, [], (err, res) => {
+        await Database.Query(tableQuery, [], (err, res) => {
             if (err) {
                 Logger.Error(err);
                 resolve();
@@ -39,7 +39,7 @@ async function main() {
     const dump = fs.readFileSync('./db/dump.sql').toString();
     /* eslint-disable-next-line */
     await new Promise(async (resolve, reject) => {
-        await Database.query(dump, [], (err, res) => {
+        await Database.Query(dump, [], (err, res) => {
             if (err) {
                 Logger.Error(err);
                 resolve();
@@ -52,7 +52,7 @@ async function main() {
         });
     });
 
-    await Database.destroy();
+    await Database.Destroy();
 }
 
 main();
