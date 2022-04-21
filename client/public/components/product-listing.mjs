@@ -76,8 +76,6 @@ class ProductListing extends Component {
             `;
         }
 
-        console.log(this.state)
-
         // brick colour availability for bricks
         let brickColourAvailability = '';
         let brickColourSelector = '';
@@ -105,7 +103,7 @@ class ProductListing extends Component {
                 Select Brick Colour&nbsp;   
                 <select class="brick-colour-selector-select">
                     ${this.state.colours.map(colour => /* html */`
-                        <option value="${colour.name}">
+                        <option value="${colour.id}">
                             ${colour.type} ${colour.name}
                         </option>
                     `).join('')}
@@ -230,7 +228,12 @@ class ProductListing extends Component {
         const addToBasket = this.root.querySelector('.add-to-basket-button');
 
         addToBasket.addEventListener('click', () => {
-            AddProductToBasket(this.state.id, this.state.type, Math.abs(parseInt(quantityInput.value)));
+            // if it is a brick, get potential modifier from the drop down menu
+            const brick = this.state.type === 'brick';
+            const modifier = brick ? this.root.querySelector('.brick-colour-selector-select').value : undefined;
+            console.log(modifier);
+
+            AddProductToBasket(this.state.id, this.state.type, Math.abs(parseInt(quantityInput.value)), modifier);
             quantityInput.value = 1;
         });
     }

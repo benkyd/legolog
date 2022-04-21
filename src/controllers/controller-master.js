@@ -54,7 +54,11 @@ function LevenshteinDistance(s, t) {
 // TODO: get this working properly
 
 function SanatiseQuery(query) {
-    return escape(query).toLowerCase().replace(/[()*]/g, '');
+    query = query.trim();
+    query = query.replace(/[^a-zA-Z0-9\s]/g, '');
+    query = escape(query);
+    query = query.toLowerCase();
+    return query;
 }
 
 module.exports = {

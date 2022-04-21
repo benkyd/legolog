@@ -127,28 +127,24 @@ class BasketPopout extends Component {
                             <span class="popup-close">&times;</span>
                         </div>
                         <div class="popup-content">
-                            <div class="popup-content-item">
-                                <span class="popup-content-item-title">Total</span>
-                                <span class="popup-content-item-value">{this.state.total}</span>
+                            <div class="popup-content-header">
+                                Total {this.state.total}
                             </div>
-                            <div class="popup-content-item">
-                                <span class="popup-content-item-title">Items</span>
-                                ${Object.keys(this.state.items).map((key) => {
-                                    const item = this.state.items[key];
-                                    return /* html */`
-                                        <div class="popup-content-item">
-                                            <span class="popup-content-item-title">X${item.quantity}</span>
-                                            <span class="popup-content-item-value">
-                                                <super-compact-listing-component class="sc-listing" 
-                                                                                 id="${key.split('~')[0]}"
-                                                                                 type="${item.type}"
-                                                                                 quantity="${item.quantity}">
-                                                </super-compact-listing-component>
-                                            </span>
-                                        </div>
-                                    `;
-                                }).join('')}
-                            </div>
+                            <span class="popup-content-item-title">Items</span>
+                            ${Object.keys(this.state.items).map((key) => {
+                                const item = this.state.items[key];
+                                return /* html */`
+                                    <div class="popup-content-item">
+                                        <span class="popup-content-item-quantity">X${item.quantity}</span>
+                                        <super-compact-listing-component class="sc-listing" 
+                                                                            id="${key.split('~')[0]}"
+                                                                            type="${item.type}"
+                                                                            quantity="${item.quantity}">
+                                        </super-compact-listing-component>
+                                        <span class="popup-content-item-value">modifier</span>
+                                    </div>
+                                `;
+                            }).join('')}
                         </div>
                         <div class="popup-footer">
                             <a href="/basket"><button class="popup-footer-button">View Basket</button></a>
@@ -195,13 +191,13 @@ class BasketPopout extends Component {
                     font-size: 0.5em;
                     position: absolute;
                     background-color: #AB8FFF;
+                    border: 1px solid #222;
                     right: 0;
                     width: 60%;
-                    padding-top: 20px;
-                    padding-bottom: 20px;
-                    height: auto;
-                    overflow-y: scroll;
-                    overflow-x: hidden;
+                    max-height: 550px;
+                    max-width: 500px;
+                    padding-top: 10px;
+                    padding-bottom: 10px;
                     flex-direction: column;
                     justify-content: center;
                     align-items: center;
@@ -216,6 +212,39 @@ class BasketPopout extends Component {
                     }
                 }
 
+                .popup-content {
+                    display: flex;
+                    flex-direction: column;
+                    flex-wrap: nowrap;
+                    justify-content: left;
+                    width: 100%;
+                    height: 100%;
+                    overflow-y: scroll;
+                    overflow-x: hidden;
+                    justify-content: space-between;
+                }
+
+                .popup-content-item {
+                    display: flex;
+                    flex-direction: row;
+                    flex-wrap: nowrap;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+
+                .popup-content-item-quantity {
+                    font-size: 2em;
+                    flex-grow: 1;
+                }
+
+                .sc-listing {
+                    flex-grow: 3;
+                }
+
+                .popup-content-item-value {
+                    text-align: right;
+                    flex-grow: 1;
+                }
             `,
         };
     }
