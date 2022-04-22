@@ -12,8 +12,12 @@ class ProductList extends Component {
         const productsList = this.state.products || [];
         // concat the new products to the existing products
         const newProducts = productsList.concat(products.data);
+
+        const augmentable = this.state.augmentable === 'true';
+
         this.setState({
             ...this.getState,
+            augmentable,
             products: newProducts,
             page: products.page.page,
             per_page: products.page.per_page,
@@ -30,7 +34,30 @@ class ProductList extends Component {
         this.state.products = [];
     }
 
+    GenerateAugmentPanel(augmentable) {
+        if (!augmentable) {
+            return '';
+        }
+        return /* html */`
+            <div class="augment-panel">
+                <div class="augment-panel-header">
+                    <span class="augment-panel-header-text">Refine search results</span>
+                </div>
+                <div class="augment-panel-body">
+                    <div class="augment-panel-body-row">
+                        <span class="augment-panel-body-row-text">Weight</span>
+                        <span class="augment-panel-body-row-text">Tag</span>
+                        <span class="augment-panel-body-row-text"></span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
     Render() {
+        const augmentPanel = this.GenerateAugmentPanel(this.state.augmentable);
+        console.log(augmentPanel);
+
         if (this.state.page * this.state.per_page >= this.state.total) {
             this.keepLoading = false;
             this.loadingBar = '';
@@ -51,6 +78,7 @@ class ProductList extends Component {
         return {
             template: /* html */`
                 <h2>{this.state.title}</h2>
+                ${augmentPanel}
                 <div class="product-list">
                     ${this.state.products.map(product => {
                         return `<compact-listing-component name="${product.name}"

@@ -47,7 +47,8 @@
             document.write(/* html */`
                 <product-list-component id="results"
                     title="Search Results for '${searchQuery}'"
-                    getroute="/api/search/${window.location.search}">
+                    getroute="/api/search/${window.location.search}"
+					augmentable="true">
                 </product-list-component>
             `);
         </script>

@@ -135,7 +135,7 @@ class BasketPopout extends Component {
                                 const item = this.state.items[key];
                                 return /* html */`
                                     <div class="popup-content-item">
-                                        <span class="popup-content-item-quantity">X${item.quantity}</span>
+                                        <span class="popup-content-item-quantity">x${item.quantity}</span>
                                         <super-compact-listing-component class="sc-listing" 
                                                                             id="${key.split('~')[0]}"
                                                                             type="${item.type}"

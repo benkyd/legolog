@@ -8,7 +8,6 @@ class CompactProductListing extends Component {
     }
 
     OnMount() {
-        console.log(this.state);
         if (this.state.tags) {
             const tags = JSON.parse(this.state.tags);
             this.setState({
@@ -31,9 +30,11 @@ class CompactProductListing extends Component {
                     <div class="product-listing-info">
                         <div class="product-listing-name">{this.state.name} {this.state.id}</div>
                         </a>
-                        ${this.state.tags
-                            ? this.state.tags.map(tag => `<tag-component name="${tag}"></tag-component>`).join('') 
-                            : ''}
+                        <span class="product-listing-tags">
+                            ${this.state.tags
+                                ? this.state.tags.map(tag => `<tag-component name="${tag}"></tag-component>`).join('') 
+                                : ''}
+                        </span>
                         ${this.state.discount
                             ? `<span class="product-listing-price-full">£${parseFloat(this.state.price).toFixed(2)}</span><span class="product-listing-price-new">£${parseFloat(this.state.discount).toFixed(2)}</span>`
                             : `<span class="product-listing-price">£${parseFloat(this.state.price).toFixed(2)}</span>`}
@@ -83,6 +84,11 @@ class CompactProductListing extends Component {
                 .product-listing-name:hover {
                     cursor: hand;
                     text-decoration: underline;
+                }
+
+                .product-listing-tags {
+                    padding-top: 5px;
+                    padding-bottom: 5px;
                 }
 
                 .product-listing-price {
