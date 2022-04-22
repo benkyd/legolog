@@ -159,7 +159,7 @@ class ProductListing extends Component {
                                 </div>
                                 <div class="menu-content">
                                     ${this.state.date_released ? /* html */'<div class="product-details-content-item">Released in {this.state.date_released}</div>' : ''}
-                                    <div class="product-details-content-item">Dimensions: {this.state.dimensions_x} x {this.state.dimensions_y} x {this.state.dimensions_z}</div>
+                                    <div class="product-details-content-item">Dimensions: {this.state.dimensions_x}mm x {this.state.dimensions_y}mm x {this.state.dimensions_z}mm</div>
                                     <div class="product-details-content-item">Weight: {this.state.weight}g</div>
                                     <div class="product-details-content-item">Not suitable for children under the age of 3 years old, small parts are a choking hazard.</div>
                                     <div class="product-details-content-item">Not for individual resale.</div>

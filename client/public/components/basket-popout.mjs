@@ -141,7 +141,6 @@ class BasketPopout extends Component {
                                                                             type="${item.type}"
                                                                             quantity="${item.quantity}">
                                         </super-compact-listing-component>
-                                        <span class="popup-content-item-value">modifier</span>
                                     </div>
                                 `;
                             }).join('')}

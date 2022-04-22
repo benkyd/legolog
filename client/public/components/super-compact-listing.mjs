@@ -36,6 +36,7 @@ class SuperCompactProductListing extends Component {
                     </span>
                     <span class="product-listing-info">
                         <span class="product-listing-name">{this.state.name}</span>
+                        <div class="product-listing-modifier">${this.state.modifier || ''}</div>
                         <tag-component name="{this.state.tag}"></tag-component>
                     </span>
                     <span class="product-pricing">
@@ -53,6 +54,8 @@ class SuperCompactProductListing extends Component {
                     align-items: center;
                     padding-left: 10px;
                     padding-right: 15px;
+                    padding-top: 5px;
+                    padding-bottom: 5px;
                     margin: 7px;
                     z-index: 0;
                     cursor: pointer;
@@ -84,6 +87,12 @@ class SuperCompactProductListing extends Component {
                     flex-direction: column;
                     align-items: flex-start;
                     flex-grow: 50
+                }
+
+                .product-listing-modifier {
+                    font-size: 0.8em;
+                    font-style: italic;
+                    color: #999;
                 }
 
                 .product-pricing {
