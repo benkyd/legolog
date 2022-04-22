@@ -38,9 +38,12 @@ class ProductList extends Component {
             this.keepLoading = true;
             this.loadingBar = `
             <!--Infinite Loading-->
-            <div class="product-list-loader">
-                <!-- https://loading.io/css/ -->
-                <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+            <div class="product-list-loader-container-container">
+                <div class="product-list-loader-container">
+                    <div class="product-list-loader">
+                        <img src="/res/loading.gif" height="100" alt="Loading...">
+                    </div>
+                </div>
             </div>
             `;
         }
@@ -55,6 +58,7 @@ class ProductList extends Component {
                                     listing="${product.listing}"
                                     price="${product.price}"
                                     type="${product.type}"
+                                    tags="${JSON.stringify(product.tags).replace(/"/g, '&quot;')}"
                                     discount="${product.discount || ''}"></compact-listing-component>
                         `;
                     }).join('')}
@@ -86,66 +90,49 @@ class ProductList extends Component {
                     border: none;
                 }
 
-                .product-list-loader {
+                .product-list-loader-container-container {
                     display: flex;
                     justify-content: center;
                 }
 
-                .lds-ellipsis {
-                    display: inline-block;
-                    position: relative;
-                    width: 80px;
-                    height: 80px;
-                    z-index: 0;
+                @keyframes grow-shrink {
+                    0% {
+                        transform: scale(1);
+                    }
+                    50% {
+                        transform: scale(1.4);
+                    }
+                    100% {
+                        transform: scale(1);
+                    }
                 }
-                .lds-ellipsis div {
-                    position: absolute;
-                    top: 33px;
-                    width: 13px;
-                    height: 13px;
+
+                @keyframes shrink-grow {
+                    0% {
+                        transform: scale(1.4);
+                    }
+                    50% {
+                        transform: scale(0.9);
+                    }
+                    100% {
+                        transform: scale(1.4);
+                    }
+                }
+
+                .product-list-loader-container {
+                    display: flex;
+                    justify-content: center;
+                    width: 100px;
                     border-radius: 50%;
-                    background: #7F5CFF;
-                    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+                    background-color: #D7C2FF;
+                    /* grow and shrink sine wave */
+                    animation-timing-function: ease-in-out;
+                    animation: grow-shrink 1s infinite;
                 }
-                .lds-ellipsis div:nth-child(1) {
-                    left: 8px;
-                    animation: lds-ellipsis1 0.6s infinite;
-                }
-                .lds-ellipsis div:nth-child(2) {
-                    left: 8px;
-                    animation: lds-ellipsis2 0.6s infinite;
-                }
-                .lds-ellipsis div:nth-child(3) {
-                    left: 32px;
-                    animation: lds-ellipsis2 0.6s infinite;
-                }
-                .lds-ellipsis div:nth-child(4) {
-                    left: 56px;
-                    animation: lds-ellipsis3 0.6s infinite;
-                }
-                @keyframes lds-ellipsis1 {
-                    0% {
-                        transform: scale(0);
-                    }
-                    100% {
-                        transform: scale(1);
-                    }
-                }
-                @keyframes lds-ellipsis3 {
-                    0% {
-                        transform: scale(1);
-                    }
-                    100% {
-                        transform: scale(0);
-                    }
-                }
-                @keyframes lds-ellipsis2 {
-                    0% {
-                        transform: translate(0, 0);
-                    }
-                    100% {
-                        transform: translate(24px, 0);
-                    }
+
+                .product-list-loader {
+                    animation-timing-function: ease-in-out;
+                    animation: shrink-grow 1s infinite;
                 }
                             
                 @media (pointer:none), (pointer:coarse), screen and (max-width: 900px) {

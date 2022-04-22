@@ -13,18 +13,39 @@ class SuperCompactProductListing extends Component {
         if (!this.state.name || !this.state.price) {
             const product = (await fetch(`/api/${this.state.type}/${this.state.id}`).then(res => res.json())).data;
             const name = product.name;
-            const price = (product.discount || product.price) * this.state.quantity || 1;
+            const price = product.discount || product.price;
             const tag = product.tag;
+            const tags = product.tags;
+            const colours = product.colours;
+
             this.setState({
                 ...this.getState,
                 name,
                 price,
                 tag,
+                tags,
+                colours,
+                quantity: product.quantity,
+            }, false);
+        } else if (this.state.tags) {
+            const tags = JSON.parse(this.state.tags);
+            this.setState({
+                ...this.getState,
+                tags,
             }, false);
         }
     }
 
     Render() {
+        let modifierPreview = '';
+        if (this.state.modifier) {
+            if (this.state.modifier !== '0') {
+                modifierPreview = /* html */`
+                    <span class="brick-colour-demonstrator" style="background-color: #${this.state.colours[this.state.modifier].hexrgb}"></span>                
+                `;
+            }
+        }
+
         return {
             template: /* html */`
                 <span class="product-listing">
@@ -33,11 +54,16 @@ class SuperCompactProductListing extends Component {
                             title="Image of {this.state.name}" 
                             alt="Image of {this.state.name}"     
                             src="/api/cdn/${this.state.id}-thumb.png">
-                    </span>
+                        </span>
+                        ${modifierPreview}
                     <span class="product-listing-info">
                         <span class="product-listing-name">{this.state.name}</span>
-                        <div class="product-listing-modifier">${this.state.modifier || ''}</div>
-                        <tag-component name="{this.state.tag}"></tag-component>
+                        <div class="product-listing-modifier">${this.state.modifier ? `Colour: ${this.state.colours[this.state.modifier].name}` : ''}</div>
+                        <span class="product-listing-tags">
+                            ${this.state.tags
+                                    ? this.state.tags.map(tag => `<tag-component name="${tag}"></tag-component>`).join('') 
+                                    : `<tag-component name="${this.state.tag}"></tag-component>`}
+                        </span>
                     </span>
                     <span class="product-pricing">
                         £${parseFloat(this.state.price).toFixed(2)}
@@ -67,6 +93,18 @@ class SuperCompactProductListing extends Component {
                     margin-bottom: 7px;
                     max-width: 100%;
                     flex-grow: 1
+                }
+
+                .brick-colour-demonstrator {
+                    position: absolute;
+                    margin: 0 auto;
+                    margin-bottom: 7px;
+                    align-self: flex-start;
+                    left: 0;
+                    width: 30px;
+                    height: 30px;
+                    margin-right: 0.5em;
+                    border: #1A1A1A solid 1px;
                 }
                 
                 .product-image {
@@ -101,7 +139,7 @@ class SuperCompactProductListing extends Component {
                     font-size: 0.8em;
                     font-weight: bold;
                     color: #E55744;
-                }
+                }             
             `,
         };
     }

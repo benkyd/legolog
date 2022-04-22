@@ -50,8 +50,14 @@ async function Query(query, params, callback) {
 
     // debug moment
     Logger.Database(`PSQL Query: ${query.substring(0, 500).trim()}...`);
-    const result = await connection.query(query, params, callback);
-    return result;
+    try {
+        const result = await connection.query(query, params, callback);
+        return result;
+    } catch (err) {
+        Logger.Database(`PSQL Query Error: ${err.message}`);
+        connection.query('ROLLBACK TRANSACTION;');
+        throw err;
+    }
 }
 
 async function Destroy() {

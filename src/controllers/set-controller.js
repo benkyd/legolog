@@ -22,7 +22,7 @@ async function Search(fuzzyString) {
     }
 
     // order by levenshtine distance
-    const sets = dbres.rows;
+    let sets = dbres.rows;
     sets.sort((a, b) => {
         const aName = a.name.toLowerCase();
         const bName = b.name.toLowerCase();
@@ -54,8 +54,18 @@ async function Search(fuzzyString) {
     // combine tags into a single array
     for (const set of sets) {
         set.type = 'set';
-        set.tags = set.tag.split(',');
+        set.tags = [];
     }
+
+    // combine (joined) rows into a single array
+    sets = sets.reduce((arr, current) => {
+        if (!arr.some(item => item.id === current.id)) {
+            arr.push(current);
+        }
+
+        arr.find(item => item.id === current.id).tags.push(current.tag);
+        return arr;
+    }, []);
 
     return sets;
 }
@@ -109,9 +119,11 @@ async function GetSets(page, resPerPage) {
     const total = parseInt(countRes.rows[0].count);
     const dbres = await Database.Query(`
         SELECT
-            id, name, price, new_price AS "discount"
+        lego_set.id, lego_set.name, price, new_price AS "discount", tag.name AS "tag"
         FROM lego_set
             LEFT JOIN lego_set_inventory as inv ON lego_set.id = inv.set_id
+            LEFT JOIN lego_set_tag AS tags ON tags.set_id = lego_set.id
+            LEFT JOIN tag AS tag ON tags.tag = tag.id
         ORDER BY id ASC
         LIMIT $1
         OFFSET $2;`,
@@ -126,11 +138,22 @@ async function GetSets(page, resPerPage) {
         };
     }
 
-    const sets = dbres.rows;
+    let sets = dbres.rows;
 
     for (const set of sets) {
         set.type = 'set';
+        set.tags = [];
     }
+
+    // combine (joined) rows into a single array
+    sets = sets.reduce((arr, current) => {
+        if (!arr.some(item => item.id === current.id)) {
+            arr.push(current);
+        }
+
+        arr.find(item => item.id === current.id).tags.push(current.tag);
+        return arr;
+    }, []);
 
     return { total, sets };
 }

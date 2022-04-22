@@ -103,7 +103,7 @@ class Search extends Component {
             const res = /* html */`
                 <super-compact-listing-component class="sc-listing" id="${result.id}"
                                                          name="${result.name}"
-                                                         tag="${result.tag}"
+                                                         tags="${JSON.stringify(result.tags).replace(/"/g, '&quot;')}"
                                                          type="${result.type}"
                                                          price="${result.discount || result.price}">
                 </super-compact-listing-component>

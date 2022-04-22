@@ -19,10 +19,10 @@ class StoreFront extends Component {
                         </div>
                     </div>
                     <div class="carousel-cell">
-                        <img class="carousel-image" src="res/warehouse.png" alt="">
+                        <img class="carousel-image" src="res/technic.png" alt="">
                         <div class="carousel-caption">
-                            <h1>Our state of the art warehouse ensures your speedy delivery</h1>
-                            <a href="/about/"><button>Find Out More</button></a>
+                            <h1>Check out our LEGO® Technic range</h1>
+                            <a href="/search/?q=technic"><button>Show Technic Now</button></a>
                         </div>
                     </div>
                     <div class="carousel-cell">

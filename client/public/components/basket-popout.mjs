@@ -139,7 +139,8 @@ class BasketPopout extends Component {
                                         <super-compact-listing-component class="sc-listing" 
                                                                             id="${key.split('~')[0]}"
                                                                             type="${item.type}"
-                                                                            quantity="${item.quantity}">
+                                                                            quantity="${item.quantity}"
+                                                                            modifier="${key.split('~')[1] || ''}">
                                         </super-compact-listing-component>
                                     </div>
                                 `;
@@ -224,6 +225,7 @@ class BasketPopout extends Component {
                 }
 
                 .popup-content-item {
+                    background-color: #F5F6F6;
                     display: flex;
                     flex-direction: row;
                     flex-wrap: nowrap;
@@ -237,6 +239,7 @@ class BasketPopout extends Component {
                 }
 
                 .sc-listing {
+                    flex-basis: 100%;
                     flex-grow: 3;
                 }
 

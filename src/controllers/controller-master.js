@@ -55,7 +55,7 @@ function LevenshteinDistance(s, t) {
 
 function SanatiseQuery(query) {
     query = query.trim();
-    query = query.replace(/[^a-zA-Z0-9\s]/g, '');
+    query = query.replace(/[^a-zA-Z0-9,/\s]/g, '');
     query = escape(query);
     query = query.toLowerCase();
     return query;

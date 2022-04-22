@@ -94,6 +94,7 @@ async function GetBulkBricks(bricksArr) {
 
 async function GetBrick(brickId) {
     await Database.Query('BEGIN TRANSACTION;');
+
     const dbres = await Database.Query(`
         SELECT lego_brick.id, lego_brick.name, tag.name AS "tag",
             inv.price, inv.new_price AS "discount", inv.stock,

@@ -16,6 +16,9 @@ function Get(req, res) {
         id = id.replace('-thumb', '');
     }
 
+    // TODO: bricks with a modifier should show the modified colour in the thumbnail
+    // I HAVE NO IDEA HOW TO DO THIS WITHOUT A LOT OF WORK
+
     // this very randomly fails sometimes
     try {
         // work out hash from id
