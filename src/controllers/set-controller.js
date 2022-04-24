@@ -1,6 +1,8 @@
 const ControllerMaster = require('./controller-master.js');
 const Database = require('../database/database.js');
 
+const PgFormat = require('pg-format');
+
 async function Search(fuzzyString) {
     await Database.Query('BEGIN TRANSACTION;');
     const dbres = await Database.Query(`
@@ -68,6 +70,33 @@ async function Search(fuzzyString) {
     }, []);
 
     return sets;
+}
+
+async function SumPrices(setsArray, quantityArray) {
+    await Database.Query('BEGIN TRANSACTION;');
+    const dbres = await Database.Query(PgFormat(`
+        SELECT COALESCE(new_price, price) AS "price"
+        FROM lego_set
+            LEFT JOIN lego_set_inventory AS set_inventory ON set_inventory.set_id = lego_set.id
+        WHERE lego_set.id IN (%L);
+    `, setsArray), []);
+    await Database.Query('END TRANSACTION;');
+
+    // validate database response
+    if (dbres.rows.length === 0) {
+        return {
+            error: 'Bricks not found',
+            long: 'The bricks you are looking for do not exist',
+        };
+    }
+
+    let sum = 0;
+    console.log(dbres);
+    for (let i = 0; i < dbres.rows.length; i++) {
+        sum += parseFloat(dbres.rows[i].price) * parseFloat(quantityArray[i]);
+    }
+
+    return sum;
 }
 
 async function GetSet(setId) {
@@ -160,6 +189,7 @@ async function GetSets(page, resPerPage) {
 
 module.exports = {
     Search,
+    SumPrices,
     GetSet,
     GetSets,
 };

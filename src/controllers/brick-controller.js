@@ -62,6 +62,32 @@ async function Search(fuzzyString) {
     return bricks;
 }
 
+async function SumPrices(bricksArr, quantityArray) {
+    await Database.Query('BEGIN TRANSACTION;');
+    const dbres = await Database.Query(PgFormat(`
+        SELECT COALESCE(new_price, price) AS "price"
+        FROM lego_brick
+            LEFT JOIN lego_brick_inventory AS brick_inventory ON brick_inventory.brick_id = lego_brick.id
+        WHERE lego_brick.id  IN (%L);
+    `, bricksArr), []);
+    await Database.Query('END TRANSACTION;');
+
+    // validate database response
+    if (dbres.rows.length === 0) {
+        return {
+            error: 'Bricks not found',
+            long: 'The bricks you are looking for do not exist',
+        };
+    }
+
+    let sum = 0;
+    for (let i = 0; i < dbres.rows.length; i++) {
+        sum += parseFloat(dbres.rows[i].price) * parseFloat(quantityArray[i]);
+    }
+
+    return sum;
+}
+
 async function GetBulkBricks(bricksArr) {
     await Database.Query('BEGIN TRANSACTION;');
     const dbres = await Database.Query(PgFormat(`
@@ -101,7 +127,7 @@ async function GetBrick(brickId) {
             inv.last_updated AS "last_stock_update",
             weight, dimensions_x, dimensions_y, dimensions_z
         FROM lego_brick
-            LEFT JOIN lego_brick_inventory AS inv on inv.brick_id = lego_brick.id
+            LEFT JOIN lego_brick_inventory AS inv ON inv.brick_id = lego_brick.id
             LEFT JOIN lego_brick_tag AS tags ON tags.brick_id = lego_brick.id
             LEFT JOIN tag AS tag ON tags.tag = tag.id
         WHERE lego_brick.id = $1;
@@ -142,6 +168,7 @@ async function GetBrick(brickId) {
 
 module.exports = {
     Search,
+    SumPrices,
     GetBulkBricks,
     GetBrick,
 };

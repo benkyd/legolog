@@ -111,7 +111,8 @@ class ProductListing extends Component {
             </div>
             `;
         }
-
+        
+        console.log(this.state);
         return {
             template: /* html */`
                 <div class="product-page">
@@ -133,7 +134,7 @@ class ProductListing extends Component {
                             </div>
 
                             <div class="product-name">{this.state.name} {this.state.id}</div>
-                            ${this.state.discountbar
+                            ${this.state.discount
                                 ? `<span class="product-listing-price-full">£${parseFloat(this.state.price).toFixed(2)}</span><span class="product-listing-price-new">£${parseFloat(this.state.discount).toFixed(2)}</span>`
                                 : `<span class="product-listing-price">£${parseFloat(this.state.price).toFixed(2)}</span>`}
                             <div class="product-description">${this.state.description || this.state.name + ' ' + this.state.tag}</div>

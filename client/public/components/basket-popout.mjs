@@ -118,6 +118,12 @@ class BasketPopout extends Component {
     }
 
     OnMount() {
+        this.setState({
+            items: {},
+            total: 0,
+            subtotal: 0,
+        }, false);
+
         this.OnLocalBasketUpdate(Object.bind(this));
 
         basketCallback = this.OnLocalBasketUpdate.bind(this);
@@ -144,7 +150,8 @@ class BasketPopout extends Component {
                             {this.state.total} Items
                         </div>
                         <div class="popup-content">
-                            ${this.state.items ? Object.keys(this.state.items).map((key) => {
+                            ${this.state.items
+                                ? Object.keys(this.state.items).map((key) => {
                                 const item = this.state.items[key];
                                 return /* html */`
                                     <div class="popup-content-item">

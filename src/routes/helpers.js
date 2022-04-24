@@ -1,7 +1,10 @@
+const BrickController = require('../controllers/brick-controller.js');
+const SetController = require('../controllers/set-controller.js');
+
 // AppEng Deadline
 const EndDate = new Date(1651269600 * 1000);
 
-function Special(req, res, next) {
+function Special(req, res) {
     res.send({
         data: {
             title: '£10 off any LEGO set! Limited Time Only! use code: LEGO10',
@@ -10,10 +13,31 @@ function Special(req, res, next) {
     });
 }
 
-function CalculateBasketPrice(req, res) {
+async function CalculateBasketPrice(req, res) {
+    const setList = [];
+    const setQuantities = [];
+    const brickList = [];
+    const brickQuantities = [];
+
+    for (const [item, value] of Object.entries(req.body.items)) {
+        if (value.type === 'set') {
+            setList.push(item.split('~')[0]);
+            setQuantities.push(value.quantity);
+        }
+        if (value.type === 'brick') {
+            brickList.push(item.split('~')[0]);
+            brickQuantities.push(value.quantity);
+        }
+    }
+
+    const setSubtotal = await SetController.SumPrices(setList, setQuantities);
+    const brickSubtotal = await BrickController.SumPrices(brickList, brickQuantities);
+
+    console.log(setSubtotal, brickSubtotal);
+
     res.send({
         data: {
-            subtotal: 10,
+            subtotal: parseFloat(setSubtotal) + parseFloat(brickSubtotal),
         },
     });
 }
