@@ -41,7 +41,7 @@ class ProductList extends Component {
         return /* html */`
             <div class="augment-panel">
                 <div class="augment-panel-header">
-                    <span class="augment-panel-header-text">Refine search results</span>
+                    <span class="augment-panel-header-text">Refine results</span>
                 </div>
                 <div class="augment-panel-body">
                     <div class="augment-panel-body-row">
@@ -56,7 +56,6 @@ class ProductList extends Component {
 
     Render() {
         const augmentPanel = this.GenerateAugmentPanel(this.state.augmentable);
-        console.log(augmentPanel);
 
         if (this.state.page * this.state.per_page >= this.state.total) {
             this.keepLoading = false;

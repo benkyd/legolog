@@ -26,11 +26,7 @@ function Init() {
     Server.App.get('/api/auth/orders/');
     Server.App.get('/api/auth/order/:id');
 
-    Server.App.get('/api/auth/basket/');
-    Server.App.put('/api/auth/basket/:id');
-    Server.App.post('/api/auth/basket/:id');
-    Server.App.delete('/api/auth/basket/:id');
-    Server.App.delete('/api/auth/basket/');
+    Server.App.post('/api/basket/price', Helpers.CalculateBasketPrice);
 
     Logger.Module('API', 'API Routes Initialized');
 }

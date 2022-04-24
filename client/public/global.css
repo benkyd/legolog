@@ -25,6 +25,10 @@ limited-margin {
 
 /* small screen */
 @media screen and (max-width: 900px) {
+    body {
+        font-size: 25px;
+    }
+
     limited-margin {
         width: 90%;
     }
@@ -34,7 +38,6 @@ limited-margin {
 @media (pointer:none), (pointer:coarse) {
     body {
         zoom: 120%;
-        font-size: 25px;
     }
 
     limited-margin {

@@ -10,6 +10,16 @@ function Special(req, res, next) {
     });
 }
 
+function CalculateBasketPrice(req, res) {
+    res.send({
+        data: {
+            subtotal: 10,
+        },
+    });
+}
+
+
 module.exports = {
     Special,
+    CalculateBasketPrice,
 };

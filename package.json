@@ -15,10 +15,7 @@
   "eslintConfig": {
     "extends": "portsoc",
     "rules": {
-      "indent": [
-        "error",
-        4
-      ]
+      "indent": "off"
     },
     "root": true,
     "env": {

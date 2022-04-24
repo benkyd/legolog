@@ -133,7 +133,7 @@ class ProductListing extends Component {
                             </div>
 
                             <div class="product-name">{this.state.name} {this.state.id}</div>
-                            ${this.state.discount
+                            ${this.state.discountbar
                                 ? `<span class="product-listing-price-full">£${parseFloat(this.state.price).toFixed(2)}</span><span class="product-listing-price-new">£${parseFloat(this.state.discount).toFixed(2)}</span>`
                                 : `<span class="product-listing-price">£${parseFloat(this.state.price).toFixed(2)}</span>`}
                             <div class="product-description">${this.state.description || this.state.name + ' ' + this.state.tag}</div>
@@ -149,7 +149,7 @@ class ProductListing extends Component {
 
                             <div class="product-add-to-basket">
                                 <button class="add-to-basket-button">Add to Basket</button>
-                                <img class="add-to-favorites-button" src="https://www.svgrepo.com/show/25921/heart.svg" width="45px" stroke="#222" stroke-width="2px" alt="Add to Favorites" title="Add to Favorites">
+                                <!-- <img class="add-to-favorites-button" src="https://www.svgrepo.com/show/25921/heart.svg" width="45px" stroke="#222" stroke-width="2px" alt="Add to Favorites" title="Add to Favorites"> -->
                             </div>
 
                             <div class="collapsible-menu">
@@ -231,7 +231,6 @@ class ProductListing extends Component {
             // if it is a brick, get potential modifier from the drop down menu
             const brick = this.state.type === 'brick';
             const modifier = brick ? this.root.querySelector('.brick-colour-selector-select').value : undefined;
-            console.log(modifier);
 
             AddProductToBasket(this.state.id, this.state.type, Math.abs(parseInt(quantityInput.value)), modifier);
             quantityInput.value = 1;

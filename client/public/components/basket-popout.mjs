@@ -85,15 +85,25 @@ class BasketPopout extends Component {
         super(BasketPopout);
     }
 
-    OnLocalBasketUpdate() {
+    async OnLocalBasketUpdate() {
         const basket = localStorage.getItem('basket');
 
         if (basket) {
             try {
                 const basketJSON = JSON.parse(basket);
+
+                const res = await fetch('/api/basket/price', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(basketJSON),
+                }).then(res => res.json());
+
                 this.setState({
                     items: basketJSON.items,
                     total: basketJSON.total,
+                    subtotal: res.data.subtotal,
                 });
             } catch (e) {
                 console.log(e);
@@ -102,6 +112,7 @@ class BasketPopout extends Component {
             this.setState({
                 items: {},
                 total: 0,
+                subtotal: 0,
             });
         }
     }
@@ -124,14 +135,16 @@ class BasketPopout extends Component {
                     <div id="basket-popup" class="popup">
                         <div class="popup-header">
                             <span class="popup-title">Basket</span>
-                            <span class="popup-close">&times;</span>
+                            <button class="toggler">
+                                <span class="cross-line cross-line-top"></span>
+                                <span class="cross-line cross-line-bottom"></span>
+                                </button>
+                        </div>
+                        <div class="popup-content-header">
+                            {this.state.total} Items
                         </div>
                         <div class="popup-content">
-                            <div class="popup-content-header">
-                                Total {this.state.total}
-                            </div>
-                            <span class="popup-content-item-title">Items</span>
-                            ${Object.keys(this.state.items).map((key) => {
+                            ${this.state.items ? Object.keys(this.state.items).map((key) => {
                                 const item = this.state.items[key];
                                 return /* html */`
                                     <div class="popup-content-item">
@@ -144,9 +157,11 @@ class BasketPopout extends Component {
                                         </super-compact-listing-component>
                                     </div>
                                 `;
-                            }).join('')}
+                            }).join('')
+                            : ''}
                         </div>
                         <div class="popup-footer">
+                            <span class="popup-footer-total">Subtotal: £${parseFloat(this.state.subtotal).toFixed(2)}</span>
                             <a href="/basket"><button class="popup-footer-button">View Basket</button></a>
                         </div>
                     </div>
@@ -197,7 +212,7 @@ class BasketPopout extends Component {
                     max-height: 550px;
                     max-width: 500px;
                     padding-top: 10px;
-                    padding-bottom: 10px;
+                    padding-bottom: 5px;
                     flex-direction: column;
                     justify-content: center;
                     align-items: center;
@@ -206,10 +221,56 @@ class BasketPopout extends Component {
 
                 @media (pointer:none), (pointer:coarse), screen and (max-width: 900px) {
                     #basket-popup {
-                        position: fixed;
+                        position: absolute;
                         left: 0;
+                        max-width: 100%;
                         width: 100%;
                     }
+                }
+
+                .popup-header {
+                    display: flex;
+                    justify-content: space-between;
+                    padding-bottom: 2px;
+                    font-size: 1.5em;
+                    font-weight: bold;
+                }
+
+                .toggler {
+                    position: absolute;
+                    right: 2px;
+                    top: 2px;
+                    background: transparent;
+                    border: none;
+                    cursor: pointer;
+                    outline: none;
+                    height: 2em;
+                    width: 2em;
+                    z-index: 50;
+                    transition: all 0.2s ease-in;
+                }
+                
+                .cross-line {
+                    background: #222;
+                    box-shadow: #222 0px 0px 2px;
+                    position: absolute;
+                    height: 2px;
+                    left: 0;
+                    width: 100%;
+                }
+                
+                #toggler:hover .cross-line {
+                    background: #777;
+                }
+                
+                .cross-line-top {
+                    top: 50%;
+                    transform: rotate(45deg) translatey(-50%);
+                }
+                
+                .cross-line-bottom {
+                    bottom: 50%;
+                    transform: rotate(-45deg) translatey(50%);
                 }
 
                 .popup-content {
@@ -247,30 +308,78 @@ class BasketPopout extends Component {
                     text-align: right;
                     flex-grow: 1;
                 }
+
+                .popup-footer {
+                    width: 100%;
+                    display: flex;
+                    flex-direction: row;
+                    flex-wrap: nowrap;
+                    justify-content: space-around;
+                    align-items: center;
+                    padding-top: 7px;
+                    padding-bottom: 2px;
+                }
+
+                .popup-footer-total {
+                    font-size: 1em;
+                    font-weight: bold;
+                }
+
+                .popup-footer-button {
+                    font-size: 1.4em;
+                    font-weight: bold;
+                    background-color: #AB8FFF;
+                    border: 1px solid #222;
+                    color: #222;
+                    padding: 5px;
+                    cursor: pointer;
+                    outline: none;
+                    transition: all 0.2s ease-in;
+                }
+
+                .popup-footer-button:hover {
+                    background-color: #222;
+                    color: #AB8FFF;
+                }
             `,
         };
     }
 
     OnRender() {
-        // set up basket
+        const basketWrapper = this.root.querySelector('#basket-wrapper');
         const basketToggler = this.root.querySelector('.basket');
+        const popup = this.root.querySelector('.popup');
+        const closeButton = this.root.querySelector('.toggler');
 
         basketToggler.addEventListener('click', () => {
-            const popup = this.root.querySelector('.popup');
             popup.classList.toggle('show');
+        });
 
-            popup.addEventListener('click', (e) => {
-                if (e.target.classList.contains('popup-close')) {
-                    popup.classList.remove('show');
-                }
-            });
+        closeButton.addEventListener('click', () => {
+            popup.classList.remove('show');
+        });
 
-            // allow "click off to close"
-            // document.addEventListener('click', (e) => {
-            //     if (!popup.contains(e.target)) {
-            //         popup.classList.remove('show');
-            //     }
-            // });
+        const toggler = this.root.querySelector('.toggler');
+        toggler.addEventListener('click', () => {
+            popup.classList.remove('show');
+        });
+
+        // allow "click off to close", allowing for the users mouse to start clicking and dragging inside the popup
+        // without closing it if the mouse leaves the popup
+        let isMouseInside = true;
+
+        basketWrapper.addEventListener('mouseleave', () => {
+            isMouseInside = false;
+        });
+
+        basketWrapper.addEventListener('mouseenter', () => {
+            isMouseInside = true;
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (!isMouseInside) {
+                popup.classList.remove('show');
+            }
         });
     }
 }
