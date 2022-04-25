@@ -7,6 +7,18 @@ class Basket extends Component {
         super(Basket);
     }
 
+    OnMount() {
+        const basket = localStorage.getItem('basket');
+        if (basket) {
+            const basketItems = JSON.parse(basket);
+            this.setState({
+                ...basketItems,
+            }, false);
+            console.log(basketItems, this.state);
+        }
+
+    }
+
     Render() {
         return {
             template: /* html */`

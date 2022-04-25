@@ -30,10 +30,11 @@ async function CalculateBasketPrice(req, res) {
         }
     }
 
-    const setSubtotal = await SetController.SumPrices(setList, setQuantities);
-    const brickSubtotal = await BrickController.SumPrices(brickList, brickQuantities);
+    let setSubtotal = await SetController.SumPrices(setList, setQuantities);
+    let brickSubtotal = await BrickController.SumPrices(brickList, brickQuantities);
 
-    console.log(setSubtotal, brickSubtotal);
+    if (setSubtotal.error) setSubtotal = 0;
+    if (brickSubtotal.error) brickSubtotal = 0;
 
     res.send({
         data: {

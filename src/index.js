@@ -5,7 +5,7 @@ const API = require('./routes/api.js');
 
 const Database = require('./database/database.js');
 
-const ngrams = require('./controllers/n-grams.js');
+const ngrams = require('./controllers/spellchecker.js');
 
 async function main() {
     Config.Load();
@@ -20,15 +20,16 @@ async function main() {
     Logger.Info('Pre-Init Complete');
 
     await Database.Connect();
+    await ngrams.Init();
 
     Server.Listen(process.env.PORT);
     API.Init();
 
-    await ngrams.Init();
 
-    ngrams.MostProbableAlternateQueries('brick 2x10x4');
-    ngrams.MostProbableAlternateQueries('lego star wars battlefront');
-    ngrams.MostProbableAlternateQueries('lego stor was s');
+    ngrams.MostProbableAlternateQueries('brick 2x10X4 2 x 2');
+    // ngrams.MostProbableAlternateQueries('brick 2 x 10 x 4 2x10X4');
+    // ngrams.MostProbableAlternateQueries('lego star wars battlefront');
+    // ngrams.MostProbableAlternateQueries('lego stor was s');
 }
 
 main();

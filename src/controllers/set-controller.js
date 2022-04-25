@@ -1,19 +1,29 @@
 const ControllerMaster = require('./controller-master.js');
 const Database = require('../database/database.js');
+const Logger = require('../logger.js');
 
 const PgFormat = require('pg-format');
 
-async function Search(fuzzyString) {
+async function Search(fuzzyStrings) {
     await Database.Query('BEGIN TRANSACTION;');
-    const dbres = await Database.Query(`
-        SELECT lego_set.id, lego_set.name, tag.name AS "tag", inv.price, inv.new_price AS "discount"
-        FROM lego_set
-            LEFT JOIN lego_set_tag AS tags ON tags.set_id = lego_set.id
-            LEFT JOIN tag AS tag ON tags.tag = tag.id
-            LEFT JOIN lego_set_inventory AS inv ON inv.set_id = lego_set.id
-        WHERE lego_set.id ~* $1 OR lego_set.name ~* $1 OR tag.name ~* $1
-    `, [fuzzyString]);
-    await Database.Query('END TRANSACTION;');
+    let dbres;
+    try {
+        dbres = await Database.Query(PgFormat(`
+            SELECT lego_set.id, lego_set.name, tag.name AS "tag", inv.price, inv.new_price AS "discount"
+            FROM lego_set
+                LEFT JOIN lego_set_tag AS tags ON tags.set_id = lego_set.id
+                LEFT JOIN tag AS tag ON tags.tag = tag.id
+                LEFT JOIN lego_set_inventory AS inv ON inv.set_id = lego_set.id
+            WHERE lego_set.id ~* ANY(ARRAY[%L]) OR lego_set.name ~* ANY(ARRAY[%L]) OR tag.name ~* ANY(ARRAY[%L])
+        `, fuzzyStrings, fuzzyStrings, fuzzyStrings), []);
+        await Database.Query('COMMIT TRANSACTION;');
+    } catch {
+        await Database.Query('ROLLBACK TRANSACTION;');
+        Logger.Error('Database Error');
+        return {
+            error: 'Database error',
+        };
+    }
 
     // validate database response
     if (dbres.rows.length === 0) {
@@ -30,8 +40,8 @@ async function Search(fuzzyString) {
         const bName = b.name.toLowerCase();
         const aTag = a.tag.toLowerCase();
         const bTag = b.tag.toLowerCase();
-        const aFuzzy = fuzzyString.toLowerCase();
-        const bFuzzy = fuzzyString.toLowerCase();
+        const aFuzzy = fuzzyStrings[0].toLowerCase();
+        const bFuzzy = fuzzyStrings[0].toLowerCase();
 
         const aDist = ControllerMaster.LevenshteinDistance(aName, aFuzzy);
         const bDist = ControllerMaster.LevenshteinDistance(bName, bFuzzy);
@@ -74,13 +84,22 @@ async function Search(fuzzyString) {
 
 async function SumPrices(setsArray, quantityArray) {
     await Database.Query('BEGIN TRANSACTION;');
-    const dbres = await Database.Query(PgFormat(`
-        SELECT COALESCE(new_price, price) AS "price"
-        FROM lego_set
-            LEFT JOIN lego_set_inventory AS set_inventory ON set_inventory.set_id = lego_set.id
-        WHERE lego_set.id IN (%L);
-    `, setsArray), []);
-    await Database.Query('END TRANSACTION;');
+    let dbres;
+    try {
+        dbres = await Database.Query(PgFormat(`
+            SELECT COALESCE(new_price, price) AS "price"
+            FROM lego_set
+                LEFT JOIN lego_set_inventory AS set_inventory ON set_inventory.set_id = lego_set.id
+            WHERE lego_set.id IN (%L);
+        `, setsArray), []);
+        await Database.Query('COMMIT TRANSACTION;');
+    } catch {
+        await Database.Query('ROLLBACK TRANSACTION;');
+        Logger.Error('Database Error');
+        return {
+            error: 'Database error',
+        };
+    }
 
     // validate database response
     if (dbres.rows.length === 0) {
@@ -101,19 +120,28 @@ async function SumPrices(setsArray, quantityArray) {
 
 async function GetSet(setId) {
     await Database.Query('BEGIN TRANSACTION;');
-    const dbres = await Database.Query(`
-        SELECT lego_set.id, lego_set.name, description, tag.name AS "tag",
-            set_contents.brick_id, set_contents.amount, inv.price,
-            date_released, weight, dimensions_x, dimensions_y, dimensions_z,
-            new_price AS "discount", inv.stock, inv.last_updated AS "last_stock_update"
-        FROM lego_set
-            LEFT JOIN lego_set_inventory AS inv ON inv.set_id = lego_set.id
-            LEFT JOIN lego_set_tag AS tags ON tags.set_id = lego_set.id
-            LEFT JOIN tag AS tag ON tags.tag = tag.id
-            LEFT JOIN set_descriptor AS set_contents ON set_contents.set_id = lego_set.id
-        WHERE lego_set.id = $1;
-    `, [setId]);
-    await Database.Query('END TRANSACTION;');
+    let dbres;
+    try {
+        dbres = await Database.Query(`
+            SELECT lego_set.id, lego_set.name, description, tag.name AS "tag",
+                set_contents.brick_id, set_contents.amount, inv.price,
+                date_released, weight, dimensions_x, dimensions_y, dimensions_z,
+                new_price AS "discount", inv.stock, inv.last_updated AS "last_stock_update"
+            FROM lego_set
+                LEFT JOIN lego_set_inventory AS inv ON inv.set_id = lego_set.id
+                LEFT JOIN lego_set_tag AS tags ON tags.set_id = lego_set.id
+                LEFT JOIN tag AS tag ON tags.tag = tag.id
+                LEFT JOIN set_descriptor AS set_contents ON set_contents.set_id = lego_set.id
+            WHERE lego_set.id = $1;
+        `, [setId]);
+        await Database.Query('COMMIT TRANSACTION;');
+    } catch {
+        await Database.Query('ROLLBACK TRANSACTION;');
+        Logger.Error('Database Error');
+        return {
+            error: 'Database error',
+        };
+    }
 
     // validate database response
     if (dbres.rows.length === 0) {
@@ -142,22 +170,31 @@ async function GetSet(setId) {
 }
 
 async function GetSets(page, resPerPage) {
-    // query for the set
     await Database.Query('BEGIN TRANSACTION;');
-    const countRes = await Database.Query('SELECT COUNT (*) FROM lego_set;');
-    const total = parseInt(countRes.rows[0].count);
-    const dbres = await Database.Query(`
+    let countRes;
+    let dbres;
+    try {
+        countRes = await Database.Query('SELECT COUNT (*) FROM lego_set;');
+        dbres = await Database.Query(`
         SELECT
-        lego_set.id, lego_set.name, price, new_price AS "discount", tag.name AS "tag"
-        FROM lego_set
-            LEFT JOIN lego_set_inventory as inv ON lego_set.id = inv.set_id
-            LEFT JOIN lego_set_tag AS tags ON tags.set_id = lego_set.id
-            LEFT JOIN tag AS tag ON tags.tag = tag.id
-        ORDER BY id ASC
-        LIMIT $1
-        OFFSET $2;`,
-    [resPerPage, page * resPerPage]);
-    await Database.Query('END TRANSACTION;');
+            lego_set.id, lego_set.name, price, new_price AS "discount", tag.name AS "tag"
+            FROM lego_set
+                LEFT JOIN lego_set_inventory as inv ON lego_set.id = inv.set_id
+                LEFT JOIN lego_set_tag AS tags ON tags.set_id = lego_set.id
+                LEFT JOIN tag AS tag ON tags.tag = tag.id
+            ORDER BY id ASC
+            LIMIT $1
+            OFFSET $2;`,
+        [resPerPage, page * resPerPage]);
+        await Database.Query('COMMIT TRANSACTION;');
+    } catch {
+        await Database.Query('ROLLBACK TRANSACTION;');
+        Logger.Error('Database Error');
+        return {
+            error: 'Database error',
+        };
+    }
+    const total = parseInt(countRes.rows[0].count);
 
     // validate database response
     if (dbres.rows.length === 0) {
@@ -173,6 +210,7 @@ async function GetSets(page, resPerPage) {
         set.type = 'set';
         set.tags = [];
     }
+
 
     // combine (joined) rows into a single array
     sets = sets.reduce((arr, current) => {

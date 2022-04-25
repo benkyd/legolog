@@ -1,6 +1,7 @@
 const ControllerMaster = require('../controllers/controller-master.js');
 const BrickController = require('../controllers/brick-controller.js');
 const SetController = require('../controllers/set-controller.js');
+const SpellController = require('../controllers/spellchecker.js');
 
 async function Search(req, res) {
     const q = req.query.q;
@@ -15,14 +16,16 @@ async function Search(req, res) {
         return;
     }
 
+    const alternateQueries = SpellController.MostProbableAlternateQueries(sanatisedQuery);
+
     const pageRequested = req.query.page || 1;
     const perPage = req.query.per_page || 16;
 
     // TODO: it is tricky to do a database offset / limit here
     // due to the fact that we have to combine the results of
     // the two queries, look into me (maybe merging the queries)
-    const brickResults = await BrickController.Search(sanatisedQuery);
-    const setResults = await SetController.Search(sanatisedQuery);
+    const brickResults = await BrickController.Search(alternateQueries);
+    const setResults = await SetController.Search(alternateQueries);
 
     if (brickResults.error && setResults.error) {
         return res.send(JSON.stringify({
@@ -32,8 +35,8 @@ async function Search(req, res) {
     }
 
     let count = 0;
-    if (brickResults) count += brickResults.length;
-    if (setResults) count += setResults.length;
+    if (!brickResults.error) count += brickResults.length;
+    if (!setResults.error) count += setResults.length;
 
     if (brickResults.error) {
         // remove after the requested page
@@ -72,8 +75,8 @@ async function Search(req, res) {
         const bName = b.name.toLowerCase();
         const aTag = a.tag.toLowerCase();
         const bTag = b.tag.toLowerCase();
-        const aFuzzy = q.toLowerCase();
-        const bFuzzy = q.toLowerCase();
+        const aFuzzy = alternateQueries[0].toLowerCase();
+        const bFuzzy = alternateQueries[0].toLowerCase();
 
         const aDist = ControllerMaster.LevenshteinDistance(aName, aFuzzy);
         const bDist = ControllerMaster.LevenshteinDistance(bName, bFuzzy);

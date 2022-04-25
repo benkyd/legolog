@@ -1,5 +1,4 @@
 const Controller = require('../controllers/set-controller.js');
-const Database = require('../database/database.js');
 
 async function Get(req, res) {
     // get id from url
@@ -18,7 +17,7 @@ async function Get(req, res) {
 
 async function Featured(req, res) {
     // query all sets and return all of them
-    const { sets } = await Controller.GetSets(0, 8);
+    const { sets } = await Controller.GetSets(0, 10);
 
     if (sets.error) {
         res.send(JSON.stringify(sets));

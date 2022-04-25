@@ -1,10 +1,17 @@
-const axios = require("axios");
+const axios = require('axios');
 
 let StaticDictionary = [];
+let MispellingDictionaryRAW = '';
 
 async function Init() {
+    // yes i know it could be unreliable to get them from external, untrusted sources
+    // this algorithm is purely for fun and is very much a "work in progress"
     await axios.get('http://www.mieliestronk.com/corncob_lowercase.txt').then(response => {
         StaticDictionary = response.data;
+    });
+
+    await axios.get('https://www.dcs.bbk.ac.uk/~roger/missp.dat').then(response => {
+        MispellingDictionaryRAW = response.data;
     });
 }
 
@@ -74,19 +81,62 @@ function MostProbableAlternateQueries(query) {
         reconstruction.push([...mostLikely]);
     }
 
-    console.log(reconstruction)
+    // go over suggested fixes and construct the permutations of the query
+    // for example if the query is 'brik 2x10X4', the reconstructions are:
+    // brick, [2x10x4, 2 x 10 x 4]
+    // therefore the permutations are:
+    // brick 2x10x4, brick 2 x 10 x 4
+
+    let totalLength = 1;
+    for (let i = 0; i < reconstruction.length; i++) {
+        const length = reconstruction[i].length;
+        totalLength *= length;
+    }
+
+    const permutations = [];
+    for (let i = 0; i < totalLength; i++) {
+        const permutation = [];
+        for (let j = 0; j < reconstruction.length; j++) {
+            const index = i % reconstruction[j].length;
+            permutation.push(reconstruction[j][index]);
+        }
+        permutations.push(permutation.join(' '));
+    }
 
     // work out a bit of context to determine the most likely sentence
+    return permutations;
 }
 
 function MostProbableMissSpelling(word) {
     // First work out if it's intended to be a word
+    if (word.match(/[0-9]/g)) {
+        // it's got a number so probably not a word
+        // if it's a number, it's either a year, id or dimension
 
-    console.log(word);
-    return BiGrams(word);
+        // if it's a dimension, we should split by x X
+        if (word.match(/[xX]/g)) {
+            // it's a dimension split by x X
+            const split = word.split(/[xX]/g);
+            return [split.join(' x '), word];
+        }
+
+        return [word];
+    }
+
+    // if it's one letter, it's probably not a word
+    if (word.length === 1) {
+        return [word];
+    }
+
+    const trigrams = TriGrams(word);
+    const bigrams = BiGrams(word);
+
+    return [word];
 }
 
 function ConditionalTrigramProbability(token) {
+    // closeness of token to the trigram commonality
+
 
 }
 
