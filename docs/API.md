@@ -20,14 +20,10 @@ automatically every request
 | POST  | /api/bulk/brick       | array           | no  | POST due to bulk nature |
 | GET   | /api/set/:id          |                 | no  | |
 | GET   | /api/cdn/:id          |                 | no  | |
+| GET   | /api/basket/price/    |                 | no  | |
 | PUT   | /api/auth/login/      |                 | yes | |
 | POST  | /api/auth/signup/     |                 | yes | |
 | GET   | /api/auth/orders/     |                 | yes | |
-| GET   | /api/auth/basket/     |                 | yes | |
-| PUT   | /api/auth/basket/:id  | quantity        | yes | |
-| POST  | /api/auth/basket/:id  |                 | yes | manipulate basket content |
-| DEL   | /api/auth/basket/:id  | quantity        | yes | if no id, delete whole |
-| DEL   | /api/auth/basket/     |                 | yes | if no id, delete whole |
 
 Query endpoints do not return the full data on a brick/set, they return
 a subset for product listing pages
@@ -51,78 +47,6 @@ q: string to search for (fuzzy)
 brick: brick to search for (absolute type, fuzzy string)
 
 set: brick to search for (absolute, fuzzy string)
-
-### /api/special/
-
-GET /api/special/
-
-Response Object
-```json
-{
-    "data": {
-        "title": "Special 1",
-        "end": "2020-01-31T00:00:00.000Z",
-    }
-}
-```
-
-### /api/type/:id
-
-GET /api/type/:id
-
-Response Object
-```json
-{
-    "data": {
-        "type": "brick", // or set
-    }
-}
-```
-
-### /api/search/
-
-GET /api/search?params
-
-### /api/bricks/
-
-GET
-
-Response Object
-```json
-{
-
-}
-```
-
-### /api/sets/
-### /api/brick/:id/
-
-
-
-### /api/set/:id/
-
-
-
-### /api/cdn/:id/
-### /api/auth/login/
-### /api/auth/signup/
-
-Request Body
-```json
-{
-
-}
-```
-
-Response Object
-```json
-{
-    
-}
-```
-
-### /api/auth/orders/
-### /api/auth/basket/
 
 ## Response Structure
 

@@ -5,6 +5,8 @@ const API = require('./routes/api.js');
 
 const Database = require('./database/database.js');
 
+const ngrams = require('./controllers/n-grams.js');
+
 async function main() {
     Config.Load();
 
@@ -21,6 +23,12 @@ async function main() {
 
     Server.Listen(process.env.PORT);
     API.Init();
+
+    await ngrams.Init();
+
+    ngrams.MostProbableAlternateQueries('brick 2x10x4');
+    ngrams.MostProbableAlternateQueries('lego star wars battlefront');
+    ngrams.MostProbableAlternateQueries('lego stor was s');
 }
 
 main();
