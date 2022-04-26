@@ -1,4 +1,4 @@
-import { AddProductToBasket, SetProductInBasket, RemoveProductFromBasket, GetBasketTotal, GetBasketTotalPrice } from './basket-popout.mjs';
+import { GetBasketItems, AddProductToBasket, RemoveProductFromBasket, GetBasketTotal, GetBasketTotalPrice } from './basket-popout.mjs';
 import { RegisterComponent, Component } from './components.mjs';
 
 class Basket extends Component {
@@ -39,7 +39,6 @@ class Basket extends Component {
                         <div class="basket-items-list">
                             ${Object.keys(this.state.items).map((key) => {
                                 const item = this.state.items[key];
-                                console.log(key, item);
                                 const modifier = key.includes('~');
                                 return /* html */`
                                     <div class="basket-item">
@@ -49,13 +48,15 @@ class Basket extends Component {
                                             bigimage="true"
                                             ${modifier ? `modifier="${key.split('~')[1]}"` : ''}>
                                         </super-compact-listing-component>
-                                        <div class="product-quantity-selector">
-                                            <button class="product-quantity-button reduce-quantity" type="button">-</button>
-                                            <input class="quantity-input" type="number" value="${item.quantity}" min="0" max="{item.stock}">
-                                            <button class="product-quantity-button increase-quantity" type="button">+</button>
-                                            <span class="product-quantity">&nbsp;<span class="stock-number">0</span> in stock</span>
-                                            </div>
-                                        <button class="product-quantity-button remove-quantity" type="button">Remove</button>
+                                        <div class="basket-item-content">
+                                            <div class="product-quantity-selector">
+                                                <button class="product-quantity-button reduce-quantity" type="button">-</button>
+                                                <input class="quantity-input" type="number" value="${item.quantity}" min="0" max="{item.stock}">
+                                                <button class="product-quantity-button increase-quantity" type="button">+</button>
+                                                <span class="product-quantity">&nbsp;<span class="stock-number">0</span> in stock</span>
+                                                </div>
+                                            <button class="product-quantity-button remove-quantity" type="button">Remove</button>
+                                        </div>
                                     </div>
                                 `;
                             }).join('')}
@@ -65,9 +66,11 @@ class Basket extends Component {
                         <div class="basket-footer-subtotal">
                             Subtotal: £<span class="basket-subtotal">0.00</span>
                         </div>
-                        <button class="basket-footer-button" type="button">Checkout</button>
-                        <button class="basket-footer-button" type="button">Checkout As Guest</button>
-                </div>
+                        <!-- checkout button -->
+                        <div class="basket-footer-checkout">
+                            <button class="basket-footer-button" type="button">Checkout as ${localStorage.user}</button>
+                        </div>
+                    </div>
             `,
             style: `
                 .basket {
@@ -88,15 +91,38 @@ class Basket extends Component {
                     flex-direction: row;
                     align-items: center;
                 }
-
+                
                 .basket-item-listing {
+                    font-size: 1.3em;
+                    flex-basis: 65%;
+                    flex-grow: 4;
+                }
+
+                @media (pointer:none), (pointer:coarse), screen and (max-width: 900px) {
+                    .basket-item {
+                        flex-direction: column;
+                    }
+
+                    .basket-item-listing {
+                        font-size: 1.3em;
+                        width: 100%;
+                        flex-basis: 100%;
+                        flex-grow: 4;
+                    }
+                }
+
+                .basket-item-content {
+                    flex-basis: 35%;
+                    flex-grow: 1;
                     width: 100%;
                     margin: 0 auto;
-                    font-size: 1.3em;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-around;
+                    align-items: center;
                 }
-                
+
                 .product-quantity-selector {
-                    flex-basis: 40%;
                     display: flex;
                     flex-direction: row;
                     justify-content: center;
@@ -139,6 +165,44 @@ class Basket extends Component {
                     border-left: none;
                     text-align: center;
                     font-size: 1.2em;
+                }
+
+                .basket-footer {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 10px;
+                    border-top: 1px solid #ccc;
+                }
+
+                .basket-footer-subtotal {
+                    font-size: 1.5em;
+                }
+
+                .basket-footer-checkout {
+                    flex-basis: 70%;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: flex-end;
+                    align-items: center;
+                }
+
+                .basket-footer-button {
+                    cursor: pointer;
+                    background-color: #222;
+                    border: none;
+                    color: #F5F6F6;
+                    padding: 0.5em;
+                    margin-left: 1em;
+                    font-size: 1.4em;
+                    transition: all 0.2s ease-in;
+                }
+                
+                .basket-footer-button:hover {
+                    background-color: #F5F6F6;
+                    outline: 2px solid #222;
+                    color: #222;
                 }
             `,
         };
@@ -203,7 +267,6 @@ class Basket extends Component {
                 const modifier = listing.getAttribute('modifier');
                 const compositeId = id + (modifier ? `~${modifier}` : '');
                 const item = this.state.items[compositeId];
-                console.log(id, modifier, item);
 
                 // update the quantity
                 if (event.target.classList.contains('reduce-quantity')) {
@@ -214,13 +277,12 @@ class Basket extends Component {
                     if (item.quantity === 0) {
                         RemoveProductFromBasket(id, item.type, item.quantity, modifier);
                         this.UpdateSubtotal();
-                        delete this.state.items[compositeId];
 
                         return this.setState({
                             ...this.state,
                             total: GetBasketTotal(),
                             items: {
-                                ...this.state.items,
+                                ...GetBasketItems(),
                             },
                         });
                     }
@@ -232,13 +294,12 @@ class Basket extends Component {
                 } else if (event.target.classList.contains('remove-quantity')) {
                     RemoveProductFromBasket(id, item.type, item.quantity, modifier);
                     this.UpdateSubtotal();
-                    delete this.state.items[compositeId];
 
                     return this.setState({
                         ...this.state,
                         total: GetBasketTotal(),
                         items: {
-                            ...this.state.items,
+                            ...GetBasketItems(),
                         },
                     });
                 }
@@ -286,22 +347,29 @@ class Basket extends Component {
                 if (event.target.value > item.stock) {
                     event.target.value = item.stock;
                 }
-                item.quantity = parseInt(event.target.value);
 
-                SetProductInBasket(id, item.type, item.quantity, modifier);
-                this.UpdateSubtotal();
-
-                if (item.quantity === 0) {
-                    delete this.state.items[compositeId];
+                if (parseInt(event.target.value) === 0) {
+                    RemoveProductFromBasket(id, item.type, item.quantity, modifier);
 
                     return this.setState({
                         ...this.state,
                         total: GetBasketTotal(),
                         items: {
-                            ...this.state.items,
+                            ...GetBasketItems(),
                         },
                     });
                 }
+
+                // if has gone up in quantity then add it
+                if (item.quantity < event.target.value) {
+                    AddProductToBasket(id, item.type, event.target.value - item.quantity, modifier);
+                    item.quantity = parseInt(event.target.value);
+                } else if (item.quantity > event.target.value) {
+                    RemoveProductFromBasket(id, item.type, item.quantity - event.target.value, modifier);
+                    item.quantity = parseInt(event.target.value);
+                }
+
+                this.UpdateSubtotal();
 
                 // update the total
                 this.setState({

@@ -1,5 +1,7 @@
 // Loosely based on https://github.com/portsoc/auth0-example/blob/main/stages/6/server/auth0-helpers.js
+// but better (obviously)
 
+const Controller = require('../controllers/user-controller.js');
 const Logger = require('../logger.js');
 
 const Axios = require('axios');
@@ -54,11 +56,37 @@ async function Auth0GetUser(req) {
 }
 
 async function Login(req, res) {
-    // tell the user all is well
-    res.send('Authenticated user: ' + req.auth.payload.sub);
-
     // tell the database the user is new if they don't already exist
     const user = await Auth0GetUser(req);
+
+    const id = user.sub.split('|')[1];
+
+    const doesExist = await Controller.GetUserByID(id);
+    if (!doesExist.error) {
+        res.send({
+            user: {
+                id,
+                nickname: doesExist.nickname,
+                email: doesExist.email,
+                admin: doesExist.admin,
+            },
+        });
+        return;
+    }
+
+    const name = user.nickname;
+    const email = user.email;
+
+    await Controller.CreateUser(id, email, false, name);
+
+    res.send({
+        user: {
+            id,
+            nickname: name,
+            email,
+            admin: false,
+        },
+    });
 }
 
 module.exports = {

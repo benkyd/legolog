@@ -7,7 +7,7 @@ import { LoginSignup, Signout } from '../auth.mjs';
 let navbarCallback = null;
 export function NotifyNavbar(type, user) {
     if (navbarCallback && type === 'login') {
-        navbarCallback.OnLogin(user);
+        navbarCallback.OnLogin();
     }
     if (navbarCallback && type === 'logout') {
         navbarCallback.OnLogout();
@@ -39,12 +39,12 @@ class NavBar extends Component {
         });
     }
 
-    OnLogin(user) {
+    OnLogin() {
         const account = this.root.querySelector('.account-item');
 
         // doing this with proper dom manipulation wasn't working
         account.innerHTML = `
-            <a class="nav-link" href="#">${user.name}▾</a>
+            <a class="nav-link" href="#">${localStorage.user}▾</a>
             <ul class="sub-nav" >
                 <li><a class="sub-nav-link" href="#">My Account</a></li>
                 <li><a class="sub-nav-link logout-button" href="#">Log Out</a></li>

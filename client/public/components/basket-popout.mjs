@@ -19,6 +19,13 @@ let basketCallback = null;
 
 // TODO: Does the localstorage have a problem with mutual exclusion?
 // TODO: Should the basket be persisted to the server?
+export function GetBasketItems() {
+    if (localStorage.getItem('basket') === null || !localStorage.getItem('basket')) {
+        return;
+    }
+    return JSON.parse(localStorage.getItem('basket')).items;
+}
+
 export function AddProductToBasket(product, type, amount, brickModifier = 'none') {
     if (localStorage.getItem('basket') === null || !localStorage.getItem('basket')) {
         localStorage.setItem('basket', JSON.stringify({
@@ -61,46 +68,15 @@ export function RemoveProductFromBasket(product, type, amount, brickModifier = '
         product += '~' + brickModifier;
     }
 
-    if (basket.items[product].quantity > amount) {
-        basket.items[product].quantity -= amount;
-    } else {
-        delete basket.items[product];
-    }
-
-    basket.total -= amount;
-
-    localStorage.setItem('basket', JSON.stringify(basket));
-
-    if (basketCallback) {
-        basketCallback();
-    }
-}
-
-export function SetProductInBasket(product, type, amount, brickModifier = 'none') {
-    if (localStorage.getItem('basket') === null || !localStorage.getItem('basket')) {
-        return;
-    }
-    const basket = JSON.parse(localStorage.getItem('basket'));
-
-    if (type === 'brick') {
-        product += '~' + brickModifier;
-    }
-
-    if (amount === 0) {
-        delete basket.items[product];
-    } else {
-        if (basket.items[product]) {
-            basket.total -= basket.items[product].quantity;
-            basket.items[product].quantity = amount;
+    if (basket.items[product]) {
+        if (basket.items[product].quantity > amount) {
+            basket.items[product].quantity -= amount;
         } else {
-            basket.items[product] = {
-                quantity: amount,
-                type,
-            };
+            delete basket.items[product];
         }
     }
 
-    basket.total += amount;
+    basket.total -= amount;
 
     localStorage.setItem('basket', JSON.stringify(basket));
 

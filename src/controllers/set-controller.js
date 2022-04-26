@@ -23,7 +23,7 @@ async function Search(fuzzyStrings) {
         Logger.Error(dbres.error);
         return dbres;
     }
-    await Database.Query('COMMIT TRANSACTION;');
+    Database.Query('COMMIT TRANSACTION;');
 
     // validate database response
     if (dbres.rows.length === 0) {
@@ -99,7 +99,7 @@ async function SumPrices(setsArray, quantityArray) {
         Logger.Error(dbres.error);
         return dbres;
     }
-    await Database.Query('COMMIT TRANSACTION;');
+    Database.Query('COMMIT TRANSACTION;');
 
     // validate database response
     if (dbres.rows.length === 0) {
@@ -140,7 +140,7 @@ async function GetSet(setId) {
         Logger.Error(dbres.error);
         return dbres;
     }
-    await Database.Query('COMMIT TRANSACTION;');
+    Database.Query('COMMIT TRANSACTION;');
 
     // validate database response
     if (dbres.rows.length === 0) {
@@ -191,7 +191,7 @@ async function GetSets(page, resPerPage) {
         Logger.Error(dbres.error);
         return dbres;
     }
-    await Database.Query('COMMIT TRANSACTION;');
+    Database.Query('COMMIT TRANSACTION;');
 
     const total = parseInt(countRes.rows[0].count);
 

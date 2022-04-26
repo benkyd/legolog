@@ -17,7 +17,7 @@ async function Get(req, res) {
 
 async function Featured(req, res) {
     // query all sets and return all of them
-    const { sets } = await Controller.GetSets(0, 10);
+    const { sets } = await Controller.GetSets(0, 9);
 
     if (sets.error) {
         res.send(JSON.stringify(sets));

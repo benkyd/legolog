@@ -32,18 +32,6 @@ function getFormatedTimeString() {
 // levelSource is the level that the source will log at ie, if levelSource is
 // LEVEL_WARN, it will only log if the current level is at or above LEVEL_WARN.
 function internalLog(type, message, cConsoleColour, levelSource) {
-    message = [message].map(x => {
-        if (typeof x === 'object') {
-            return JSON.stringify(x);
-        }
-
-        if (Array.isArray(x)) {
-            return x.join(' ');
-        }
-
-        return x;
-    }).join(' ');
-
     if (Options.logToConsole && (Options.logLevel <= levelSource)) {
         console.log(`${getFormatedTimeString()} [${cConsoleColour(type)}] ${message}`);
     }
@@ -60,16 +48,15 @@ function internalLog(type, message, cConsoleColour, levelSource) {
     }
 }
 
-const Info = (...messages) => internalLog('INFO', messages, clc.greenBright, LEVEL_INFO);
-const Warn = (...messages) => internalLog('WARN', messages, clc.yellowBright, LEVEL_WARN);
-const Error = (...messages) => internalLog('ERROR', messages, clc.redBright, LEVEL_STICK);
-const Panic = (...messages) => internalLog('PANIC', messages, clc.bgRedBright, LEVEL_STICK);
-const Debug = (...messages) => internalLog('DEBUG', messages, clc.cyanBright, LEVEL_DEBUG);
+const Info = (...messages) => internalLog('INFO', messages.join(' '), clc.greenBright, LEVEL_INFO);
+const Warn = (...messages) => internalLog('WARN', messages.join(' '), clc.yellowBright, LEVEL_WARN);
+const Error = (...messages) => internalLog('ERROR', messages.join(' '), clc.redBright, LEVEL_STICK);
+const Panic = (...messages) => internalLog('PANIC', messages.join(' '), clc.bgRedBright, LEVEL_STICK);
+const Debug = (...messages) => internalLog('DEBUG', messages.join(' '), clc.cyanBright, LEVEL_DEBUG);
 const Module = (module, ...messages) => internalLog(`MODULE [${module}]`, ` ${messages.join(' ')}`, clc.blue, LEVEL_INFO);
 const Database = (...messages) => internalLog('PSQL', `[DB] ${messages.join(' ')}`, clc.blue, LEVEL_INFO);
 const ExpressLogger = (req, res, next) => {
-    // don't spam the console with 1000000 bloody requests for thumbnails
-    if (req.originalUrl.startsWith('/api/cdn/')) {
+    if (req.originalUrl.startsWith('/api/cdn')) {
         return next();
     }
     internalLog('HTTP', `[${req.method}] ${req.originalUrl} FROM ${req.headers['x-forwarded-for'] || req.socket.remoteAddress}`, clc.magenta, LEVEL_VERBOSE);

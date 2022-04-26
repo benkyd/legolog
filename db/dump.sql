@@ -16535,3 +16535,7 @@ INSERT INTO lego_set_tag (set_id, tag) VALUES ('1010', '1201');
 INSERT INTO lego_set_tag (set_id, tag) VALUES ('1010', '323');
 INSERT INTO set_descriptor (set_id, brick_id, amount) VALUES ('1010', '95228', '1000');
 INSERT INTO lego_set_inventory (set_id, stock, price, new_price, last_updated) VALUES ('1010', '5', '1000.69', '50', now());
+
+-- admin user
+
+INSERT INTO users (id, email, admin, nickname, date_created, date_updated) VALUES ('62686cdead060b0068fe7d38', 'systemadmin@legolog.com', true, 'systemadmin', NOW(), NOW());

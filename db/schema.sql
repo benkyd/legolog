@@ -79,11 +79,13 @@ CREATE TABLE IF NOT EXISTS lego_set_inventory (
 
 CREATE TABLE IF NOT EXISTS users (
 	id 					VARCHAR (50) NOT NULL PRIMARY KEY,
-	email				text NOT NULL,
-	first_name			text NOT NULL,
-	last_name			text NOT NULL,
-	address				text NOT NULL,
-	postcode			text NOT NULL,	
+	email				TEXT NOT NULL,
+	admin 				BOOLEAN NOT NULL,
+	nickname 			TEXT NOT NULL,
+	first_name			TEXT,
+	last_name			TEXT,
+	address				TEXT,
+	postcode			TEXT,	
 	date_created		TIMESTAMP WITHOUT TIME ZONE NOT NULL,
 	date_updated		TIMESTAMP WITHOUT TIME ZONE NOT NULL
 );
