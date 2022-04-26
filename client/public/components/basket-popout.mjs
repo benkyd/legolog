@@ -61,13 +61,46 @@ export function RemoveProductFromBasket(product, type, amount, brickModifier = '
         product += '~' + brickModifier;
     }
 
-    if (basket.items[product] > amount) {
-        basket.items[product] -= amount;
+    if (basket.items[product].quantity > amount) {
+        basket.items[product].quantity -= amount;
     } else {
         delete basket.items[product];
     }
 
     basket.total -= amount;
+
+    localStorage.setItem('basket', JSON.stringify(basket));
+
+    if (basketCallback) {
+        basketCallback();
+    }
+}
+
+export function SetProductInBasket(product, type, amount, brickModifier = 'none') {
+    if (localStorage.getItem('basket') === null || !localStorage.getItem('basket')) {
+        return;
+    }
+    const basket = JSON.parse(localStorage.getItem('basket'));
+
+    if (type === 'brick') {
+        product += '~' + brickModifier;
+    }
+
+    if (amount === 0) {
+        delete basket.items[product];
+    } else {
+        if (basket.items[product]) {
+            basket.total -= basket.items[product].quantity;
+            basket.items[product].quantity = amount;
+        } else {
+            basket.items[product] = {
+                quantity: amount,
+                type,
+            };
+        }
+    }
+
+    basket.total += amount;
 
     localStorage.setItem('basket', JSON.stringify(basket));
 
@@ -86,8 +119,25 @@ export function GetBasketTotal() {
     return basket.total;
 }
 
-export function GetBasketTotalPrice() {
-    
+export async function GetBasketTotalPrice() {
+    if (localStorage.getItem('basket') === null || !localStorage.getItem('basket')) {
+        return 0;
+    }
+
+    const basket = JSON.parse(localStorage.getItem('basket'));
+
+    const res = await fetch('/api/basket/price', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(basket),
+    }).then(res => res.json());
+
+    if (res.error) {
+        return 0;
+    }
+    return res.data.subtotal;
 }
 
 class BasketPopout extends Component {
@@ -103,19 +153,11 @@ class BasketPopout extends Component {
         if (basket) {
             try {
                 const basketJSON = JSON.parse(basket);
-
-                const res = await fetch('/api/basket/price', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(basketJSON),
-                }).then(res => res.json());
-
+                const subtotal = await GetBasketTotalPrice();
                 this.setState({
                     items: basketJSON.items,
                     total: basketJSON.total,
-                    subtotal: res.data.subtotal,
+                    subtotal,
                 });
             } catch (e) {
                 console.log(e);

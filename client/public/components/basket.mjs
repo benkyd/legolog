@@ -1,4 +1,4 @@
-import { AddProductToBasket, GetBasketTotal, RemoveProductFromBasket } from './basket-popout.mjs';
+import { AddProductToBasket, SetProductInBasket, RemoveProductFromBasket, GetBasketTotal, GetBasketTotalPrice } from './basket-popout.mjs';
 import { RegisterComponent, Component } from './components.mjs';
 
 class Basket extends Component {
@@ -32,7 +32,7 @@ class Basket extends Component {
                             Your Basket
                         </div>
                         <div class="basket-header-total">
-                            Total: {this.state.total} items
+                            Total: <span class="basket-total">{this.state.total}</span> items
                         </div>
                     </div>
                     <div class="basket-items">
@@ -60,6 +60,13 @@ class Basket extends Component {
                                 `;
                             }).join('')}
                     </div>
+                    <div class="basket-footer">
+                        <!-- subtotal -->
+                        <div class="basket-footer-subtotal">
+                            Subtotal: £<span class="basket-subtotal">0.00</span>
+                        </div>
+                        <button class="basket-footer-button" type="button">Checkout</button>
+                        <button class="basket-footer-button" type="button">Checkout As Guest</button>
                 </div>
             `,
             style: `
@@ -137,7 +144,16 @@ class Basket extends Component {
         };
     }
 
+    async UpdateSubtotal() {
+        const subtotal = await GetBasketTotalPrice();
+        const basketSubtotal = this.root.querySelector('.basket-subtotal');
+        if (basketSubtotal) {
+            basketSubtotal.innerText = parseFloat(subtotal).toFixed(2);
+        }
+    }
+
     OnRender() {
+        this.UpdateSubtotal();
         this.root.querySelectorAll('.basket-item-listing').forEach((listing) => {
             // listen to mutations on the attribute stock because the stock is updated once the
             // super compact listing is loaded and the stock is updated
@@ -158,7 +174,6 @@ class Basket extends Component {
                                 ...this.state,
                             }, false);
                         }
-
                         // update the stock number
                         const stockNumber = mutation.target.parentElement.querySelector('.stock-number');
                         stockNumber.innerText = stock;
@@ -172,6 +187,7 @@ class Basket extends Component {
                 attributeFilter: ['stock'],
             });
         });
+
 
         // set up each button to update the quantity and remove if it is zero
         this.root.querySelectorAll('.product-quantity-button').forEach((button) => {
@@ -197,7 +213,16 @@ class Basket extends Component {
                     }
                     if (item.quantity === 0) {
                         RemoveProductFromBasket(id, item.type, item.quantity, modifier);
+                        this.UpdateSubtotal();
                         delete this.state.items[compositeId];
+
+                        return this.setState({
+                            ...this.state,
+                            total: GetBasketTotal(),
+                            items: {
+                                ...this.state.items,
+                            },
+                        });
                     }
                 } else if (event.target.classList.contains('increase-quantity')) {
                     if (item.quantity < item.stock) {
@@ -206,7 +231,16 @@ class Basket extends Component {
                     }
                 } else if (event.target.classList.contains('remove-quantity')) {
                     RemoveProductFromBasket(id, item.type, item.quantity, modifier);
+                    this.UpdateSubtotal();
                     delete this.state.items[compositeId];
+
+                    return this.setState({
+                        ...this.state,
+                        total: GetBasketTotal(),
+                        items: {
+                            ...this.state.items,
+                        },
+                    });
                 }
 
                 // update the total
@@ -217,7 +251,72 @@ class Basket extends Component {
                         ...this.state.items,
                         [compositeId]: item,
                     },
-                });
+                }, false);
+
+                // update the total so it doesn't need to be rendered again
+                const total = this.root.querySelector('.basket-total');
+                total.innerText = this.state.total;
+                // and the same on the item
+                const itemTotal = clickedItem.querySelector('.quantity-input');
+                itemTotal.value = parseInt(item.quantity);
+                this.UpdateSubtotal();
+            });
+        });
+
+
+        // do the same but with the input field
+        this.root.querySelectorAll('.quantity-input').forEach((input) => {
+            input.addEventListener('change', (event) => {
+                let clickedItem = event.target.parentElement;
+                let listing = clickedItem.querySelector('.basket-item-listing');
+                if (!listing) {
+                    clickedItem = clickedItem.parentElement;
+                    listing = clickedItem.querySelector('.basket-item-listing');
+                }
+
+                const id = listing.getAttribute('id');
+                const modifier = listing.getAttribute('modifier');
+                const compositeId = id + (modifier ? `~${modifier}` : '');
+                const item = this.state.items[compositeId];
+
+                // update the quantity
+                if (event.target.value < 0) {
+                    event.target.value = 0;
+                }
+                if (event.target.value > item.stock) {
+                    event.target.value = item.stock;
+                }
+                item.quantity = parseInt(event.target.value);
+
+                SetProductInBasket(id, item.type, item.quantity, modifier);
+                this.UpdateSubtotal();
+
+                if (item.quantity === 0) {
+                    delete this.state.items[compositeId];
+
+                    return this.setState({
+                        ...this.state,
+                        total: GetBasketTotal(),
+                        items: {
+                            ...this.state.items,
+                        },
+                    });
+                }
+
+                // update the total
+                this.setState({
+                    ...this.state,
+                    total: GetBasketTotal(),
+                    items: {
+                        ...this.state.items,
+                        [compositeId]: item,
+                    },
+                }, false);
+
+
+                // update the total so it doesn't need to be rendered again
+                const total = this.root.querySelector('.basket-total');
+                total.innerText = this.state.total;
             });
         });
     }

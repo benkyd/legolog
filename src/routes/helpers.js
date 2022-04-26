@@ -1,5 +1,6 @@
 const BrickController = require('../controllers/brick-controller.js');
 const SetController = require('../controllers/set-controller.js');
+const Logger = require('../logger.js');
 
 // AppEng Deadline
 const EndDate = new Date(1651269600 * 1000);
@@ -37,11 +38,19 @@ async function CalculateBasketPrice(req, res) {
         }
     }
 
-    let setSubtotal = await SetController.SumPrices(setList, setQuantities);
-    let brickSubtotal = await BrickController.SumPrices(brickList, brickQuantities);
+    Logger.Debug(`Set list: ${setList} Brick list: ${brickList}`);
+    let setSubtotal = setList > 0
+        ? await SetController.SumPrices(setList, setQuantities)
+        : 0;
+    let brickSubtotal = brickList > 0
+        ? await BrickController.SumPrices(brickList, brickQuantities)
+        : 0;
+
 
     if (setSubtotal.error) setSubtotal = 0;
     if (brickSubtotal.error) brickSubtotal = 0;
+
+    Logger.Debug(`Set subtotal: ${setSubtotal} Brick subtotal: ${brickSubtotal} Total: ${parseFloat(setSubtotal) + parseFloat(brickSubtotal)}`);
 
     res.send({
         data: {

@@ -110,7 +110,6 @@ async function SumPrices(setsArray, quantityArray) {
     }
 
     let sum = 0;
-    console.log(dbres);
     for (let i = 0; i < dbres.rows.length; i++) {
         sum += parseFloat(dbres.rows[i].price) * parseFloat(quantityArray[i]);
     }
