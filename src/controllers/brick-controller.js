@@ -6,24 +6,24 @@ const PgFormat = require('pg-format');
 
 async function Search(fuzzyStrings) {
     await Database.Query('BEGIN TRANSACTION;');
-    let dbres;
-    try {
-        dbres = await Database.Query(PgFormat(`
-            SELECT lego_brick.id, lego_brick.name, tag.name AS "tag", inv.price, inv.new_price AS "discount"
-            FROM lego_brick
-                LEFT JOIN lego_brick_tag AS tags ON tags.brick_id = lego_brick.id
-                LEFT JOIN tag AS tag ON tags.tag = tag.id
-                LEFT JOIN lego_brick_inventory AS inv ON inv.brick_id = lego_brick.id
-            WHERE lego_brick.id ~* ANY(ARRAY[%L]) OR lego_brick.name ~* ANY(ARRAY[%L]) OR tag.name ~* ANY(ARRAY[%L])
-        `, fuzzyStrings, fuzzyStrings, fuzzyStrings), []);
-        await Database.Query('COMMIT TRANSACTION;');
-    } catch {
-        await Database.Query('ROLLBACK TRANSACTION;');
-        Logger.Error('Database Error');
+    const dbres = await Database.Query(PgFormat(`
+        SELECT lego_brick.id, lego_brick.name, tag.name AS "tag", inv.price, inv.new_price AS "discount"
+        FROM lego_brick
+            LEFT JOIN lego_brick_tag AS tags ON tags.brick_id = lego_brick.id
+            LEFT JOIN tag AS tag ON tags.tag = tag.id
+            LEFT JOIN lego_brick_inventory AS inv ON inv.brick_id = lego_brick.id
+        WHERE lego_brick.id ~* ANY(ARRAY[%L]) OR lego_brick.name ~* ANY(ARRAY[%L]) OR tag.name ~* ANY(ARRAY[%L])
+    `, fuzzyStrings, fuzzyStrings, fuzzyStrings), []).catch(() => {
         return {
             error: 'Database error',
         };
+    });
+    if (dbres.error) {
+        Database.Query('ROLLBACK TRANSACTION;');
+        Logger.Error(dbres.error);
+        return dbres;
     }
+    await Database.Query('COMMIT TRANSACTION;');
 
     // validate database response
     if (dbres.rows.length === 0) {
@@ -74,22 +74,22 @@ async function Search(fuzzyStrings) {
 
 async function SumPrices(bricksArr, quantityArray) {
     await Database.Query('BEGIN TRANSACTION;');
-    let dbres;
-    try {
-        dbres = await Database.Query(PgFormat(`
-            SELECT COALESCE(new_price, price) AS "price"
-            FROM lego_brick
-                LEFT JOIN lego_brick_inventory AS brick_inventory ON brick_inventory.brick_id = lego_brick.id
-            WHERE lego_brick.id IN (%L);
-        `, bricksArr), []);
-        await Database.Query('COMMIT TRANSACTION;');
-    } catch {
-        await Database.Query('ROLLBACK TRANSACTION;');
-        Logger.Error('Database Error');
+    const dbres = await Database.Query(PgFormat(`
+        SELECT COALESCE(new_price, price) AS "price"
+        FROM lego_brick
+            LEFT JOIN lego_brick_inventory AS brick_inventory ON brick_inventory.brick_id = lego_brick.id
+        WHERE lego_brick.id IN (%L);
+    `, bricksArr), []).catch(() => {
         return {
             error: 'Database error',
         };
+    });
+    if (dbres.error) {
+        Database.Query('ROLLBACK TRANSACTION;');
+        Logger.Error(dbres.error);
+        return dbres;
     }
+    await Database.Query('COMMIT TRANSACTION;');
 
     // validate database response
     if (dbres.rows.length === 0) {
@@ -109,24 +109,24 @@ async function SumPrices(bricksArr, quantityArray) {
 
 async function GetBulkBricks(bricksArr) {
     await Database.Query('BEGIN TRANSACTION;');
-    let dbres;
-    try {
-        dbres = await Database.Query(PgFormat(`
-            SELECT lego_brick.id, lego_brick.name, tag.name AS "tag", inv.price, inv.new_price AS "discount"
-            FROM lego_brick
-                LEFT JOIN lego_brick_tag AS tags ON tags.brick_id = lego_brick.id
-                LEFT JOIN tag AS tag ON tags.tag = tag.id
-                LEFT JOIN lego_brick_inventory AS inv ON inv.brick_id = lego_brick.id
-            WHERE lego_brick.id IN (%L);
-        `, bricksArr), []);
-        await Database.Query('COMMIT TRANSACTION;');
-    } catch {
-        await Database.Query('ROLLBACK TRANSACTION;');
-        Logger.Error('Database Error');
+    const dbres = await Database.Query(PgFormat(`
+        SELECT lego_brick.id, lego_brick.name, tag.name AS "tag", inv.price, inv.new_price AS "discount"
+        FROM lego_brick
+            LEFT JOIN lego_brick_tag AS tags ON tags.brick_id = lego_brick.id
+            LEFT JOIN tag AS tag ON tags.tag = tag.id
+            LEFT JOIN lego_brick_inventory AS inv ON inv.brick_id = lego_brick.id
+        WHERE lego_brick.id IN (%L);
+    `, bricksArr), []).catch(() => {
         return {
             error: 'Database error',
         };
+    });
+    if (dbres.error) {
+        Database.Query('ROLLBACK TRANSACTION;');
+        Logger.Error(dbres.error);
+        return dbres;
     }
+    await Database.Query('COMMIT TRANSACTION;');
 
     // validate database response
     if (dbres.rows.length === 0) {
@@ -148,34 +148,40 @@ async function GetBulkBricks(bricksArr) {
 
 async function GetBrick(brickId) {
     await Database.Query('BEGIN TRANSACTION;');
-    let dbres;
-    let colDbres;
-    try {
-        dbres = await Database.Query(`
-            SELECT lego_brick.id, lego_brick.name, tag.name AS "tag",
-                inv.price, inv.new_price AS "discount", inv.stock,
-                inv.last_updated AS "last_stock_update",
-                weight, dimensions_x, dimensions_y, dimensions_z
-            FROM lego_brick
-                LEFT JOIN lego_brick_inventory AS inv ON inv.brick_id = lego_brick.id
-                LEFT JOIN lego_brick_tag AS tags ON tags.brick_id = lego_brick.id
-                LEFT JOIN tag AS tag ON tags.tag = tag.id
-            WHERE lego_brick.id = $1;
-        `, [brickId]);
-        colDbres = await Database.Query(`
-            SELECT lego_brick_colour.id, lego_brick_colour.name, lego_brick_colour.hexrgb, 
-                colour_type.name AS "colour_type"
-            FROM lego_brick_colour
-            LEFT JOIN colour_type AS colour_type ON lego_brick_colour.col_type = colour_type.id
-        `, []);
-        await Database.Query('COMMIT TRANSACTION;');
-    } catch {
-        await Database.Query('ROLLBACK TRANSACTION;');
-        Logger.Error('Database Error');
+    const dbres = await Database.Query(`
+        SELECT lego_brick.id, lego_brick.name, tag.name AS "tag",
+            inv.price, inv.new_price AS "discount", inv.stock,
+            inv.last_updated AS "last_stock_update",
+            weight, dimensions_x, dimensions_y, dimensions_z
+        FROM lego_brick
+            LEFT JOIN lego_brick_inventory AS inv ON inv.brick_id = lego_brick.id
+            LEFT JOIN lego_brick_tag AS tags ON tags.brick_id = lego_brick.id
+            LEFT JOIN tag AS tag ON tags.tag = tag.id
+        WHERE lego_brick.id = $1;
+    `, [brickId]).catch(() => {
         return {
             error: 'Database error',
         };
+    });
+
+    const colDbres = await Database.Query(`
+        SELECT lego_brick_colour.id, lego_brick_colour.name, lego_brick_colour.hexrgb, 
+            colour_type.name AS "colour_type"
+        FROM lego_brick_colour
+        LEFT JOIN colour_type AS colour_type ON lego_brick_colour.col_type = colour_type.id
+    `, []).catch(() => {
+        return {
+            error: 'Database error',
+        };
+    });
+
+    if (dbres.error || colDbres.error) {
+        Database.Query('ROLLBACK TRANSACTION;');
+        Logger.Error(dbres.error || colDbres.error);
+        return dbres || colDbres;
     }
+
+    await Database.Query('COMMIT TRANSACTION;');
 
     // validate database response
     if (dbres.rows.length === 0) {

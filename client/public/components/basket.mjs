@@ -1,3 +1,4 @@
+import { AddProductToBasket, GetBasketTotal, RemoveProductFromBasket } from './basket-popout.mjs';
 import { RegisterComponent, Component } from './components.mjs';
 
 class Basket extends Component {
@@ -145,6 +146,19 @@ class Basket extends Component {
                     if (mutation.attributeName === 'stock') {
                         const stock = parseInt(mutation.target.getAttribute('stock'));
 
+                        const itemCompositeId = mutation.target.getAttribute('id') + (mutation.target.getAttribute('modifier') ? '~' + mutation.target.getAttribute('modifier') : '');
+                        const item = this.state.items[itemCompositeId];
+                        if (item) {
+                            item.stock = stock;
+                            this.setState({
+                                items: {
+                                    ...this.state.items,
+                                    [itemCompositeId]: item,
+                                },
+                                ...this.state,
+                            }, false);
+                        }
+
                         // update the stock number
                         const stockNumber = mutation.target.parentElement.querySelector('.stock-number');
                         stockNumber.innerText = stock;
@@ -162,40 +176,48 @@ class Basket extends Component {
         // set up each button to update the quantity and remove if it is zero
         this.root.querySelectorAll('.product-quantity-button').forEach((button) => {
             button.addEventListener('click', (event) => {
-                const item = event.target.parentElement.parentElement;
-                const id = item.getAttribute('id');
-                const type = item.getAttribute('type');
-                const modifier = item.getAttribute('modifier');
-                const quantity = parseInt(item.querySelector('.quantity-input').value);
-                const stock = parseInt(item.querySelector('.stock-number').innerText);
+                let clickedItem = event.target.parentElement;
+                let listing = clickedItem.querySelector('.basket-item-listing');
+                if (!listing) {
+                    clickedItem = clickedItem.parentElement;
+                    listing = clickedItem.querySelector('.basket-item-listing');
+                }
+
+                const id = listing.getAttribute('id');
+                const modifier = listing.getAttribute('modifier');
+                const compositeId = id + (modifier ? `~${modifier}` : '');
+                const item = this.state.items[compositeId];
+                console.log(id, modifier, item);
 
                 // update the quantity
                 if (event.target.classList.contains('reduce-quantity')) {
-                    if (quantity > 0) {
-                        item.querySelector('.quantity-input').value = quantity - 1;
+                    if (item.quantity > 0) {
+                        item.quantity--;
+                        RemoveProductFromBasket(id, item.type, 1, modifier);
+                    }
+                    if (item.quantity === 0) {
+                        RemoveProductFromBasket(id, item.type, item.quantity, modifier);
+                        delete this.state.items[compositeId];
                     }
                 } else if (event.target.classList.contains('increase-quantity')) {
-                    if (quantity < stock) {
-                        item.querySelector('.quantity-input').value = quantity + 1;
+                    if (item.quantity < item.stock) {
+                        item.quantity++;
+                        AddProductToBasket(id, item.type, 1, modifier);
                     }
                 } else if (event.target.classList.contains('remove-quantity')) {
-                    // remove the item from the basket
-                    // delete this.state.items[id];
-                    // this.setState({
-                    //     items: this.state.items,
-                    // }, true);
+                    RemoveProductFromBasket(id, item.type, item.quantity, modifier);
+                    delete this.state.items[compositeId];
                 }
 
                 // update the total
                 this.setState({
-                    total: Object.keys(this.state.items).reduce((total, key) => {
-                        const item = this.state.items[key];
-                        return total + (item.quantity * item.price);
-                    }, 0),
-                }, true);
-
-                // update the basket in local storage
-                // localStorage.setItem('basket', JSON.stringify(this.state));
+                    ...this.state,
+                    total: GetBasketTotal(),
+                    items: {
+                        ...this.state.items,
+                        [compositeId]: item,
+                    },
+                });
             });
         });
     }

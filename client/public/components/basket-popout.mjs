@@ -17,7 +17,6 @@ import { RegisterComponent, Component } from './components.mjs';
 
 let basketCallback = null;
 
-
 // TODO: Does the localstorage have a problem with mutual exclusion?
 // TODO: Should the basket be persisted to the server?
 export function AddProductToBasket(product, type, amount, brickModifier = 'none') {
@@ -77,6 +76,19 @@ export function RemoveProductFromBasket(product, type, amount, brickModifier = '
     }
 }
 
+export function GetBasketTotal() {
+    if (localStorage.getItem('basket') === null || !localStorage.getItem('basket')) {
+        return 0;
+    }
+
+    const basket = JSON.parse(localStorage.getItem('basket'));
+
+    return basket.total;
+}
+
+export function GetBasketTotalPrice() {
+    
+}
 
 class BasketPopout extends Component {
     static __IDENTIFY() { return 'basket-popout'; }
