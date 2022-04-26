@@ -30,7 +30,8 @@ class Tag extends Component {
 
     OnRender() {
         this.root.addEventListener('click', () => {
-            window.location.href = `/search?q=${this.state.name}`;
+            const query = encodeURIComponent(this.state.name);
+            window.location.href = `/search?q=${query}`;
         });
     }
 }
