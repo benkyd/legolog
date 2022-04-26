@@ -30,7 +30,7 @@ class Tag extends Component {
 
     OnRender() {
         this.root.addEventListener('click', () => {
-            this.root.classList.toggle('tag-selected');
+            window.location.href = `/search?q=${this.state.name}`;
         });
     }
 }

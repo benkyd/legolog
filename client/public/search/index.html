@@ -43,8 +43,8 @@
             console.log(`/api/search/${window.location.search}`)
             // parse out the search query using the query object
             const query = new URLSearchParams(window.location.search)
-            // get the search query
-            const searchQuery = query.get('q')
+			// get the search query from the query object
+			const searchQuery = query.get('q');
             document.write(/* html */`
                 <product-list-component id="results"
                     title="Search Results for '${searchQuery}'"

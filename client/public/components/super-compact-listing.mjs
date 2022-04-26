@@ -1,7 +1,6 @@
 import { RegisterComponent, Component } from './components.mjs';
 
 // super compact listing is interoperable through types which makes it exteremeely poggers and also portable
-
 class SuperCompactProductListing extends Component {
     static __IDENTIFY() { return 'super-compact-listing'; }
 
@@ -17,6 +16,8 @@ class SuperCompactProductListing extends Component {
             const tag = product.tag;
             const tags = product.tags;
             const colours = product.colours;
+
+            this.setAttribute('stock', product.stock);
 
             this.setState({
                 ...this.getState,
@@ -53,7 +54,7 @@ class SuperCompactProductListing extends Component {
                         <img class="product-image" 
                             title="Image of {this.state.name}" 
                             alt="Image of {this.state.name}"     
-                            src="/api/cdn/${this.state.id}-thumb.png">
+                            src="/api/cdn/${this.state.id}${this.state.bigimage ? '' : '-thumb'}.png">
                         </span>
                         ${modifierPreview}
                     <span class="product-listing-info">
@@ -61,7 +62,7 @@ class SuperCompactProductListing extends Component {
                         <div class="product-listing-modifier">${this.state.modifier ? `Colour: ${this.state.colours[this.state.modifier].name}` : ''}</div>
                         <span class="product-listing-tags">
                             ${this.state.tags
-                                    ? this.state.tags.map(tag => `<tag-component name="${tag}"></tag-component>`).join('') 
+                                    ? this.state.tags.map(tag => `<tag-component name="${tag}"></tag-component>`).join('')
                                     : `<tag-component name="${this.state.tag}"></tag-component>`}
                         </span>
                     </span>
@@ -108,6 +109,8 @@ class SuperCompactProductListing extends Component {
                 }
                 
                 .product-image {
+                    max-height: 150px;
+                    max-width: 150px;
                     object-fit: scale-down;
                     object-position: center;
                 }

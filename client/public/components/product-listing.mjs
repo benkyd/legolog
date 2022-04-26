@@ -111,8 +111,7 @@ class ProductListing extends Component {
             </div>
             `;
         }
-        
-        console.log(this.state);
+
         return {
             template: /* html */`
                 <div class="product-page">

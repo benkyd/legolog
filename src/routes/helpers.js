@@ -19,6 +19,13 @@ async function CalculateBasketPrice(req, res) {
     const brickList = [];
     const brickQuantities = [];
 
+    if (!req.body.items) {
+        res.send({
+            error: 'No items in basket',
+        });
+        return;
+    }
+
     for (const [item, value] of Object.entries(req.body.items)) {
         if (value.type === 'set') {
             setList.push(item.split('~')[0]);

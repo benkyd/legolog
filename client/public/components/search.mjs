@@ -118,6 +118,8 @@ class Search extends Component {
             return;
         }
 
+        value = encodeURIComponent(value);
+
         const route = `/api/search?q=${value}&per_page=10`;
         fetch(route).then((response) => {
             return response.json();
@@ -148,8 +150,10 @@ class Search extends Component {
 
             if (e.keyCode === 13) {
                 const searchTerm = e.target.value;
-                if (searchTerm.length > 0) {
-                    window.location.href = `/search?q=${searchTerm}`;
+                const encodedSearchTerm = encodeURIComponent(searchTerm);
+
+                if (encodedSearchTerm.length > 0) {
+                    window.location.href = `/search?q=${encodedSearchTerm}`;
                 }
             }
         });
