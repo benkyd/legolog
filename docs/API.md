@@ -22,8 +22,8 @@ automatically every request
 | GET   | /api/basket/price/    |                 | ❌ | |
 | GET   | /api/discount/        | offer code      | ❌ | |
 | GET   | /api/auth/login/      |                 | ✔️ | |
-| POST  | /api/auth/order/      |                 | ✔️❌ | |
-| GET   | /api/auth/order/:id   |                 | ✔️❌ | |
+| POST  | /api/auth/order/      |                 | ❌ | |
+| GET   | /api/auth/order/:id   |                 | ❌ | Security By Obscurity |
 | GET   | /api/auth/orders/     |                 | ✔️ | |
 
 Query endpoints do not return the full data on a brick/set, they return

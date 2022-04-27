@@ -91,7 +91,7 @@ class Checkout extends Component {
                                 </div>
                                 <div class="checkout-summary-prices-row discount-row" style="display: ${this.state.discount > 0 ? 'flex;' : 'none;'}">
                                     <span class="checkout-summary-prices-row-label">Discount</span>
-                                    <span class="checkout-summary-prices-row-value">£-${parseFloat(this.state.discount).toFixed(2)}</span>
+                                    <span class="checkout-summary-prices-row-value">-£${parseFloat(this.state.discount).toFixed(2)}</span>
                                 </div>
                                 <div class="checkout-summary-prices-row">
                                     <span class="checkout-summary-prices-row-label">Total</span>
