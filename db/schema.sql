@@ -90,22 +90,34 @@ CREATE TABLE IF NOT EXISTS users (
 	date_updated		TIMESTAMP WITHOUT TIME ZONE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS orders (
+CREATE TABLE IF NOT EXISTS order_log (
 	id 					VARCHAR (50) NOT NULL PRIMARY KEY,
-	user_id				VARCHAR (50) NOT NULL,
+	user_id				VARCHAR (50) NOT NULL, -- 0 if guest
+	subtotal 			DECIMAL NOT NULL,
 	date_placed			TIMESTAMP WITHOUT TIME ZONE NOT NULL,
 	FOREIGN KEY ( user_id ) REFERENCES users( id )
 );
 
-CREATE TABLE IF NOT EXISTS order_items (
+CREATE TABLE IF NOT EXISTS order_item (
 	order_id			VARCHAR (50) NOT NULL,
 	brick_id			VARCHAR (50),
 	-- colour is a modifier for the brick
 	brick_colour		INT,
 	set_id				VARCHAR (50),
 	amount				INT NOT NULL,
-	FOREIGN KEY ( order_id ) REFERENCES orders( id ),
+	price_paid			DECIMAL NOT NULL,
+	FOREIGN KEY ( order_id ) REFERENCES order_log( id ),
 	FOREIGN KEY ( brick_id ) REFERENCES lego_brick( id ),
 	FOREIGN KEY ( brick_colour ) REFERENCES lego_brick_colour( id ),
 	FOREIGN KEY ( set_id ) REFERENCES lego_set( id )
+);
+
+CREATE TABLE IF NOT EXISTS offer_code (
+	id 					SERIAL NOT NULL PRIMARY KEY,
+	code				TEXT NOT NULL,
+	discount			DECIMAL NOT NULL, -- percentage or fixed amount
+	discount_type		INT NOT NULL, -- 0 = percentage, 1 = fixed amount
+	min_order_value		DECIMAL NOT NULL,
+	type 				TEXT NOT NULL, -- set or brick
+	expiry_date			TIMESTAMP WITHOUT TIME ZONE NOT NULL
 );

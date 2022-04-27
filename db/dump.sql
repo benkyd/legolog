@@ -16539,3 +16539,7 @@ INSERT INTO lego_set_inventory (set_id, stock, price, new_price, last_updated) V
 -- admin user
 
 INSERT INTO users (id, email, admin, nickname, date_created, date_updated) VALUES ('62686cdead060b0068fe7d38', 'systemadmin@legolog.com', true, 'systemadmin', NOW(), NOW());
+
+-- offer code
+
+INSERT INTO offer_code (code, discount, discount_type, min_order_value, type, expiry_date) VALUES ('LEGO10', 10,  1, 10.00, 'set', '2022-06-10');

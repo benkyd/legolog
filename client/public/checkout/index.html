@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>LegoLog Search Results</title>
+	<title>LegoLog Checkout</title>
     <meta name="viewport">
 	<link rel="icon" type="image/svg+xml" href="/res/favicon.svg">
 	<link rel="stylesheet" type="text/css" href="../global.css">
@@ -14,44 +14,23 @@
 	<!-- Auth0 - a library for authentication -->
 	<script src="https://cdn.auth0.com/js/auth0-spa-js/1.13/auth0-spa-js.production.js"></script>
 
-	<!-- Flickity - a library to make carousells easier to implement -->
-	<link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
-	<script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
-
 	<!-- Components used on this page - they must be included to work -->
 	<script type="module" src="/components/components.mjs"></script>
 	<script type="module" src="/components/navbar.mjs"></script>
 	<script type="module" src="/components/search.mjs"></script>
-	<script type="module" src="/components/basket.mjs"></script>
 	<script type="module" src="/components/basket-popout.mjs"></script>
+	<script type="module" src="/components/checkout.mjs"></script>
 	<script type="module" src="/components/accessability-popout.mjs"></script>
 	<script type="module" src="/components/notificationbar.mjs"></script>
-	<script type="module" src="/components/storefront.mjs"></script>
 	<script type="module" src="/components/tag.mjs"></script>
-	<script type="module" src="/components/product-list.mjs"></script>
 	<script type="module" src="/components/super-compact-listing.mjs"></script>
-	<script type="module" src="/components/compact-listing.mjs"></script>
-	<script type="module" src="/components/product-listing.mjs"></script>
 
-	<script type="module" src="index.mjs"></script>
+	<script type="module" src="/index.mjs"></script>
 </head>
-<body>
+<body>	
 	<notificationbar-component></notificationbar-component>
 	<navbar-component></navbar-component>
 	<limited-margin>
-        <script>
-            console.log(`/api/search/${window.location.search}`)
-            // parse out the search query using the query object
-            const query = new URLSearchParams(window.location.search)
-			// get the search query from the query object
-			const searchQuery = query.get('q');
-            document.write(/* html */`
-                <product-list-component id="results"
-                    title="Search Results for '${searchQuery}'"
-                    getroute="/api/search/${window.location.search}"
-					augmentable="true">
-                </product-list-component>
-            `);
-        </script>
-	</limited-margin>
+        <checkout-component></checkout-component>
+    </limited-margin>
 </body>

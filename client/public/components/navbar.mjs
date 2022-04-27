@@ -1,6 +1,6 @@
 import { RegisterComponent, Component, SideLoad } from './components.mjs';
 import { LoginSignup, Signout } from '../auth.mjs';
-import * as StorageListener from '../localStorage-listener.mjs';
+import * as StorageListener from '../localstorage-listener.mjs';
 
 // due to peculiarities in asynchronus loading of components,
 // we need to have this remember the state of the logged in user
@@ -46,13 +46,19 @@ class NavBar extends Component {
             return;
         }
 
+        if (localStorage.admin === 'true' || localStorage.admin === true) {
+            this.root.querySelector('.stock-mode').style.display = 'flex';
+        } else {
+            this.root.querySelector('.stock-mode').style.display = 'none';
+        }
+
         const account = this.root.querySelector('.account-item');
 
         // doing this with proper dom manipulation wasn't working
         account.innerHTML = `
             <a class="nav-link" href="#">${localStorage.user}▾</a>
             <ul class="sub-nav" >
-                <li><a class="sub-nav-link" href="#">My Account</a></li>
+                <li><a class="sub-nav-link" href="#">My Orders</a></li>
                 <li><a class="sub-nav-link logout-button" href="#">Log Out</a></li>
             </ul>
         `;
@@ -76,12 +82,6 @@ class NavBar extends Component {
         this.SetupHamburger();
         this.OnLogin();
 
-        if (localStorage.admin === true) {
-            this.root.querySelector('.stock-mode').style.display = 'flex';
-        } else {
-            this.root.querySelector('.stock-mode').style.display = 'none';
-        }
-
         StorageListener.ListenOnKey('admin', (e) => {
             const admin = e.value;
             if (admin) {
@@ -91,8 +91,9 @@ class NavBar extends Component {
             }
         });
 
-        this.root.querySelector('stock-slider').addEventListener('change', (e) => {
-            console.log(e);
+        this.root.querySelector('.stock-slider').addEventListener('change', (e) => {
+            const stock = e.target.checked;
+            localStorage.setItem('stock-mode', stock);
         });
 
         // setup log in button

@@ -2,8 +2,7 @@ const BrickController = require('../controllers/brick-controller.js');
 const SetController = require('../controllers/set-controller.js');
 const Logger = require('../logger.js');
 
-// AppEng Deadline
-const EndDate = new Date(1651269600 * 1000);
+const EndDate = new Date('2022-06-10T00:00:00.000Z');
 
 function Special(req, res) {
     res.send({
@@ -15,6 +14,8 @@ function Special(req, res) {
 }
 
 async function CalculateBasketPrice(req, res) {
+    // and here we remmeber the c days where you had to declare all
+    // of your variables at the top of the scope *ah*
     const setList = [];
     const setQuantities = [];
     const brickList = [];

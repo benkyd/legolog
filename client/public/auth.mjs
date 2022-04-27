@@ -58,15 +58,13 @@ export async function InitAuth0() {
 
         const fetchOptions = {
             method: 'GET',
+            // bear hug
             headers: { Authorization: `Bearer ${token}` },
         };
 
         const res = await fetch('/api/auth/login', fetchOptions).then(res => res.json());
-        console.log(res);
 
         localStorage.setItem('admin', res.user.admin);
-
-        // do stuff
     }
 }
 

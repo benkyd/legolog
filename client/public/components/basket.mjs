@@ -68,7 +68,7 @@ class Basket extends Component {
                         </div>
                         <!-- checkout button -->
                         <div class="basket-footer-checkout">
-                            <button class="basket-footer-button" type="button">Checkout as ${localStorage.user}</button>
+                            <a href="/checkout"><button class="basket-footer-button checkout-button" type="button">Checkout as ${localStorage.user}</button></a>
                         </div>
                     </div>
             `,
