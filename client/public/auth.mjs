@@ -11,7 +11,7 @@ let auth0 = null;
 async function CheckRedirect() {
     const isAuthenticated = await auth0.isAuthenticated();
     if (isAuthenticated) {
-        localStorage.loggedIn = true;
+        localStorage.setItem('loggedIn', true);
         return;
     }
 
@@ -22,7 +22,7 @@ async function CheckRedirect() {
             await auth0.handleRedirectCallback();
         } catch (e) {
             window.alert(e.message || 'authentication error, sorry');
-            localStorage.loggedIn = false;
+            localStorage.setItem('loggedIn', false);
             Signout();
         }
 
@@ -32,8 +32,9 @@ async function CheckRedirect() {
 }
 
 export async function InitAuth0() {
-    localStorage.loggedIn = false;
-    localStorage.user = 'Guest';
+    // localStorage.setItem('loggedIn', false);
+    // localStorage.setItem('user', 'Guest');
+    // localStorage.setItem('admin', false);
 
     auth0 = await window.createAuth0Client({
         domain: AUTH0CONFIG.domain,
@@ -46,9 +47,9 @@ export async function InitAuth0() {
     const isAuthenticated = await auth0.isAuthenticated();
     if (isAuthenticated) {
         const user = await auth0.getUser();
-        localStorage.user = user.given_name || user.nickname;
+        localStorage.setItem('user', user.given_name || user.nickname);
         NotifyNavbar('login', user);
-        localStorage.loggedIn = true;
+        localStorage.setItem('loggedIn', true);
 
         // tell the server about the logon, so that it can make the proper
         // entry in the database, if there is for example an address
@@ -62,6 +63,8 @@ export async function InitAuth0() {
 
         const res = await fetch('/api/auth/login', fetchOptions).then(res => res.json());
         console.log(res);
+
+        localStorage.setItem('admin', res.user.admin);
 
         // do stuff
     }
@@ -88,8 +91,9 @@ export async function LoginSignup() {
 }
 
 export async function Signout() {
-    localStorage.loggedIn = false;
-    localStorage.user = 'Guest';
+    localStorage.setItem('loggedIn', false);
+    localStorage.setItem('user', 'Guest');
+    localStorage.setItem('admin', false);
     await auth0.logout({
         returnTo: window.location.origin,
     });

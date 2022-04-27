@@ -1,5 +1,6 @@
 import { RegisterComponent, Component, SideLoad } from './components.mjs';
 import { LoginSignup, Signout } from '../auth.mjs';
+import * as StorageListener from '../localStorage-listener.mjs';
 
 // due to peculiarities in asynchronus loading of components,
 // we need to have this remember the state of the logged in user
@@ -40,6 +41,11 @@ class NavBar extends Component {
     }
 
     OnLogin() {
+        if (!localStorage.user || localStorage.user === 'Guest') {
+            this.OnLogout();
+            return;
+        }
+
         const account = this.root.querySelector('.account-item');
 
         // doing this with proper dom manipulation wasn't working
@@ -60,18 +66,39 @@ class NavBar extends Component {
     OnLogout() {
         const account = this.root.querySelector('.account-item');
         account.innerHTML = '<a class="account-button nav-link" href="#">My Account</a>';
+        const loginButton = this.root.querySelector('.account-button');
+        loginButton.addEventListener('click', () => {
+            LoginSignup(this);
+        });
     }
 
     OnRender() {
         this.SetupHamburger();
+        this.OnLogin();
+
+        if (localStorage.admin === true) {
+            this.root.querySelector('.stock-mode').style.display = 'flex';
+        } else {
+            this.root.querySelector('.stock-mode').style.display = 'none';
+        }
+
+        StorageListener.ListenOnKey('admin', (e) => {
+            const admin = e.value;
+            if (admin) {
+                this.root.querySelector('.stock-mode').style.display = 'flex';
+            } else {
+                this.root.querySelector('.stock-mode').style.display = 'none';
+            }
+        });
+
+        this.root.querySelector('stock-slider').addEventListener('change', (e) => {
+            console.log(e);
+        });
 
         // setup log in button
         const loginButton = this.root.querySelector('.account-button');
         loginButton.addEventListener('click', () => {
             LoginSignup(this);
-            // remove event listener and then change the
-            // text to the users name and a dropdown that gives
-            // them the option to log out
         });
     }
 }
