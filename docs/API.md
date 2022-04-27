@@ -9,21 +9,22 @@ automatically every request
 ## Routes
 
 | Type | Route | Queries | Auth? | Notes |
-| --- | --- | --- | -- | --- |
-| GET   | /api/special/         |                 | no  | |
-| GET   | /api/type/:id         |                 | no  | |
-| GET   | /api/search/          | query (q), page | no  | Query endpoint |
-| GET   | /api/bricks/          | query (q), page | no  | Query endpoint |
-| GET   | /api/sets/            | query (q), page | no  | Query endpoint |
-| GET   | /api/sets/featured    | page            | no  | Query endpoint |
-| GET   | /api/brick/:id        |                 | no  | |
-| POST  | /api/bulk/brick       | array           | no  | POST due to bulk nature |
-| GET   | /api/set/:id          |                 | no  | |
-| GET   | /api/cdn/:id          |                 | no  | |
-| GET   | /api/basket/price/    |                 | no  | |
-| PUT   | /api/auth/login/      |                 | yes | |
-| POST  | /api/auth/signup/     |                 | yes | |
-| GET   | /api/auth/orders/     |                 | yes | |
+| --- | --- | --- | - | --- |
+| GET   | /api/special/         |                 | ❌ | |
+| GET   | /api/search/          | query (q), page | ❌ | Query endpoint |
+| GET   | /api/bricks/          | query (q), page | ❌ | Query endpoint |
+| GET   | /api/sets/            | query (q), page | ❌ | Query endpoint |
+| GET   | /api/sets/featured    | page            | ❌ | Query endpoint |
+| GET   | /api/brick/:id        |                 | ❌ | |
+| POST  | /api/bulk/brick       | array           | ❌ | POST due to bulk nature |
+| GET   | /api/set/:id          |                 | ❌ | |
+| GET   | /api/cdn/:id          |                 | ❌ | |
+| GET   | /api/basket/price/    |                 | ❌ | |
+| GET   | /api/discount/        | offer code      | ❌ | |
+| GET   | /api/auth/login/      |                 | ✔️ | |
+| POST  | /api/auth/order/      |                 | ✔️❌ | |
+| GET   | /api/auth/order/:id   |                 | ✔️❌ | |
+| GET   | /api/auth/orders/     |                 | ✔️ | |
 
 Query endpoints do not return the full data on a brick/set, they return
 a subset for product listing pages
@@ -52,11 +53,11 @@ set: brick to search for (absolute, fuzzy string)
 
 ```js
 {
-    error: false
     data: {
         // defined in the response description for each route
     }
-    // other important data, or metadata for the data can be added here
+    // other important data, or metadata for the data
+    // (such as pagination data) can be added here
 }
 ```
 

@@ -38,14 +38,16 @@
         flex-direction: column;
     }
 
+    /* we want the "your order" on top here */
     .checkout-body-left {
+        width: 100%;
         order: 1;
-        flex-basis: 100%;
     }
 
     .checkout-body-right {
+        width: 100%;
+        margin-top: 50px;
         order: 0;
-        flex-basis: 100%;
     }
 }
 
@@ -104,6 +106,26 @@
     align-items: flex-start;
 }
 
+.full-width {
+    width: 100%;
+}
+
+.checkout-place-order {
+    width: 100%;
+}
+
+.checkout-place-order-button {
+    width: 100%;
+    box-shadow: #222 0px 0px 2px;
+    background: #222;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: all 250ms ease-in-out;
+}
+
 .edit-basket {
     font-size: 0.7em;
     color: #888;
@@ -111,3 +133,101 @@
     text-transform: uppercase;
 }
  
+.checkout-summary-prices {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.checkout-summary-prices-row {
+    width: 100%;
+    margin-top: 10px;
+    font-size: 1em;
+    color: #444;
+    font-weight: lighter;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.discount-row {
+    color: #E55744;
+}
+
+.checkout-summary-discount-code {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.offer-text {
+    margin-bottom: 10px;
+    height: 3em;
+    width: 79%;
+    background-color: #F5F6F6;
+    border: 1px solid #ccc;
+    border-radius: 0.4em;
+    transition: all 250ms ease-in-out;
+}
+    
+.offer-text:focus {
+    outline: 0;
+    border: 2px solid transparent;
+    border-bottom: 2px solid #222;
+    border-radius: 0;
+}
+
+.offer-button {
+    width: 14%;
+    background: #222;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 250ms ease-in-out;
+}
+
+.offer-button:hover {
+    background-color: #F5F6F6;
+    outline: 2px solid #222;
+    color: #222;
+}
+
+.error {
+    color: #E55744;
+    font-size: 0.8em;
+    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake {
+    10%, 90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+
+    20%, 80% {
+        transform: translate3d(2px, 0, 0);
+    }
+
+    30%, 50%, 70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    40%, 60% {
+        transform: translate3d(4px, 0, 0);
+    }
+}
+
+.code-applied {
+    color: #F2CA52;
+    font-weight: bold;
+    pointer-events: none;
+}

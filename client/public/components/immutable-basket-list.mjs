@@ -1,5 +1,5 @@
 import { RegisterComponent, Component } from './components.mjs';
-import { GetBasketTotalPrice } from './basket-popout.mjs';
+import { GetBasketTotalPrice } from '../basket.mjs';
 import * as LocalStorageListener from '../localstorage-listener.mjs';
 
 class ImmutableBasketList extends Component {
@@ -79,8 +79,10 @@ class ImmutableBasketList extends Component {
                     flex-direction: column;
                     flex-wrap: nowrap;
                     justify-content: left;
-                    height: ${this.state.w || '100%'};
-                    height: ${this.state.h || 'auto'};
+                    height: 100%;
+                    width: 100%;
+                    max-width: ${this.state.w || '100%'};
+                    max-height: ${this.state.h || 'auto'};
                     overflow-y: scroll;
                     overflow-x: hidden;
                     justify-content: space-between;

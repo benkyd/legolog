@@ -1,4 +1,4 @@
-import { GetBasketTotalPrice } from './basket-popout.mjs';
+    import { GetBasketTotalPrice } from '../basket.mjs';
 import { RegisterComponent, Component, SideLoad } from './components.mjs';
 
 class Checkout extends Component {
@@ -10,7 +10,9 @@ class Checkout extends Component {
 
     async OnMount() {
         this.setState({
+            subtotal: parseFloat(await GetBasketTotalPrice()).toFixed(2),
             total: parseFloat(await GetBasketTotalPrice()).toFixed(2),
+            discount: 0,
         });
     }
 
@@ -22,10 +24,20 @@ class Checkout extends Component {
                 </div>
                 <div class="checkout">
                     <div class="checkout-body-left">
+                        <div class="checkout-delivery-form-title section-title">Shipping Details</div>
                         <div class="checkout-delivery-form">
-                            <div class="checkout-delivery-form-title section-title">Shipping Details</div>
-                            <input class="checkout-form-row-input" type="text" autocomplete="address-line1" name="address" placeholder="Shipping Address"/>
-                            <input class="checkout-form-row-input" type="text" autocomplete="postal-code" name="postcode" placeholder="Postcode"/>
+                            <span class="form-item full-width">
+                                <label class="checkout-form-row-label">Email</label>
+                                <input class="checkout-form-row-input" type="text" autocomplete="email" name="email" placeholder="Email"/>
+                            </span>
+                            <span class="form-item full-width">
+                                <label class="checkout-form-row-label">Address Line 1</label>
+                                <input class="checkout-form-row-input" type="text" autocomplete="address-line1" name="address" placeholder="House Name or Number"/>
+                            </span>
+                            <span class="form-item full-width">
+                                <label class="checkout-form-row-label">Post Code</label>
+                                <input class="checkout-form-row-input" type="text" autocomplete="postal-code" name="postcode" placeholder="e.g AB12 CD3"/>
+                            </span>
                         </div>
 
                         <div class="checkout-delivery-form-title section-title">Payment Details</div>
@@ -43,7 +55,7 @@ class Checkout extends Component {
                             <div class="payment-row">
                                 <span class="form-item">
                                     <label class="checkout-form-row-label"> Expiry Date </label>
-                                    <input class="checkout-form-row-input" type="text" autocomplete="cc-exp" name="cc-exp" placeholder="MM/YY"/>
+                                    <input class="checkout-form-row-input" type="text" autocomplete="cc-exp" name="cc-exp" placeholder="MM / YY"/>
                                 </span>
                                 <span class="form-item">
                                     <label class="checkout-form-row-label"> CVV / CSC </label>
@@ -53,17 +65,36 @@ class Checkout extends Component {
                         </div>
 
                         <div class="checkout-place-order">
-                            <button class="checkout-place-order-button">Buy £${this.state.total}</button>
+                            <button class="checkout-place-order-button">Buy £${this.state.subtotal - this.state.discount}</button>
                         </div>
                     </div>
                     <div class="checkout-body-right">
                     <div class="checkout-summary-title section-title">Your Order <a href="/basket"><span class="edit-basket">edit basket</span><a> </div>
                         <div class="checkout-summary">
                             <immutable-basket-list-component h="300px"></immutable-basket-list-component>
-                            <div class="checkout-summary-total">Subtotal ${this.state.total}</div>
-                            <div class="checkout-summary-total">Shipping (UK Only) ${this.state.total}</div>
-                            <div class="checkout-summary-total">Total ${this.state.total}</div>
-                            <input type="text" class="offer-text" placeholder="LEGO10"/><button class="offer-button">Apply Offer Code</button>
+
+                            <div class="checkout-summary-prices">
+                                <div class="checkout-summary-prices-row">
+                                    <span class="checkout-summary-prices-row-label">Subtotal</span>
+                                    <span class="checkout-summary-prices-row-value">£${this.state.subtotal}</span>
+                                </div>
+                                <div class="checkout-summary-prices-row">
+                                    <span class="checkout-summary-prices-row-label">Delivery</span>
+                                    <span class="checkout-summary-prices-row-value">£0.00</span>
+                                </div>
+                                <div class="checkout-summary-prices-row discount-row" style="display: ${this.state.discount > 0 ? 'flex;' : 'none;'}">
+                                    <span class="checkout-summary-prices-row-label">Discount</span>
+                                    <span class="checkout-summary-prices-row-value">£-${parseFloat(this.state.discount).toFixed(2)}</span>
+                                </div>
+                                <div class="checkout-summary-prices-row">
+                                    <span class="checkout-summary-prices-row-label">Total</span>
+                                    <span class="checkout-summary-prices-row-value">£${parseFloat(this.state.subtotal - this.state.discount).toFixed(2)}</span>
+                                </div>
+                            </div>
+                            <div><label class="checkout-form-row-label"> Discount Code </label></div>
+                            <div class="checkout-summary-discount-code">
+                                <input type="text" class="offer-text" name="offer-text" placeholder="LEGO10"/><button class="offer-button">Apply</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -155,6 +186,58 @@ class Checkout extends Component {
                 e.target.value = e.target.value.trim().substring(0, 3);
                 lastCvv = e.target.value;
             }
+        });
+
+        // discount code
+        this.root.querySelector('.offer-button').addEventListener('click', async () => {
+            // get discount code
+            const offerText = this.root.querySelector('input[name="offer-text"]').value;
+            const offerTextBox = this.root.querySelector('.offer-text');
+
+            // check if valid
+            if (offerText.length === 0 || offerTextBox.classList.contains('code-applied')) {
+                // show error
+                offerTextBox.classList.add('error');
+                setTimeout(() => {
+                    offerTextBox.classList.remove('error');
+                }, 1000);
+                return;
+            }
+
+            // ask server for discount
+            const req = await fetch(`/api/discount?code=${encodeURIComponent(offerText)}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }).then((res) => res.json());
+
+            if (req.error) {
+                // show error
+                offerTextBox.classList.add('error');
+                setTimeout(() => {
+                    offerTextBox.classList.remove('error');
+                }, 1000);
+                return;
+            }
+
+            offerTextBox.classList.add('code-applied');
+            offerTextBox.disabled = true;
+
+            if (await GetBasketTotalPrice() < req.discount.min_value) {
+                // show error
+                offerTextBox.classList.add('error');
+                setTimeout(() => {
+                    offerTextBox.classList.remove('error');
+                }, 1000);
+                return;
+            }
+
+            this.setState({
+                subtotal: parseFloat(await GetBasketTotalPrice()).toFixed(2),
+                total: parseFloat(await GetBasketTotalPrice(req.discount, req.type, req.entity_type)).toFixed(2),
+                discount: await GetAbsoluteBasketDiscount(req.discount, req.type, req.entity_type),
+            });
         });
     }
 }

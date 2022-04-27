@@ -109,8 +109,8 @@ class SuperCompactProductListing extends Component {
                 }
                 
                 .product-image {
-                    max-height: 150px;
-                    max-width: 150px;
+                    max-height: 110px;
+                    max-width: 110px;
                     object-fit: scale-down;
                     object-position: center;
                 }

@@ -1,5 +1,5 @@
-import { GetBasketItems, AddProductToBasket, RemoveProductFromBasket, GetBasketTotal, GetBasketTotalPrice } from './basket-popout.mjs';
 import { RegisterComponent, Component } from './components.mjs';
+import * as BasketMaster from '../basket.mjs';
 
 class Basket extends Component {
     static __IDENTIFY() { return 'basket'; }
@@ -93,7 +93,7 @@ class Basket extends Component {
                 }
                 
                 .basket-item-listing {
-                    font-size: 1.3em;
+                    font-size: 1.2em;
                     flex-basis: 65%;
                     flex-grow: 4;
                 }
@@ -209,7 +209,7 @@ class Basket extends Component {
     }
 
     async UpdateSubtotal() {
-        const subtotal = await GetBasketTotalPrice();
+        const subtotal = await BasketMaster.GetBasketTotalPrice();
         const basketSubtotal = this.root.querySelector('.basket-subtotal');
         if (basketSubtotal) {
             basketSubtotal.innerText = parseFloat(subtotal).toFixed(2);
@@ -272,34 +272,34 @@ class Basket extends Component {
                 if (event.target.classList.contains('reduce-quantity')) {
                     if (item.quantity > 0) {
                         item.quantity--;
-                        RemoveProductFromBasket(id, item.type, 1, modifier);
+                        BasketMaster.RemoveProductFromBasket(id, item.type, 1, modifier);
                     }
                     if (item.quantity === 0) {
-                        RemoveProductFromBasket(id, item.type, item.quantity, modifier);
+                        BasketMaster.RemoveProductFromBasket(id, item.type, item.quantity, modifier);
                         this.UpdateSubtotal();
 
                         return this.setState({
                             ...this.state,
-                            total: GetBasketTotal(),
+                            total: BasketMaster.GetBasketTotal(),
                             items: {
-                                ...GetBasketItems(),
+                                ...BasketMaster.GetBasketItems(),
                             },
                         });
                     }
                 } else if (event.target.classList.contains('increase-quantity')) {
                     if (item.quantity < item.stock) {
                         item.quantity++;
-                        AddProductToBasket(id, item.type, 1, modifier);
+                        BasketMaster.AddProductToBasket(id, item.type, 1, modifier);
                     }
                 } else if (event.target.classList.contains('remove-quantity')) {
-                    RemoveProductFromBasket(id, item.type, item.quantity, modifier);
+                    BasketMaster.RemoveProductFromBasket(id, item.type, item.quantity, modifier);
                     this.UpdateSubtotal();
 
                     return this.setState({
                         ...this.state,
-                        total: GetBasketTotal(),
+                        total: BasketMaster.GetBasketTotal(),
                         items: {
-                            ...GetBasketItems(),
+                            ...BasketMaster.GetBasketItems(),
                         },
                     });
                 }
@@ -307,7 +307,7 @@ class Basket extends Component {
                 // update the total
                 this.setState({
                     ...this.state,
-                    total: GetBasketTotal(),
+                    total: BasketMaster.GetBasketTotal(),
                     items: {
                         ...this.state.items,
                         [compositeId]: item,
@@ -349,23 +349,23 @@ class Basket extends Component {
                 }
 
                 if (parseInt(event.target.value) === 0) {
-                    RemoveProductFromBasket(id, item.type, item.quantity, modifier);
+                    BasketMaster.RemoveProductFromBasket(id, item.type, item.quantity, modifier);
 
                     return this.setState({
                         ...this.state,
-                        total: GetBasketTotal(),
+                        total: BasketMaster.GetBasketTotal(),
                         items: {
-                            ...GetBasketItems(),
+                            ...BasketMaster.GetBasketItems(),
                         },
                     });
                 }
 
                 // if has gone up in quantity then add it
                 if (item.quantity < event.target.value) {
-                    AddProductToBasket(id, item.type, event.target.value - item.quantity, modifier);
+                    BasketMaster.AddProductToBasket(id, item.type, event.target.value - item.quantity, modifier);
                     item.quantity = parseInt(event.target.value);
                 } else if (item.quantity > event.target.value) {
-                    RemoveProductFromBasket(id, item.type, item.quantity - event.target.value, modifier);
+                    BasketMaster.RemoveProductFromBasket(id, item.type, item.quantity - event.target.value, modifier);
                     item.quantity = parseInt(event.target.value);
                 }
 
@@ -374,7 +374,7 @@ class Basket extends Component {
                 // update the total
                 this.setState({
                     ...this.state,
-                    total: GetBasketTotal(),
+                    total: BasketMaster.GetBasketTotal(),
                     items: {
                         ...this.state.items,
                         [compositeId]: item,
