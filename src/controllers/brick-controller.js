@@ -91,8 +91,6 @@ async function SumPrices(bricksArr, quantityArray) {
     }
     Database.Query('COMMIT TRANSACTION;');
 
-    console.log(dbres.rows)
-
     // validate database response
     if (dbres.rows.length === 0) {
         return {

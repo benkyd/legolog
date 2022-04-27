@@ -1,5 +1,5 @@
-    import { GetBasketTotalPrice } from '../basket.mjs';
 import { RegisterComponent, Component, SideLoad } from './components.mjs';
+import * as Basket from '../basket.mjs';
 
 class Checkout extends Component {
     static __IDENTIFY() { return 'checkout'; }
@@ -10,8 +10,8 @@ class Checkout extends Component {
 
     async OnMount() {
         this.setState({
-            subtotal: parseFloat(await GetBasketTotalPrice()).toFixed(2),
-            total: parseFloat(await GetBasketTotalPrice()).toFixed(2),
+            subtotal: parseFloat(await Basket.GetBasketTotalPrice()).toFixed(2),
+            total: parseFloat(await Basket.GetBasketTotalPrice()).toFixed(2),
             discount: 0,
         });
     }
@@ -221,10 +221,9 @@ class Checkout extends Component {
                 return;
             }
 
-            offerTextBox.classList.add('code-applied');
-            offerTextBox.disabled = true;
+            const offer = req.data;
 
-            if (await GetBasketTotalPrice() < req.discount.min_value) {
+            if ((await Basket.GetBasketTotalPrice()) < parseFloat(offer.min_value)) {
                 // show error
                 offerTextBox.classList.add('error');
                 setTimeout(() => {
@@ -233,10 +232,13 @@ class Checkout extends Component {
                 return;
             }
 
+            offerTextBox.classList.add('code-applied');
+            offerTextBox.disabled = true;
+
             this.setState({
-                subtotal: parseFloat(await GetBasketTotalPrice()).toFixed(2),
-                total: parseFloat(await GetBasketTotalPrice(req.discount, req.type, req.entity_type)).toFixed(2),
-                discount: await GetAbsoluteBasketDiscount(req.discount, req.type, req.entity_type),
+                subtotal: parseFloat(await Basket.GetBasketTotalPrice()).toFixed(2),
+                total: parseFloat(await Basket.GetBasketTotalPrice(offer.discount, offer.type, offer.entity_type)).toFixed(2),
+                discount: await Basket.GetAbsoluteBasketDiscount(offer.discount, offer.type, offer.entity_type),
             });
         });
     }
