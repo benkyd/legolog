@@ -180,22 +180,7 @@ class BasketPopout extends Component {
                             {this.state.total} Items
                         </div>
                         <div class="popup-content">
-                            ${this.state.items
-                                ? Object.keys(this.state.items).map((key) => {
-                                const item = this.state.items[key];
-                                return /* html */`
-                                    <div class="popup-content-item">
-                                        <span class="popup-content-item-quantity">x${item.quantity}</span>
-                                        <super-compact-listing-component class="sc-listing" 
-                                                                            id="${key.split('~')[0]}"
-                                                                            type="${item.type}"
-                                                                            quantity="${item.quantity}"
-                                                                            modifier="${key.split('~')[1] || ''}">
-                                        </super-compact-listing-component>
-                                    </div>
-                                `;
-                            }).join('')
-                            : ''}
+                            <immutable-basket-list-component h="400px" class="basket-list"></immutable-basket-list-component>
                         </div>
                         <div class="popup-footer">
                             <span class="popup-footer-total">Subtotal: £${parseFloat(this.state.subtotal).toFixed(2)}</span>
@@ -311,39 +296,12 @@ class BasketPopout extends Component {
                 }
 
                 .popup-content {
-                    display: flex;
-                    flex-direction: column;
-                    flex-wrap: nowrap;
-                    justify-content: left;
                     width: 100%;
                     height: 100%;
-                    overflow-y: scroll;
-                    overflow-x: hidden;
-                    justify-content: space-between;
                 }
 
-                .popup-content-item {
-                    background-color: #F5F6F6;
-                    display: flex;
-                    flex-direction: row;
-                    flex-wrap: nowrap;
-                    justify-content: space-between;
-                    align-items: center;
-                }
-
-                .popup-content-item-quantity {
-                    font-size: 2em;
-                    flex-grow: 1;
-                }
-
-                .sc-listing {
-                    flex-basis: 100%;
-                    flex-grow: 3;
-                }
-
-                .popup-content-item-value {
-                    text-align: right;
-                    flex-grow: 1;
+                .basket-list {
+                    width: 100%;
                 }
 
                 .popup-footer {

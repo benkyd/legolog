@@ -6,7 +6,7 @@ import * as StorageListener from '../localstorage-listener.mjs';
 // we need to have this remember the state of the logged in user
 // so that we can display the correct navbar
 let navbarCallback = null;
-export function NotifyNavbar(type, user) {
+export function NotifyNavbar(type) {
     if (navbarCallback && type === 'login') {
         navbarCallback.OnLogin();
     }
@@ -98,9 +98,11 @@ class NavBar extends Component {
 
         // setup log in button
         const loginButton = this.root.querySelector('.account-button');
-        loginButton.addEventListener('click', () => {
-            LoginSignup(this);
-        });
+        if (loginButton) {
+            loginButton.addEventListener('click', () => {
+                LoginSignup(this);
+            });
+        }
     }
 }
 

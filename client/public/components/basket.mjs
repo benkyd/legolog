@@ -258,7 +258,7 @@ class Basket extends Component {
             button.addEventListener('click', (event) => {
                 let clickedItem = event.target.parentElement;
                 let listing = clickedItem.querySelector('.basket-item-listing');
-                if (!listing) {
+                while (listing === null) {
                     clickedItem = clickedItem.parentElement;
                     listing = clickedItem.querySelector('.basket-item-listing');
                 }
@@ -330,7 +330,7 @@ class Basket extends Component {
             input.addEventListener('change', (event) => {
                 let clickedItem = event.target.parentElement;
                 let listing = clickedItem.querySelector('.basket-item-listing');
-                if (!listing) {
+                while (listing === null) {
                     clickedItem = clickedItem.parentElement;
                     listing = clickedItem.querySelector('.basket-item-listing');
                 }

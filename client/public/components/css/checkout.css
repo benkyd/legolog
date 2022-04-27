@@ -1,0 +1,113 @@
+.checkout-header {
+    margin-top: 20px;
+    font-size: 2em;
+    border-bottom: 1px solid #ccc;
+}
+
+.checkout {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.section-title {
+    font-size: 1.3em;
+    margin-bottom: 25px;
+    margin-top: 25px;
+    border-bottom: 1px solid #ccc;
+}
+
+.checkout-body-left {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 45%;
+    order: 0;
+}
+
+.checkout-body-right {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 45%;
+    order: 1;
+}
+
+@media (pointer:none), (pointer:coarse), screen and (max-width: 900px) {
+    .checkout {
+        flex-direction: column;
+    }
+
+    .checkout-body-left {
+        order: 1;
+        flex-basis: 100%;
+    }
+
+    .checkout-body-right {
+        order: 0;
+        flex-basis: 100%;
+    }
+}
+
+.checkout-form-row-input, .checkout-form-row-label {
+    width: 100%;
+}
+
+.checkout-form-row-label {
+    font-size: 0.9em;
+    color: #888;
+    text-transform: uppercase;
+}
+
+.checkout-form-row-input {
+    margin-bottom: 10px;
+    height: 3em;
+    background-color: #F5F6F6;
+    border: 1px solid #ccc;
+    border-radius: 0.4em;
+    transition: all 250ms ease-in-out;
+}
+
+.checkout-form-row-input:focus {
+    outline: 0;
+    border: 2px solid transparent;
+    border-bottom: 2px solid #222;
+    border-radius: 0;
+}
+
+.checkout-payment-form {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.payment-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.visa {
+    background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/260969/ic_card_visa.png) no-repeat;
+    background-position: 95%;
+}
+
+.mastercard {
+    background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/260969/ic_card_master_card.png) no-repeat;
+    background-position: 95%;
+}
+
+.form-item {
+    width: 49%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.edit-basket {
+    font-size: 0.7em;
+    color: #888;
+    float: right;
+    text-transform: uppercase;
+}
+ 
