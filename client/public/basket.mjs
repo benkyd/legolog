@@ -83,7 +83,7 @@ export function GetBasketTotal() {
     return basket.total;
 }
 
-export async function GetBasketTotalPrice(discount = 0, type = '£', entity_type = undefined) {
+export async function GetBasketTotalPrice(discount = 0, type = '£', entity = undefined) {
     if (localStorage.getItem('basket') === null || !localStorage.getItem('basket')) {
         return 0;
     }
@@ -101,9 +101,28 @@ export async function GetBasketTotalPrice(discount = 0, type = '£', entity_type
     if (res.error) {
         return 0;
     }
+
+    if (discount !== 0) {
+        return res.data.subtotal - GetAbsoluteBasketDiscount(discount, type, entity);
+    }
     return res.data.subtotal;
 }
 
-export async function GetAbsoluteBasketDiscount(discount = 0, type = '£', entity_type = undefined) {
-    
+export function GetAbsoluteBasketDiscount(discount = 0, type = '£', entity = undefined) {
+    if (localStorage.getItem('basket') === null || !localStorage.getItem('basket')) {
+        return;
+    }
+    const basket = JSON.parse(localStorage.getItem('basket'));
+
+    let discountAccumulator = 0;
+
+    for (const [key, product] of Object.entries(basket.items)) {
+        if (product.type === entity) {
+            if (type === '£') {
+                discountAccumulator += product.quantity * discount;
+            }
+        }
+    }
+
+    return discountAccumulator;
 }

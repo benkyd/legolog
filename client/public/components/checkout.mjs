@@ -17,6 +17,7 @@ class Checkout extends Component {
     }
 
     Render() {
+        console.log(this.state);
         return {
             template: /* html */`
                 <div class="checkout-header">
@@ -26,17 +27,23 @@ class Checkout extends Component {
                     <div class="checkout-body-left">
                         <div class="checkout-delivery-form-title section-title">Shipping Details</div>
                         <div class="checkout-delivery-form">
-                            <span class="form-item full-width">
-                                <label class="checkout-form-row-label">Email</label>
-                                <input class="checkout-form-row-input" type="text" autocomplete="email" name="email" placeholder="Email"/>
-                            </span>
+                            <div class="delivery-row">
+                                <span class="form-item">
+                                    <label class="checkout-form-row-label">Name</label>
+                                    <input class="checkout-form-row-input" type="text" autocomplete="name" name="name" placeholder="Name" value="${this.state.name || ''}"/>
+                                </span>
+                                <span class="form-item">
+                                    <label class="checkout-form-row-label">Email</label>
+                                    <input class="checkout-form-row-input" type="text" autocomplete="email" name="email" placeholder="Email" value="${this.state.email || ''}"/>
+                                </span>
+                            </div>
                             <span class="form-item full-width">
                                 <label class="checkout-form-row-label">Address Line 1</label>
-                                <input class="checkout-form-row-input" type="text" autocomplete="address-line1" name="address" placeholder="House Name or Number"/>
+                                <input class="checkout-form-row-input" type="text" autocomplete="address-line1" name="address" placeholder="House Name or Number" value="${this.state.address || ''}"/>
                             </span>
                             <span class="form-item full-width">
                                 <label class="checkout-form-row-label">Post Code</label>
-                                <input class="checkout-form-row-input" type="text" autocomplete="postal-code" name="postcode" placeholder="e.g AB12 CD3"/>
+                                <input class="checkout-form-row-input" type="text" autocomplete="postal-code" name="postcode" placeholder="e.g AB12 CD3" value="${this.state.post || ''}"/>
                             </span>
                         </div>
 
@@ -44,22 +51,22 @@ class Checkout extends Component {
                         <div class="checkout-payment-form">
                             <div class="payment-row">
                                 <span class="form-item">
-                                    <label class="checkout-form-row-label"> Card Number </label>
-                                    <input class="checkout-form-row-input" type="text" autocomplete="cc-number" name="cc-number" placeholder="0000 0000 0000 0000"/>
+                                    <label class="checkout-form-row-label">Card Number </label>
+                                    <input class="checkout-form-row-input" type="text" autocomplete="cc-number" name="cc-number" placeholder="0000 0000 0000 0000" value="${this.state.ccno || ''}"/>
                                 </span>
                                 <span class="form-item">
-                                    <label class="checkout-form-row-label"> Cardholder Post Code </label>
-                                    <input class="checkout-form-row-input" type="text" autocomplete="postal-code" name="postal-code" placeholder="e.g AB12 CD3"/>
+                                    <label class="checkout-form-row-label">Cardholder Post Code </label>
+                                    <input class="checkout-form-row-input" type="text" autocomplete="postal-code" name="postal-code" placeholder="e.g AB12 CD3" value="${this.state.ppost || ''}"/>
                                 </span>
                             </div>
                             <div class="payment-row">
                                 <span class="form-item">
-                                    <label class="checkout-form-row-label"> Expiry Date </label>
-                                    <input class="checkout-form-row-input" type="text" autocomplete="cc-exp" name="cc-exp" placeholder="MM / YY"/>
+                                    <label class="checkout-form-row-label">Expiry Date </label>
+                                    <input class="checkout-form-row-input" type="text" autocomplete="cc-exp" name="cc-exp" placeholder="MM / YY" value="${this.state.exp || ''}"/>
                                 </span>
                                 <span class="form-item">
-                                    <label class="checkout-form-row-label"> CVV / CSC </label>
-                                    <input class="checkout-form-row-input" type="text" autocomplete="cc-csc" name="cc-csc" placeholder="CCV"/>
+                                    <label class="checkout-form-row-label">CVV / CSC </label>
+                                    <input class="checkout-form-row-input" type="text" autocomplete="cc-csc" name="cc-csc" placeholder="CCV" value="${this.state.cvv || ''}"/>
                                 </span>
                             </div>
                         </div>
@@ -104,6 +111,33 @@ class Checkout extends Component {
     }
 
     OnRender() {
+        // make sure to save the rest for re-rendering
+        this.root.querySelector('input[name="name"]').addEventListener('keyup', (e) => {
+            this.setState({
+                ...this.getState,
+                name: e.target.value,
+            }, false);
+        });
+        this.root.querySelector('input[name="email"]').addEventListener('keyup', (e) => {
+            this.setState({
+                ...this.getState,
+                email: e.target.value,
+            }, false);
+        });
+        this.root.querySelector('input[name="address"]').addEventListener('keyup', (e) => {
+            this.setState({
+                ...this.getState,
+                address: e.target.value,
+            }, false);
+        });
+        this.root.querySelector('input[name="postcode"]').addEventListener('keyup', (e) => {
+            this.setState({
+                ...this.getState,
+                post: e.target.value,
+            }, false);
+        });
+
+
         // card number
         let lastCardNumber = '';
         this.root.querySelector('input[name="cc-number"]').addEventListener('keyup', (e) => {
@@ -129,6 +163,11 @@ class Checkout extends Component {
                 // update card type
                 this.root.querySelector('input[name="cc-number"]').classList.add(cardType);
 
+                this.setState({
+                    ...this.getState,
+                    ccno: e.target.value,
+                }, false);
+
                 if (e.target.value.length === 19) {
                     this.root.querySelector('input[name="postal-code"]').focus();
                 }
@@ -147,6 +186,11 @@ class Checkout extends Component {
                 e.target.value = e.target.value.toUpperCase();
                 // not longer than 4 sets of 4 numbers
                 lastPostalCode = e.target.value;
+
+                this.setState({
+                    ...this.getState,
+                    ppost: e.target.value,
+                }, false);
             }
 
             if (e.keyCode === 13) {
@@ -165,6 +209,11 @@ class Checkout extends Component {
                 // not longer than 2 sets of 2 numbers
                 e.target.value = e.target.value.trim().substring(0, 7);
                 lastExpiryDate = e.target.value;
+
+                this.setState({
+                    ...this.getState,
+                    exp: e.target.value,
+                }, false);
 
                 if (e.target.value.length === 7) {
                     this.root.querySelector('input[name="cc-csc"]').focus();
@@ -185,8 +234,20 @@ class Checkout extends Component {
                 // not longer than 3 numbers
                 e.target.value = e.target.value.trim().substring(0, 3);
                 lastCvv = e.target.value;
+
+                this.setState({
+                    ...this.getState,
+                    cvv: e.target.value,
+                }, false);
             }
         });
+
+        if (this.state.codeApplied) {
+            this.root.querySelector('.offer-text').value = this.state.codeApplied;
+            this.root.querySelector('.offer-text').disabled = true;
+            this.root.querySelector('.offer-button').innerText = 'Applied';
+            this.root.querySelector('.offer-button').disabled = true;
+        }
 
         // discount code
         this.root.querySelector('.offer-button').addEventListener('click', async () => {
@@ -232,13 +293,26 @@ class Checkout extends Component {
                 return;
             }
 
+            const absoluteDiscount = Basket.GetAbsoluteBasketDiscount(offer.discount, offer.type, offer.entity_type);
+
+            if (absoluteDiscount === 0) {
+                // show error
+                offerTextBox.classList.add('error');
+                setTimeout(() => {
+                    offerTextBox.classList.remove('error');
+                }, 1000);
+                return;
+            }
+
             offerTextBox.classList.add('code-applied');
             offerTextBox.disabled = true;
 
             this.setState({
+                ...this.getState,
                 subtotal: parseFloat(await Basket.GetBasketTotalPrice()).toFixed(2),
                 total: parseFloat(await Basket.GetBasketTotalPrice(offer.discount, offer.type, offer.entity_type)).toFixed(2),
-                discount: await Basket.GetAbsoluteBasketDiscount(offer.discount, offer.type, offer.entity_type),
+                discount: absoluteDiscount,
+                codeApplied: offerText,
             });
         });
     }

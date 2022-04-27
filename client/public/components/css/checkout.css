@@ -51,6 +51,12 @@
     }
 }
 
+.delivery-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 .checkout-form-row-input, .checkout-form-row-label {
     width: 100%;
 }
