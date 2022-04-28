@@ -14,8 +14,6 @@ function Init() {
 
     Server.App.get('/api/search/', Query.Search);
 
-    Server.App.get('/api/bricks/', Bricks.Query);
-    Server.App.get('/api/sets/');
     Server.App.get('/api/sets/featured/', Sets.Featured);
     Server.App.get('/api/brick/:id', Bricks.Get);
     Server.App.post('/api/bulk/brick', Bricks.GetMultiple);
@@ -25,8 +23,11 @@ function Init() {
 
     Server.App.post('/api/basket/price/', Helpers.CalculateBasketPrice);
     Server.App.get('/api/discount/', Helpers.DiscountCode);
+    Server.App.post('/api/order');
+    Server.App.get('/api/order:id');
 
     Server.App.get('/api/auth/login/', Auth0.JWTMiddleware, Auth0.Login);
+
     Server.App.get('/api/auth/orders/');
     Server.App.get('/api/auth/order/:id');
 

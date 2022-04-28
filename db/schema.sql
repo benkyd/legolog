@@ -93,9 +93,12 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS order_log (
 	id 					VARCHAR (50) NOT NULL PRIMARY KEY,
 	user_id				VARCHAR (50) NOT NULL, -- 0 if guest
-	subtotal 			DECIMAL NOT NULL,
+	offer_code			SERIAL,
+	subtotal_paid		DECIMAL NOT NULL,
+	discount			DECIMAL,
 	date_placed			TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-	FOREIGN KEY ( user_id ) REFERENCES users( id )
+	FOREIGN KEY ( user_id ) REFERENCES users( id ),
+	FOREIGN KEY ( offer_code ) REFERENCES offer_code( id )
 );
 
 CREATE TABLE IF NOT EXISTS order_item (

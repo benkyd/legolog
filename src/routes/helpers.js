@@ -51,12 +51,14 @@ async function CalculateBasketPrice(req, res) {
     const newBrickQuantities = [];
     for (let i = 0; i < brickList.length; i++) {
         if (!newBrickList.includes(brickList[i])) {
-            newBrickList[i] = brickList[i];
-            newBrickQuantities[i] = brickQuantities[i];
+            newBrickList.push(brickList[i]);
+            newBrickQuantities.push(brickQuantities[i]);
         } else {
             newBrickQuantities[newBrickList.indexOf(brickList[i])] += brickQuantities[i];
         }
     }
+
+    console.log(newBrickList);
 
     let setSubtotal = setList.length > 0
         ? await SetController.SumPrices(setList, setQuantities)

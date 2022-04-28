@@ -35,12 +35,7 @@ async function GetMultiple(req, res) {
     }));
 }
 
-function Query(req, res, next) {
-    next();
-}
-
 module.exports = {
     Get,
     GetMultiple,
-    Query,
 };

@@ -12,8 +12,6 @@ automatically every request
 | --- | --- | --- | - | --- |
 | GET   | /api/special/         |                 | ❌ | |
 | GET   | /api/search/          | query (q), page | ❌ | Query endpoint |
-| GET   | /api/bricks/          | query (q), page | ❌ | Query endpoint |
-| GET   | /api/sets/            | query (q), page | ❌ | Query endpoint |
 | GET   | /api/sets/featured    | page            | ❌ | Query endpoint |
 | GET   | /api/brick/:id        |                 | ❌ | |
 | POST  | /api/bulk/brick       | array           | ❌ | POST due to bulk nature |
@@ -21,9 +19,9 @@ automatically every request
 | GET   | /api/cdn/:id          |                 | ❌ | |
 | GET   | /api/basket/price/    |                 | ❌ | |
 | GET   | /api/discount/        | offer code      | ❌ | |
-| GET   | /api/auth/login/      |                 | ✔️ | |
-| POST  | /api/auth/order/      |                 | ❌ | |
+| POST  | /api/order/           |                 | ❌ | |
 | GET   | /api/auth/order/:id   |                 | ❌ | Security By Obscurity |
+| GET   | /api/auth/login/      |                 | ✔️ | |
 | GET   | /api/auth/orders/     |                 | ✔️ | |
 
 Query endpoints do not return the full data on a brick/set, they return

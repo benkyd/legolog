@@ -13,6 +13,9 @@
 //     },
 // }
 
+let BasketPriceRelavant = false;
+let KnownBasketPrice = 0;
+
 // TODO: Does the localstorage have a problem with mutual exclusion?
 // TODO: Should the basket be persisted to the server?
 export function GetBasketItems() {
