@@ -19,7 +19,7 @@ automatically every request
 | GET   | /api/cdn/:id          |                 | ❌ | |
 | GET   | /api/basket/price/    |                 | ❌ | |
 | GET   | /api/discount/        | offer code      | ❌ | |
-| POST  | /api/order/           |                 | ❌ | |
+| POST  | /api/order/           |                 | ❌ | IF user is authenticated, auth/bearer will be sent and done manually without middleware |
 | GET   | /api/auth/order/:id   |                 | ❌ | Security By Obscurity |
 | GET   | /api/auth/login/      |                 | ✔️ | |
 | GET   | /api/auth/orders/     |                 | ✔️ | |
@@ -33,19 +33,17 @@ a subset for product listing pages
 
 For all endpoints that query, the following parameters are supported:
 
+q: string to search for (fuzzy)
+
 tags: tags to include in search
+
+type: type of entity to return (set / brick)
 
 total: total results (not pageified)
 
 per_page: results to include per page
 
 page: page requested
-
-q: string to search for (fuzzy)
-
-brick: brick to search for (absolute type, fuzzy string)
-
-set: brick to search for (absolute, fuzzy string)
 
 ## Response Structure
 
@@ -64,7 +62,7 @@ set: brick to search for (absolute, fuzzy string)
 ```js
 {
     error: "Error doing x",
-    long: "y needs to be z",
+    long: "y needs to be z", // not always present
 }
 ```
 

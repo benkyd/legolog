@@ -1,5 +1,6 @@
 import { RegisterComponent, Component, SideLoad } from './components.mjs';
 import * as Basket from '../basket.mjs';
+import * as Auth from '../auth.mjs';
 
 class Checkout extends Component {
     static __IDENTIFY() { return 'checkout'; }
@@ -314,6 +315,59 @@ class Checkout extends Component {
                 discount: absoluteDiscount,
                 codeApplied: offerText,
             });
+        });
+
+        // submit
+        this.root.querySelector('.checkout-place-order-button').addEventListener('click', async () => {
+            // BLACK BOX - PAYMENT GATEWAY WILL BE CALLED HERE
+            // BLACK BOX - PAYMENT GATEWAY WILL BE CALLED HERE
+
+            // get everything needed to send to the server
+            const basket = await Basket.GetBasketItems();
+            const discountCode = this.state.codeApplied || '';
+            if (basket.length === 0) {
+                alert('How did you get here?');
+            }
+
+            let req;
+            if (localStorage.loggedIn === 'true') {
+                // send to server
+                req = await fetch('/api/auth/order', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${await Auth.GetToken()}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        basket,
+                        discountCode,
+                    }),
+                }).then((res) => res.json());
+            } else {
+                // send to server NO AUTH
+                req = await fetch('/api/order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        basket,
+                        discountCode,
+                    }),
+                }).then((res) => res.json());
+            }
+
+            if (req.error) {
+                alert(req.error);
+                return;
+            }
+
+            // clear basket
+            await Basket.ClearBasket();
+
+            // redirect to receipt
+            window.location.href = `/order/${req.data.receipt_id}`;
+            // we're done !
         });
     }
 }

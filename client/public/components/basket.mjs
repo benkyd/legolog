@@ -204,6 +204,13 @@ class Basket extends Component {
                     outline: 2px solid #222;
                     color: #222;
                 }
+
+                .button-disabled {
+                    background-color: #ccc;
+                    color: #222;
+                    cursor: not-allowed;
+                    pointer-events: all !important;
+                }
             `,
         };
     }
@@ -213,6 +220,17 @@ class Basket extends Component {
         const basketSubtotal = this.root.querySelector('.basket-subtotal');
         if (basketSubtotal) {
             basketSubtotal.innerText = parseFloat(subtotal).toFixed(2);
+        }
+        if (parseFloat(basketSubtotal.innerText) === 0.0) {
+            // gray out checkout button
+            const checkoutButton = this.root.querySelector('.checkout-button');
+            checkoutButton.classList.add('button-disabled');
+            checkoutButton.disabled = true;
+        } else {
+            // un-gray checkout button
+            const checkoutButton = this.root.querySelector('.checkout-button');
+            checkoutButton.classList.remove('button-disabled');
+            checkoutButton.disabled = false;
         }
     }
 

@@ -4,6 +4,10 @@ const Logger = require('../logger.js');
 
 const PgFormat = require('pg-format');
 
+// C
+
+// R
+
 async function Search(fuzzyStrings) {
     await Database.Query('BEGIN TRANSACTION;');
     const dbres = await Database.Query(PgFormat(`
@@ -208,6 +212,10 @@ async function GetBrick(brickId) {
 
     return brick;
 }
+
+// U
+
+// D
 
 module.exports = {
     Search,

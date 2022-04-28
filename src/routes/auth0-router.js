@@ -91,5 +91,6 @@ async function Login(req, res) {
 
 module.exports = {
     JWTMiddleware,
+    Auth0GetUser,
     Login,
 };

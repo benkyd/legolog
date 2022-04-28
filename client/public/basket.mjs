@@ -1,5 +1,4 @@
 // Basket is stored locally only and is not persisted to the server.
-// It is used to store the current basket and is used to calculate the total price of the basket.
 // It is also used to store the current user's basket.
 // The structure of the basket is in local storage and is as follows:
 // {
@@ -13,9 +12,6 @@
 //     },
 // }
 
-let BasketPriceRelavant = false;
-let KnownBasketPrice = 0;
-
 // TODO: Does the localstorage have a problem with mutual exclusion?
 // TODO: Should the basket be persisted to the server?
 export function GetBasketItems() {
@@ -23,6 +19,10 @@ export function GetBasketItems() {
         return;
     }
     return JSON.parse(localStorage.getItem('basket')).items;
+}
+
+export function ClearBasket() {
+    localStorage.removeItem('basket');
 }
 
 export function AddProductToBasket(product, type, amount, brickModifier = 'none') {

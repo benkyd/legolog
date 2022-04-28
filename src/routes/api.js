@@ -7,6 +7,7 @@ const Bricks = require('./bricks-router.js');
 const Sets = require('./sets-router.js');
 const Query = require('./query-router.js');
 const Auth0 = require('./auth0-router.js');
+const Order = require('./order-router.js');
 
 // CRUD is implemented where it makes sense.
 function Init() {
@@ -23,13 +24,12 @@ function Init() {
 
     Server.App.post('/api/basket/price/', Helpers.CalculateBasketPrice);
     Server.App.get('/api/discount/', Helpers.DiscountCode);
-    Server.App.post('/api/order');
+    Server.App.post('/api/order/', Order.ProcessNew);
     Server.App.get('/api/order:id');
 
     Server.App.get('/api/auth/login/', Auth0.JWTMiddleware, Auth0.Login);
-
+    Server.App.post('/api/auth/order/', Auth0.JWTMiddleware, Order.ProcessNew);
     Server.App.get('/api/auth/orders/');
-    Server.App.get('/api/auth/order/:id');
 
     Logger.Module('API', 'API Routes Initialized');
 }

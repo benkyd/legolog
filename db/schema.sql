@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS order_log (
 	id 					VARCHAR (50) NOT NULL PRIMARY KEY,
-	user_id				VARCHAR (50) NOT NULL, -- 0 if guest
+	user_id				VARCHAR (50), -- null if guest
 	offer_code			SERIAL,
 	subtotal_paid		DECIMAL NOT NULL,
 	discount			DECIMAL,
