@@ -21,7 +21,7 @@ function Get(req, res) {
 
     // if linux
     const defaultFile = `${process.cwd()}\\db\\img\\default.png`;
-    if (process.platform === 'linux') {
+    if (process.platform !== 'win32') {
         defaultFile.replace(/\\/g, '/');
     }
 
@@ -33,7 +33,7 @@ function Get(req, res) {
 
         // if linux
         const file = `${process.cwd()}\\db\\img\\${bucket[0]}\\${bucket[1]}\\${bucket[2]}\\${bucket[3]}\\${id}`;
-        if (process.platform === 'linux') {
+        if (process.platform !== 'win32') {
             file.replace(/\\/g, '/');
         }
 
