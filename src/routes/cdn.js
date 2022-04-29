@@ -20,9 +20,9 @@ function Get(req, res) {
     // I HAVE NO IDEA HOW TO DO THIS WITHOUT A LOT OF WORK
 
     // if linux
-    const defaultFile = `${process.cwd()}\\db\\img\\default.png`;
+    let defaultFile = `${process.cwd()}\\db\\img\\default.png`;
     if (process.platform !== 'win32') {
-        defaultFile.replace(/\\/g, '/');
+        defaultFile = defaultFile.replace(/\\/g, '/');
     }
 
     // this very randomly fails sometimes
@@ -32,9 +32,9 @@ function Get(req, res) {
         const bucket = hash.substring(0, 4);
 
         // if linux
-        const file = `${process.cwd()}\\db\\img\\${bucket[0]}\\${bucket[1]}\\${bucket[2]}\\${bucket[3]}\\${id}`;
+        let file = `${process.cwd()}\\db\\img\\${bucket[0]}\\${bucket[1]}\\${bucket[2]}\\${bucket[3]}\\${id}`;
         if (process.platform !== 'win32') {
-            file.replace(/\\/g, '/');
+            file = file.replace(/\\/g, '/');
         }
 
         if (fs.existsSync(file)) {
