@@ -1,5 +1,5 @@
 import { RegisterComponent, Component, SideLoad } from './components.mjs';
-import { AddProductToBasket } from '../basket.mjs';
+import * as Basket from '../basket.mjs';
 import * as LocalStorageListener from '../local-storage-listener.mjs';
 import * as Auth from '../auth.mjs';
 
@@ -149,6 +149,9 @@ class ProductListing extends Component {
                                 <span class="product-quantity">&nbsp;{this.state.stock} in stock</span>
                             </div>
 
+                            <br>
+                            <div class="amount-in-basket">0 In Basket</div>
+
                             ${localStorage.getItem('stock-mode') === 'true'
                                 ? /* html */`
                                     <div class="product-stock-mode">
@@ -233,9 +236,14 @@ class ProductListing extends Component {
         const increaseQuantityButton = this.root.querySelector('.increase-quantity');
         const reduceQuantityButton = this.root.querySelector('.reduce-quantity');
         const addToBasket = this.root.querySelector('.add-to-basket-button');
+        this.root.querySelector('.amount-in-basket').innerText = `${Basket.GetItemAmountBasket(this.state.id)} In Basket`;
 
         quantityInput.value = 1;
-        if (this.state.stock === 0) {
+        if (this.state.stock - Basket.GetItemAmountBasket(this.state.id) < 1) {
+            quantityInput.value = 0;
+        }
+
+        if (this.state.stock === 0 || parseInt(quantityInput.value) === 0) {
             quantityInput.value = 0;
             increaseQuantityButton.disabled = true;
             reduceQuantityButton.disabled = true;
@@ -246,14 +254,14 @@ class ProductListing extends Component {
         quantityInput.addEventListener('change', () => {
             quantityInput.value = parseInt(quantityInput.value);
 
-            if (quantityInput.value > this.state.stock) {
+            if (quantityInput.value > this.state.stock + Basket.GetItemAmountBasket(this.state.id)) {
                 quantityInput.value = this.state.stock;
             }
         });
 
         increaseQuantityButton.addEventListener('click', () => {
             const quantity = parseInt(quantityInput.value);
-            if (quantity < this.state.stock) {
+            if (quantity + Basket.GetItemAmountBasket(this.state.id) < this.state.stock) {
                 quantityInput.value = quantity + 1;
             }
         });
@@ -282,8 +290,17 @@ class ProductListing extends Component {
             const brick = this.state.type === 'brick';
             const modifier = brick ? this.root.querySelector('.brick-colour-selector-select').value : undefined;
 
-            AddProductToBasket(this.state.id, this.state.type, Math.abs(parseInt(quantityInput.value)), modifier);
+            Basket.AddProductToBasket(this.state.id, this.state.type, Math.abs(parseInt(quantityInput.value)), modifier);
+            this.root.querySelector('.amount-in-basket').innerText = `${Basket.GetItemAmountBasket(this.state.id)} In Basket`;
             quantityInput.value = 1;
+            if (this.state.stock - Basket.GetItemAmountBasket(this.state.id) < 1) {
+                quantityInput.value = 0;
+                quantityInput.value = 0;
+                increaseQuantityButton.disabled = true;
+                reduceQuantityButton.disabled = true;
+                addToBasket.disabled = true;
+                addToBasket.innerText = 'Out of Stock';
+            }
         });
     }
 }
