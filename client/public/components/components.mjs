@@ -32,6 +32,7 @@ export class Component extends HTMLElement {
     Update() { }
     Render() { Component.__WARN('Render'); }
     OnRender() { }
+    OnUnMount() { }
     static __IDENTIFY() { Component.__WARN('identify'); }
 
     async connectedCallback() {
@@ -60,6 +61,7 @@ export class Component extends HTMLElement {
 
     disconnectedCallback() {
         this.root.innerHTML = '';
+        this.OnUnMount();
     }
 
     watchAttributeChange(callback) {

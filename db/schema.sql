@@ -90,15 +90,29 @@ CREATE TABLE IF NOT EXISTS users (
 	date_updated		TIMESTAMP WITHOUT TIME ZONE NOT NULL
 );
 
+
+CREATE TABLE IF NOT EXISTS offer_code (
+	code				TEXT NOT NULL PRIMARY KEY,
+	discount			DECIMAL NOT NULL, -- percentage or fixed amount
+	discount_type		INT NOT NULL, -- 0 = percentage, 1 = fixed amount
+	min_order_value		DECIMAL NOT NULL,
+	type 				TEXT NOT NULL, -- set or brick
+	expiry_date			TIMESTAMP WITHOUT TIME ZONE NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS order_log (
 	id 					VARCHAR (50) NOT NULL PRIMARY KEY,
 	user_id				VARCHAR (50), -- null if guest
-	offer_code			SERIAL,
 	subtotal_paid		DECIMAL NOT NULL,
+	offer_code			TEXT,
 	discount			DECIMAL,
 	date_placed			TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+	shipped				BOOLEAN NOT NULL,
+	date_shipped 		TIMESTAMP WITHOUT TIME ZONE,
+	recieved			BOOLEAN NOT NULL,
+	date_recieved		TIMESTAMP WITHOUT TIME ZONE,
 	FOREIGN KEY ( user_id ) REFERENCES users( id ),
-	FOREIGN KEY ( offer_code ) REFERENCES offer_code( id )
+	FOREIGN KEY ( offer_code ) REFERENCES offer_code( code )
 );
 
 CREATE TABLE IF NOT EXISTS order_item (
@@ -108,19 +122,8 @@ CREATE TABLE IF NOT EXISTS order_item (
 	brick_colour		INT,
 	set_id				VARCHAR (50),
 	amount				INT NOT NULL,
-	price_paid			DECIMAL NOT NULL,
 	FOREIGN KEY ( order_id ) REFERENCES order_log( id ),
 	FOREIGN KEY ( brick_id ) REFERENCES lego_brick( id ),
 	FOREIGN KEY ( brick_colour ) REFERENCES lego_brick_colour( id ),
 	FOREIGN KEY ( set_id ) REFERENCES lego_set( id )
-);
-
-CREATE TABLE IF NOT EXISTS offer_code (
-	id 					SERIAL NOT NULL PRIMARY KEY,
-	code				TEXT NOT NULL,
-	discount			DECIMAL NOT NULL, -- percentage or fixed amount
-	discount_type		INT NOT NULL, -- 0 = percentage, 1 = fixed amount
-	min_order_value		DECIMAL NOT NULL,
-	type 				TEXT NOT NULL, -- set or brick
-	expiry_date			TIMESTAMP WITHOUT TIME ZONE NOT NULL
 );

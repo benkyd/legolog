@@ -1,9 +1,9 @@
 <html>
 <head>
-	<title>LegoLog Featured Sets</title>
+	<title>LegoLog Basket</title>
     <meta name="viewport">
 	<link rel="icon" type="image/svg+xml" href="/res/favicon.svg">
-	<link rel="stylesheet" type="text/css" href="../global.css">
+	<link rel="stylesheet" type="text/css" href="/global.css">
 
 	<!-- Fonts -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,34 +14,24 @@
 	<!-- Auth0 - a library for authentication -->
 	<script src="https://cdn.auth0.com/js/auth0-spa-js/1.13/auth0-spa-js.production.js"></script>
 
-	<!-- Flickity - a library to make carousells easier to implement -->
-	<link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
-	<script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
-
 	<!-- Components used on this page - they must be included to work -->
 	<script type="module" src="/components/components.mjs"></script>
 	<script type="module" src="/components/navbar.mjs"></script>
 	<script type="module" src="/components/search.mjs"></script>
+	<script type="module" src="/components/order-list.mjs"></script>
 	<script type="module" src="/components/basket-popout.mjs"></script>
 	<script type="module" src="/components/immutable-list.mjs"></script>
 	<script type="module" src="/components/accessability-popout.mjs"></script>
 	<script type="module" src="/components/notificationbar.mjs"></script>
 	<script type="module" src="/components/tag.mjs"></script>
-	<script type="module" src="/components/product-list.mjs"></script>
 	<script type="module" src="/components/super-compact-listing.mjs"></script>
-	<script type="module" src="/components/compact-listing.mjs"></script>
-	<script type="module" src="/components/product-listing.mjs"></script>
 
-	<script type="module" src="index.mjs"></script>
+	<script type="module" src="/index.mjs"></script>
 </head>
-<body>
+<body>	
 	<notificationbar-component></notificationbar-component>
 	<navbar-component></navbar-component>
 	<limited-margin>
-        <product-list-component id="featured"
-            title="Featured Lego Sets"
-            getroute="/api/sets/featured"
-            type="set">
-        </product-list-component>
+        <order-list-component></order-list-component>
 	</limited-margin>
 </body>

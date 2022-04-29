@@ -1,26 +1,25 @@
 import { RegisterComponent, Component } from './components.mjs';
-import { GetBasketTotalPrice } from '../basket.mjs';
 import * as LocalStorageListener from '../localstorage-listener.mjs';
 
-class ImmutableBasketList extends Component {
-    static __IDENTIFY() { return 'immutable-basket-list'; }
+// This was changed to be generic from the original: ImmutableBasketList
+// so it acts now on a local storage "source" instead of just basket
+// works i guess /shrug
+class ImmutableList extends Component {
+    static __IDENTIFY() { return 'immutable-list'; }
 
     constructor() {
-        super(ImmutableBasketList);
+        super(ImmutableList);
     }
 
-    async OnLocalBasketUpdate() {
-        const basket = localStorage.getItem('basket');
+    OnLocalStorageListener() {
+        const itemsList = localStorage.getItem(this.state.source);
 
-        if (basket) {
+        if (itemsList) {
             try {
-                const basketJSON = JSON.parse(basket);
-                const subtotal = await GetBasketTotalPrice();
+                const itemsJson = JSON.parse(itemsList);
                 this.setState({
                     ...this.getState,
-                    items: basketJSON.items,
-                    total: basketJSON.total,
-                    subtotal,
+                    items: itemsJson.items,
                 });
             } catch (e) {
                 console.log(e);
@@ -29,26 +28,17 @@ class ImmutableBasketList extends Component {
             this.setState({
                 ...this.getState,
                 items: {},
-                total: 0,
-                subtotal: 0,
             });
         }
     }
 
 
     OnMount() {
-        LocalStorageListener.ListenOnKey('basket', () => {
-            this.OnLocalBasketUpdate(Object.bind(this));
+        LocalStorageListener.ListenOnKey(this.state.source, () => {
+            this.OnLocalStorageListener(Object.bind(this));
         });
 
-        this.setState({
-           ...this.getState,
-            items: {},
-            total: 0,
-            subtotal: 0,
-        }, false);
-
-        this.OnLocalBasketUpdate(Object.bind(this));
+        this.OnLocalStorageListener(Object.bind(this));
     }
 
     Render() {
@@ -115,4 +105,4 @@ class ImmutableBasketList extends Component {
     }
 }
 
-RegisterComponent(ImmutableBasketList);
+RegisterComponent(ImmutableList);

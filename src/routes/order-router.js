@@ -2,11 +2,10 @@ const ControllerMaster = require('../controllers/controller-master.js');
 const MiscController = require('../controllers/misc-controller.js');
 const BrickController = require('../controllers/brick-controller.js');
 const SetController = require('../controllers/set-controller.js');
+const OrderController = require('../controllers/order-controller.js');
 const AuthRouter = require('./auth0-router.js');
 
 async function ProcessNew(req, res) {
-    console.log(req.body);
-
     // as it's optional auth, 0 is guest
     let userID = null;
     if (req.auth) {
@@ -16,8 +15,6 @@ async function ProcessNew(req, res) {
         }
     }
 
-    console.log(userID);
-
     // validate the request
     if (!req.body.basket) {
         return res.send({
@@ -26,7 +23,7 @@ async function ProcessNew(req, res) {
     }
 
     const basket = req.body.basket;
-    const discountCode = req.body.discountCode || '';
+    const discountCode = req.body.discountCode || null;
 
     // validate the basket
 
@@ -114,11 +111,13 @@ async function ProcessNew(req, res) {
     // now we need to calculate the discount (if applicable)
     // again, this could do with some consolidation
 
-    let discount = 0;
-    if (discountCode !== '') {
+    let discount = {
+        discount: 0,
+    };
+    if (discountCode !== null) {
         const sanatisedCode = ControllerMaster.SanatiseQuery(req.query.code);
 
-        const discount = await MiscController.GetDiscount(sanatisedCode);
+        discount = await MiscController.GetDiscount(sanatisedCode);
 
         if (discount.error) {
             return res.send({
@@ -133,9 +132,64 @@ async function ProcessNew(req, res) {
         }
     }
 
+    const total = basketSubtotal - discount.discount;
 
+    const order = await OrderController.NewOrder(userID, total, basket, discountCode, discount.discount);
+
+    if (order.error) {
+        return res.send({
+            error: order.error,
+        });
+    }
+
+    return res.send({
+        data: {
+            receipt_id: order,
+        },
+    });
+}
+
+async function GetOrder(req, res) {
+    const orderId = req.params.id;
+
+    if (!orderId) {
+        return res.send({
+            error: 'No order id in request',
+        });
+    }
+
+    const order = await OrderController.GetOrderById(orderId);
+
+    if (order.error) {
+        return res.send({
+            error: order.error,
+        });
+    }
+
+    return res.send({
+        data: order,
+    });
+}
+
+async function GetOrders(req, res) {
+    const user = await AuthRouter.Auth0GetUser(req);
+    const userId = user.sub.split('|')[1];
+
+    const orders = await OrderController.GetOrdersByUser(userId);
+
+    if (orders.error) {
+        return res.send({
+            error: orders.error,
+        });
+    }
+
+    return res.send({
+        data: orders,
+    });
 }
 
 module.exports = {
     ProcessNew,
+    GetOrder,
+    GetOrders,
 };

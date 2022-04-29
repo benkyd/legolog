@@ -7,11 +7,13 @@ const AUTH0CONFIG = {
 };
 
 let auth0 = null;
+let ready = false;
 
 async function CheckRedirect() {
     const isAuthenticated = await auth0.isAuthenticated();
     if (isAuthenticated) {
         localStorage.setItem('loggedIn', true);
+        ready = true;
         return;
     }
 
@@ -23,6 +25,7 @@ async function CheckRedirect() {
         } catch (e) {
             window.alert(e.message || 'authentication error, sorry');
             localStorage.setItem('loggedIn', false);
+            ready = false;
             Signout();
         }
 
@@ -32,9 +35,7 @@ async function CheckRedirect() {
 }
 
 export async function InitAuth0() {
-    // localStorage.setItem('loggedIn', false);
-    // localStorage.setItem('user', 'Guest');
-    // localStorage.setItem('admin', false);
+    ready = false;
 
     auth0 = await window.createAuth0Client({
         domain: AUTH0CONFIG.domain,
@@ -50,6 +51,7 @@ export async function InitAuth0() {
         localStorage.setItem('user', user.given_name || user.nickname);
         NotifyNavbar('login', user);
         localStorage.setItem('loggedIn', true);
+        ready = true;
 
         // tell the server about the logon, so that it can make the proper
         // entry in the database, if there is for example an address
@@ -69,6 +71,11 @@ export async function InitAuth0() {
 }
 
 export async function GetToken() {
+    /* eslint-disable-next-line */
+    while (!ready) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
+
     const token = await auth0.getTokenSilently();
     return token;
 }
@@ -90,6 +97,7 @@ export async function LoginSignup() {
 
 export async function Signout() {
     localStorage.setItem('loggedIn', false);
+    ready = false;
     localStorage.setItem('user', 'Guest');
     localStorage.setItem('admin', false);
     await auth0.logout({

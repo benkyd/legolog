@@ -66,7 +66,7 @@ class BasketPopout extends Component {
                             {this.state.total} Items
                         </div>
                         <div class="popup-content">
-                            <immutable-basket-list-component h="400px" class="basket-list"></immutable-basket-list-component>
+                            <immutable-list-component source="basket" h="400px" class="basket-list"></immutable-list-component>
                         </div>
                         <div class="popup-footer">
                             <span class="popup-footer-total">Subtotal: £${parseFloat(this.state.subtotal).toFixed(2)}</span>

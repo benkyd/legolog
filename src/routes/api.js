@@ -25,11 +25,11 @@ function Init() {
     Server.App.post('/api/basket/price/', Helpers.CalculateBasketPrice);
     Server.App.get('/api/discount/', Helpers.DiscountCode);
     Server.App.post('/api/order/', Order.ProcessNew);
-    Server.App.get('/api/order:id');
+    Server.App.get('/api/order/:id', Order.GetOrder);
 
     Server.App.get('/api/auth/login/', Auth0.JWTMiddleware, Auth0.Login);
     Server.App.post('/api/auth/order/', Auth0.JWTMiddleware, Order.ProcessNew);
-    Server.App.get('/api/auth/orders/');
+    Server.App.get('/api/auth/orders/', Auth0.JWTMiddleware, Order.GetOrders);
 
     Logger.Module('API', 'API Routes Initialized');
 }

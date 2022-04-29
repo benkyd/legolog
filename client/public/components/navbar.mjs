@@ -46,22 +46,29 @@ class NavBar extends Component {
             return;
         }
 
-        if (localStorage.admin === 'true' || localStorage.admin === true) {
-            this.root.querySelector('.stock-mode').style.display = 'flex';
-        } else {
-            this.root.querySelector('.stock-mode').style.display = 'none';
-        }
-
         const account = this.root.querySelector('.account-item');
 
-        // doing this with proper dom manipulation wasn't working
-        account.innerHTML = `
-            <a class="nav-link" href="#">${localStorage.user}▾</a>
-            <ul class="sub-nav" >
-                <li><a class="sub-nav-link" href="#">My Orders</a></li>
-                <li><a class="sub-nav-link logout-button" href="#">Log Out</a></li>
-            </ul>
-        `;
+        if (localStorage.admin === 'true' || localStorage.admin === true) {
+            this.root.querySelector('.stock-mode').style.display = 'flex';
+            account.innerHTML = `
+                <a class="nav-link" href="#">${localStorage.user}▾</a>
+                <ul class="sub-nav" >
+                    <li><a class="sub-nav-link" href="/orders">My Orders</a></li>
+                    <li><a class="sub-nav-link" href="">Add or Remove Stock</a></li>
+                    <li><a class="sub-nav-link" href="">Review Open Orders</a></li>
+                    <li><a class="sub-nav-link logout-button" href="#">Log Out</a></li>
+                </ul>
+            `;
+        } else {
+            this.root.querySelector('.stock-mode').style.display = 'none';
+            account.innerHTML = `
+                <a class="nav-link" href="#">${localStorage.user}▾</a>
+                <ul class="sub-nav" >
+                    <li><a class="sub-nav-link" href="/orders">My Orders</a></li>
+                    <li><a class="sub-nav-link logout-button" href="#">Log Out</a></li>
+                </ul>
+            `;
+        }
 
         const logoutButton = account.querySelector('.logout-button');
         logoutButton.addEventListener('click', () => {

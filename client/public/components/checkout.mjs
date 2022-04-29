@@ -79,7 +79,7 @@ class Checkout extends Component {
                     <div class="checkout-body-right">
                     <div class="checkout-summary-title section-title">Your Order <a href="/basket"><span class="edit-basket">edit basket</span><a> </div>
                         <div class="checkout-summary">
-                            <immutable-basket-list-component h="300px"></immutable-basket-list-component>
+                            <immutable-list-component source="basket" h="300px"></immutable-list-component>
 
                             <div class="checkout-summary-prices">
                                 <div class="checkout-summary-prices-row">
@@ -363,10 +363,10 @@ class Checkout extends Component {
             }
 
             // clear basket
-            await Basket.ClearBasket();
+            Basket.ClearBasket();
 
             // redirect to receipt
-            window.location.href = `/order/${req.data.receipt_id}`;
+            window.location.href = `/orders/order?id=${req.data.receipt_id}`;
             // we're done !
         });
     }
