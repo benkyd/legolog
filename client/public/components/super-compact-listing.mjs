@@ -8,7 +8,7 @@ class SuperCompactProductListing extends Component {
         super(SuperCompactProductListing);
     }
 
-    async OnMount() {
+    async Update() {
         if (!this.state.name || !this.state.price) {
             const product = (await fetch(`/api/${this.state.type}/${this.state.id}`).then(res => res.json())).data;
             const name = product.name;
@@ -28,7 +28,12 @@ class SuperCompactProductListing extends Component {
                 colours,
                 quantity: product.quantity,
             }, false);
-        } else if (this.state.tags) {
+        }
+
+        if (this.state.tags) {
+            if (this.state.tags.length >= 1) {
+                return;
+            }
             const tags = JSON.parse(this.state.tags);
             this.setState({
                 ...this.getState,

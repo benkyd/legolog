@@ -49,7 +49,6 @@ export async function InitAuth0() {
     if (isAuthenticated) {
         const user = await auth0.getUser();
         localStorage.setItem('user', user.given_name || user.nickname);
-        NotifyNavbar('login', user);
         localStorage.setItem('loggedIn', true);
         ready = true;
 
@@ -67,6 +66,7 @@ export async function InitAuth0() {
         const res = await fetch('/api/auth/login', fetchOptions).then(res => res.json());
 
         localStorage.setItem('admin', res.user.admin);
+        NotifyNavbar('login', user);
     }
 }
 

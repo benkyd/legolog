@@ -10,26 +10,29 @@ automatically every request
 
 | Type | Route | Queries | Auth? | Notes |
 | --- | --- | --- | - | --- |
-| GET   | /api/special/         |                 | ❌ | |
-| GET   | /api/search/          | query (q), page | ❌ | Query endpoint |
-| GET   | /api/sets/featured    | page            | ❌ | Query endpoint |
-| GET   | /api/brick/:id        |                 | ❌ | |
-| POST  | /api/bulk/brick       | array           | ❌ | POST due to bulk nature |
-| GET   | /api/set/:id          |                 | ❌ | |
-| GET   | /api/cdn/:id          |                 | ❌ | |
-| GET   | /api/basket/price/    |                 | ❌ | |
-| GET   | /api/discount/        | offer code      | ❌ | |
-| POST  | /api/order/           |                 | ❌ | IF user is authenticated, auth/bearer will be sent and done manually without middleware |
-| GET   | /api/auth/order/:id   |                 | ❌ | Security By Obscurity |
-| GET   | /api/auth/login/      |                 | ✔️ | |
-| GET   | /api/auth/orders/     |                 | ✔️ | |
+| GET   | /api/special/                   |                 | ❌ | |
+| GET   | /api/search/                    | query (q), page | ❌ | Query endpoint |
+| GET   | /api/sets/featured              | page            | ❌ | Query endpoint |
+| GET   | /api/brick/:id                  |                 | ❌ | |
+| POST  | /api/bulk/brick                 | array           | ❌ | POST due to bulk nature |
+| GET   | /api/set/:id                    |                 | ❌ | |
+| GET   | /api/cdn/:id                    |                 | ❌ | |
+| GET   | /api/basket/price/              |                 | ❌ | |
+| GET   | /api/discount/                  | offer code      | ❌ | |
+| POST  | /api/order/                     |                 | ❌ | IF user is authenticated, auth/bearer will be sent and done manually without middleware |
+| GET   | /api/auth/order/:id             |                 | ❌ | Security By Obscurity |
+| GET   | /api/auth/login/                |                 | ✔️ | |
+| GET   | /api/auth/orders/               |                 | ✔️ | |
+| GET   | /api/auth/staff/orders/         |                 | ✔️ | All unshipped orders |
+| PUT   | /api/auth/staff/order/:id       |                 | ✔️ | Update order to shipped, recieved (carrier) |
+| PUT   | /api/auth/staff/stock/:type/:id |                 | ✔️ | Update stock on item |
+| POST  | /api/auth/staff/stock/          |                 | ✔️ | Add item to inventory |
+| DEL   | /api/auth/staff/stock/:type/:id |                 | ✔️ | Remove item from inventory |
 
 Query endpoints do not return the full data on a brick/set, they return
 a subset for product listing pages
 
 ## Query structure
-
-## Query parameters
 
 For all endpoints that query, the following parameters are supported:
 

@@ -31,6 +31,9 @@ function Init() {
     Server.App.post('/api/auth/order/', Auth0.JWTMiddleware, Order.ProcessNew);
     Server.App.get('/api/auth/orders/', Auth0.JWTMiddleware, Order.GetOrders);
 
+    Server.App.get('/api/auth/staff/orders/', Auth0.JWTMiddleware, Auth0.AdminOnlyEndpoint, Order.GetUnFinishedOrders);
+    Server.App.put('/api/auth/staff/order/:id', Auth0.JWTMiddleware, Auth0.AdminOnlyEndpoint, Order.UpdateOrderStatus);
+
     Logger.Module('API', 'API Routes Initialized');
 }
 

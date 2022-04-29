@@ -115,7 +115,7 @@ async function ProcessNew(req, res) {
         discount: 0,
     };
     if (discountCode !== null) {
-        const sanatisedCode = ControllerMaster.SanatiseQuery(req.query.code);
+        const sanatisedCode = ControllerMaster.SanatiseQuery(discountCode);
 
         discount = await MiscController.GetDiscount(sanatisedCode);
 
@@ -188,8 +188,76 @@ async function GetOrders(req, res) {
     });
 }
 
+async function GetUnFinishedOrders(req, res) {
+    const orders = await OrderController.GetUnFinishedOrders();
+
+    if (orders.error) {
+        return res.send({
+            error: orders.error,
+        });
+    }
+
+    return res.send({
+        data: orders,
+    });
+}
+
+async function UpdateOrderStatus(req, res) {
+    const orderId = req.params.id;
+    const status = req.body.status;
+
+    if (!orderId) {
+        return res.send({
+            error: 'No order id in request',
+        });
+    }
+
+    if (!status) {
+        return res.send({
+            error: 'No status in request',
+        });
+    }
+
+    const shipped = status.shipped;
+    if (!shipped) {
+        const completed = status.completed;
+        if (!completed) {
+            return res.send({
+                error: 'No status in request',
+            });
+        }
+        const orderRecieved = await OrderController.OrderRecieved(orderId);
+        if (orderRecieved.error) {
+            return res.send({
+                error: orderRecieved.error,
+            });
+        }
+
+        return res.send({
+            data: {
+                success: true,
+            },
+        });
+    }
+
+    const orderShipped = await OrderController.OrderShipped(orderId);
+    if (orderShipped.error) {
+        return res.send({
+            error: orderShipped.error,
+        });
+    }
+
+    return res.send({
+        data: {
+            success: true,
+        },
+    });
+}
+
 module.exports = {
     ProcessNew,
     GetOrder,
     GetOrders,
+    GetUnFinishedOrders,
+    UpdateOrderStatus,
 };

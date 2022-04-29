@@ -115,7 +115,34 @@ async function GetOrdersByUser(userId) {
                discount, date_placed, shipped
         FROM order_log
         WHERE order_log.user_id = $1
+        ORDER BY date_placed DESC
     `, [userId]).catch(() => {
+        return {
+            error: 'Database error',
+        };
+    });
+    if (dbres.error) {
+        Database.Query('ROLLBACK TRANSACTION;');
+        Logger.Error(dbres.error);
+        return {
+            error: 'Database error',
+        };
+    }
+    Database.Query('COMMIT TRANSACTION;');
+
+    const result = dbres.rows;
+    return result;
+}
+
+async function GetUnFinishedOrders() {
+    await Database.Query('BEGIN TRANSACTION;');
+    const dbres = await Database.Query(`
+        SELECT order_log.id, order_log.user_id, subtotal_paid,
+               date_placed, shipped, recieved
+        FROM order_log
+        WHERE order_log.recieved = FALSE
+        ORDER BY date_placed DESC
+    `).catch(() => {
         return {
             error: 'Database error',
         };
@@ -136,11 +163,47 @@ async function GetOrdersByUser(userId) {
 // U
 
 async function OrderShipped(orderid) {
-
+    await Database.Query('BEGIN TRANSACTION;');
+    const dbres = await Database.Query(`
+        UPDATE order_log
+        SET shipped = TRUE, date_shipped = NOW()
+        WHERE id = $1
+    `, [orderid]).catch(() => {
+        return {
+            error: 'Database error',
+        };
+    });
+    if (dbres.error) {
+        Database.Query('ROLLBACK TRANSACTION;');
+        Logger.Error(dbres.error);
+        return {
+            error: 'Database error',
+        };
+    }
+    Database.Query('COMMIT TRANSACTION;');
+    return true;
 }
 
 async function OrderRecieved(orderid) {
-
+    await Database.Query('BEGIN TRANSACTION;');
+    const dbres = await Database.Query(`
+        UPDATE order_log
+        SET recieved = TRUE, date_recieved = NOW()
+        WHERE id = $1
+    `, [orderid]).catch(() => {
+        return {
+            error: 'Database error',
+        };
+    });
+    if (dbres.error) {
+        Database.Query('ROLLBACK TRANSACTION;');
+        Logger.Error(dbres.error);
+        return {
+            error: 'Database error',
+        };
+    }
+    Database.Query('COMMIT TRANSACTION;');
+    return true;
 }
 
 // D
@@ -149,6 +212,7 @@ module.exports = {
     NewOrder,
     GetOrderById,
     GetOrdersByUser,
+    GetUnFinishedOrders,
     OrderShipped,
     OrderRecieved,
 };

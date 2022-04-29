@@ -8,7 +8,7 @@ class Order extends Component {
     }
 
     async OnMount() {
-        // get order id from search param
+            // get order id from search param
         const query = new URLSearchParams(window.location.search);
         const id = query.get('id');
 
@@ -20,7 +20,6 @@ class Order extends Component {
             ...res,
         }, false);
 
-        console.log(this.state);
         localStorage.setItem('viewing-order', JSON.stringify({ items: res.items }));
     }
 
@@ -86,22 +85,22 @@ class Order extends Component {
                                     </div>
                                     <div class="order-track-step">
                                         <span class="order-track-status">
-                                            <div class="order-track-step-icon"></div>
-                                            <div class="order-track-step-line"></div>
+                                            <div class="order-track-step-icon ${this.state.shipped ? 'completed' : ''}"></div>
+                                            <div class="order-track-step-line ${this.state.shipped ? 'completed' : ''}"></div>
                                         </span>
                                         <div class="order-track-text">
                                             <span class="order-body-status-title">Posted</span>
-                                            <span class="when"></span>
+                                            <span class="when">${this.state.shipped ? new Date(this.state.date_shipped).toDateString() : ''}</span>
                                         </div>
                                     </div>
                                     <div class="order-track-step">
                                         <span class="order-track-status">
-                                            <div class="order-track-step-icon"></div>
-                                            <div class="order-track-step-line"></div>
+                                            <div class="order-track-step-icon ${this.state.recieved ? 'completed' : ''}"></div>
+                                            <div class="order-track-step-line ${this.state.recieved ? 'completed' : ''}"></div>
                                         </span>
                                         <div class="order-track-text">
                                             <span class="order-body-status-title">Delivered</span>
-                                            <span class="when"></span>
+                                            <span class="when">${this.state.recieved ? new Date(this.state.date_recieved).toDateString() : ''}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -118,7 +117,6 @@ class Order extends Component {
     }
 
     OnRender() {
-        // todo: add order tracking, the data is already there
     }
 
     OnUnMount() {

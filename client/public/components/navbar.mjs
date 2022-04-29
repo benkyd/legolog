@@ -54,8 +54,8 @@ class NavBar extends Component {
                 <a class="nav-link" href="#">${localStorage.user}▾</a>
                 <ul class="sub-nav" >
                     <li><a class="sub-nav-link" href="/orders">My Orders</a></li>
-                    <li><a class="sub-nav-link" href="">Add or Remove Stock</a></li>
-                    <li><a class="sub-nav-link" href="">Review Open Orders</a></li>
+                    <li><a class="sub-nav-link" href="/staff/stock">Add or Remove Stock</a></li>
+                    <li><a class="sub-nav-link" href="/staff/revieworders">Review Open Orders</a></li>
                     <li><a class="sub-nav-link logout-button" href="#">Log Out</a></li>
                 </ul>
             `;

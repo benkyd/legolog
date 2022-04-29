@@ -13,6 +13,10 @@ const AUTH0CONFIG = {
     audience: 'localhost:8080/api',
 };
 
+// Auth0 was rate limiting me a LOT, so I'm going to use a cache to
+// prevent that from happening again
+const Auth0UserCache = [];
+
 const JWTChecker = OAuth2JWTBearer.auth({
     audience: AUTH0CONFIG.audience,
     issuerBaseURL: `https://${AUTH0CONFIG.domain}`,
@@ -33,6 +37,25 @@ function JWTMiddleware(req, res, next) {
     });
 }
 
+async function AdminOnlyEndpoint(req, res, next) {
+    const user = await Auth0GetUser(req);
+    if (!user) {
+        return res.send({
+            error: 'No user found',
+        });
+    }
+
+    const localUser = await Controller.GetUserByID(user.sub.split('|')[1]);
+
+    if (!localUser.admin) {
+        return res.send({
+            error: 'Unauthorized',
+        });
+    }
+
+    next();
+}
+
 async function Auth0GetUser(req) {
     if (!req.auth) {
         return null;
@@ -40,13 +63,20 @@ async function Auth0GetUser(req) {
 
     if (!req.auth || !req.auth.token) return null;
 
+    const token = req.auth.token;
+    if (Auth0UserCache[token]) {
+        return Auth0UserCache[token];
+    }
+
     try {
         const response = await Axios.get(`https://${AUTH0CONFIG.domain}/userinfo`, {
             method: 'GET',
             headers: {
-                authorization: `Bearer ${req.auth.token}`,
+                authorization: `Bearer ${token}`,
             },
         });
+
+        Auth0UserCache[token] = response.data;
 
         return response.data;
     } catch (err) {
@@ -58,6 +88,11 @@ async function Auth0GetUser(req) {
 async function Login(req, res) {
     // tell the database the user is new if they don't already exist
     const user = await Auth0GetUser(req);
+    if (!user) {
+        return res.send({
+            error: 'No user found',
+        });
+    }
 
     const id = user.sub.split('|')[1];
 
@@ -91,6 +126,7 @@ async function Login(req, res) {
 
 module.exports = {
     JWTMiddleware,
+    AdminOnlyEndpoint,
     Auth0GetUser,
     Login,
 };
