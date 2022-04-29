@@ -78,7 +78,7 @@ export class Component extends HTMLElement {
 
     attributeChangedCallback(name, newValue) {
         console.log(`attribute changed: ${name} ${newValue}`);
-        this.Update(Object.bind(this, name, {
+        this.Update(Object.bind(this)(name, {
             ...this.state,
             [name]: newValue,
         }));
