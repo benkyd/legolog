@@ -1,7 +1,7 @@
 // import { RendererPreInit, BrickRenderer } from './brick-renderer/index.mjs';
 
 import { InitAuth0 } from './auth.mjs';
-import * as StorageListener from './localstorage-listener.mjs';
+import * as StorageListener from './local-storage-listener.mjs';
 
 function main() {
     InitAuth0();

@@ -1,6 +1,6 @@
 import { RegisterComponent, Component, SideLoad } from './components.mjs';
 import { AddProductToBasket } from '../basket.mjs';
-import * as LocalStorageListener from '../localstorage-listener.mjs';
+import * as LocalStorageListener from '../local-storage-listener.mjs';
 import * as Auth from '../auth.mjs';
 
 class ProductListing extends Component {

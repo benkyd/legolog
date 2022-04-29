@@ -1,5 +1,5 @@
 import { RegisterComponent, Component } from './components.mjs';
-import * as LocalStorageListener from '../localstorage-listener.mjs';
+import * as LocalStorageListener from '../local-storage-listener.mjs';
 
 // This was changed to be generic from the original: ImmutableBasketList
 // so it acts now on a local storage "source" instead of just basket

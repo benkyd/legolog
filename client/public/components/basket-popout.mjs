@@ -1,6 +1,6 @@
 import { RegisterComponent, Component } from './components.mjs';
 import * as Basket from '../basket.mjs';
-import * as LocalStorageListener from '../localstorage-listener.mjs';
+import * as LocalStorageListener from '../local-storage-listener.mjs';
 
 class BasketPopout extends Component {
     static __IDENTIFY() { return 'basket-popout'; }

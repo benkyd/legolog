@@ -1,6 +1,6 @@
 import { RegisterComponent, Component, SideLoad } from './components.mjs';
 import { LoginSignup, Signout } from '../auth.mjs';
-import * as StorageListener from '../localstorage-listener.mjs';
+import * as StorageListener from '../local-storage-listener.mjs';
 
 // due to peculiarities in asynchronus loading of components,
 // we need to have this remember the state of the logged in user
