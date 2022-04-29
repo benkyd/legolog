@@ -21,12 +21,6 @@ async function Update(req, res) {
 
     const data = req.body;
 
-    if (!data || !data.new_stock_level) {
-        return res.send({
-            error: 'No data in request',
-        });
-    }
-
     if (type === 'brick') {
         const stock = await BrickController.UpdateStock(id, data.new_stock_level);
         if (stock.error) {

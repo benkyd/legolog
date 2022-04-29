@@ -25,6 +25,23 @@ export function ClearBasket() {
     localStorage.removeItem('basket');
 }
 
+export function GetItemAmountBasket(product) {
+    if (localStorage.getItem('basket') === null || !localStorage.getItem('basket')) {
+        return;
+    }
+    const basket = JSON.parse(localStorage.getItem('basket'));
+
+    let accumilator = 0;
+
+    for (const [item, value] of Object.entries(basket.items)) {
+        if (item.includes(product)) {
+            accumilator += value.quantity;
+        }
+    }
+
+    return accumilator;
+}
+
 export function AddProductToBasket(product, type, amount, brickModifier = 'none') {
     if (localStorage.getItem('basket') === null || !localStorage.getItem('basket')) {
         localStorage.setItem('basket', JSON.stringify({

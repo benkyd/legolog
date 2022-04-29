@@ -1,9 +1,9 @@
 <html>
 <head>
-	<title>LegoLog Search Results</title>
+	<title>LegoLog Featured Sets</title>
     <meta name="viewport">
 	<link rel="icon" type="image/svg+xml" href="/res/favicon.svg">
-	<link rel="stylesheet" type="text/css" href="../global.css">
+	<link rel="stylesheet" type="text/css" href="/global.css">
 
 	<!-- Fonts -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,12 +22,10 @@
 	<script type="module" src="/components/components.mjs"></script>
 	<script type="module" src="/components/navbar.mjs"></script>
 	<script type="module" src="/components/search.mjs"></script>
-	<script type="module" src="/components/basket.mjs"></script>
 	<script type="module" src="/components/basket-popout.mjs"></script>
 	<script type="module" src="/components/immutable-list.mjs"></script>
 	<script type="module" src="/components/accessability-popout.mjs"></script>
 	<script type="module" src="/components/notificationbar.mjs"></script>
-	<script type="module" src="/components/storefront.mjs"></script>
 	<script type="module" src="/components/tag.mjs"></script>
 	<script type="module" src="/components/product-list.mjs"></script>
 	<script type="module" src="/components/super-compact-listing.mjs"></script>
@@ -40,21 +38,10 @@
 	<notificationbar-component></notificationbar-component>
 	<navbar-component></navbar-component>
 	<limited-margin>
-        <script>
-            console.log(`/api/search/${window.location.search}`)
-            // parse out the search query using the query object
-            const query = new URLSearchParams(window.location.search)
-			// get the search query from the query object
-			const searchQuery = query.get('q');
-			const tagQuery = query.get('tag');
-			const typeQuery = query.get('type');
-            document.write(/* html */`
-                <product-list-component id="results"
-                    title="Search Results for ${typeQuery || ''} '${searchQuery || tagQuery || 'By Catagory'}'"
-                    getroute="/api/search/${window.location.search}"
-					augmentable="true">
-                </product-list-component>
-            `);
-        </script>
+        <product-list-component id="featured"
+            title="New Lego Sets"
+            getroute="/api/sets/new"
+            type="set">
+        </product-list-component>
 	</limited-margin>
 </body>

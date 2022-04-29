@@ -8,10 +8,49 @@ const PgFormat = require('pg-format');
 
 // R
 
+async function SearchByTag(fuzzyTag) {
+    await Database.Query('BEGIN TRANSACTION;');
+    const dbres = await Database.Query(`
+        SELECT lego_brick.id, lego_brick.name, tag.name AS "tag", inv.price, inv.new_price AS "discount", inv.stock
+        FROM lego_brick
+            LEFT JOIN lego_brick_tag AS tags ON tags.brick_id = lego_brick.id
+            LEFT JOIN tag AS tag ON tags.tag = tag.id
+            LEFT JOIN lego_brick_inventory AS inv ON inv.brick_id = lego_brick.id
+        WHERE tag.name ~* $1
+    `, [fuzzyTag]).catch(() => {
+        return {
+            error: 'Database error',
+        };
+    });
+    if (dbres.error) {
+        Database.Query('ROLLBACK TRANSACTION;');
+        Logger.Error(dbres.error);
+        return dbres;
+    }
+    Database.Query('COMMIT TRANSACTION;');
+
+    // validate database response
+    if (dbres.rows.length === 0) {
+        return {
+            error: 'Bricks not found',
+            long: 'The bricks you are looking for do not exist',
+        };
+    }
+    const bricks = dbres.rows;
+
+    // combine tags into a single array
+    for (const brick of bricks) {
+        brick.type = 'brick';
+        brick.tags = brick.tag.split(',');
+    }
+
+    return bricks;
+}
+
 async function Search(fuzzyStrings) {
     await Database.Query('BEGIN TRANSACTION;');
     const dbres = await Database.Query(PgFormat(`
-        SELECT lego_brick.id, lego_brick.name, tag.name AS "tag", inv.price, inv.new_price AS "discount"
+        SELECT lego_brick.id, lego_brick.name, tag.name AS "tag", inv.price, inv.new_price AS "discount", inv.stock
         FROM lego_brick
             LEFT JOIN lego_brick_tag AS tags ON tags.brick_id = lego_brick.id
             LEFT JOIN tag AS tag ON tags.tag = tag.id
@@ -114,7 +153,7 @@ async function SumPrices(bricksArr, quantityArray) {
 async function GetBulkBricks(bricksArr) {
     await Database.Query('BEGIN TRANSACTION;');
     const dbres = await Database.Query(PgFormat(`
-        SELECT lego_brick.id, lego_brick.name, tag.name AS "tag", inv.price, inv.new_price AS "discount"
+        SELECT lego_brick.id, lego_brick.name, tag.name AS "tag", inv.price, inv.new_price AS "discount", inv.stock
         FROM lego_brick
             LEFT JOIN lego_brick_tag AS tags ON tags.brick_id = lego_brick.id
             LEFT JOIN tag AS tag ON tags.tag = tag.id
@@ -260,6 +299,7 @@ async function UpdateStock(brickId, newStock) {
 // D
 
 module.exports = {
+    SearchByTag,
     Search,
     SumPrices,
     GetBulkBricks,

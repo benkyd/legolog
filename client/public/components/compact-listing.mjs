@@ -1,4 +1,5 @@
 import { RegisterComponent, Component } from './components.mjs';
+import * as Basket from '../basket.mjs';
 
 class CompactProductListing extends Component {
     static __IDENTIFY() { return 'compact-listing'; }
@@ -32,13 +33,16 @@ class CompactProductListing extends Component {
                         </a>
                         <span class="product-listing-tags">
                             ${this.state.tags
-                                ? this.state.tags.map(tag => `<tag-component name="${tag}"></tag-component>`).join('') 
+                                ? this.state.tags.map(tag => `<tag-component name="${tag}"></tag-component>`).join('')
                                 : ''}
                         </span>
+                        <div class="add-to-basket">
+                            <button class="add-to-basket-button">Add to basket</button>
+                        </div>
                         ${this.state.discount
                             ? `<span class="product-listing-price-full">£${parseFloat(this.state.price).toFixed(2)}</span><span class="product-listing-price-new">£${parseFloat(this.state.discount).toFixed(2)}</span>`
                             : `<span class="product-listing-price">£${parseFloat(this.state.price).toFixed(2)}</span>`}
-                    </div>
+                    </div>      
                 </div>
             `,
             style: `
@@ -118,6 +122,35 @@ class CompactProductListing extends Component {
                         max-height: 100%;
                     }
                 }
+
+                .add-to-basket {
+                    width: 100%;
+                }
+
+                .add-to-basket-button {
+                    width: 100%;
+                    background-color: #F5F6F6;
+                    outline: 2px solid #222;
+                    color: #222;
+                    border: none;
+                    padding: 10px;
+                    fomt-size: 1.2em;
+                    font-weight: bold;
+                    cursor: pointer;
+                    transition: all 250ms ease-in-out;
+                    margin-top: 5px;
+                    margin-bottom: 5px;
+                }
+                
+                .add-to-basket-button:hover {
+                    color: #fff;
+                    background-color: #222;
+                }
+
+                .button-refresh {
+                    color: #fff;
+                    background-color: #222;
+                }
             `,
         };
     }
@@ -134,6 +167,28 @@ class CompactProductListing extends Component {
         });
         name.addEventListener('click', () => {
             this.OpenProductListing(Object.bind(this));
+        });
+
+        const addToBasketButton = this.root.querySelector('.add-to-basket-button');
+
+        if (parseInt(this.state.stock) - Basket.GetItemAmountBasket(this.state.id) < 1 || parseInt(this.state.stock) === 0) {
+            addToBasketButton.disabled = true;
+            addToBasketButton.style.backgroundColor = '#888';
+            addToBasketButton.style.color = '#222';
+            addToBasketButton.innerText = 'Out of stock';
+        }
+
+        addToBasketButton.addEventListener('click', () => {
+            Basket.AddProductToBasket(this.state.id, this.state.type, 1, 0);
+
+            addToBasketButton.disabled = true;
+            addToBasketButton.classList.add('button-refresh');
+            addToBasketButton.innerText = 'Added to basket';
+            setTimeout(() => {
+                this.setState({
+                    ...this.getState,
+                });
+            }, 1000);
         });
     }
 }

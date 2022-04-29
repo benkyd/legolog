@@ -16532,7 +16532,6 @@ INSERT INTO lego_set_inventory (set_id, stock, price, new_price, last_updated) V
 
 INSERT INTO lego_set (id, name, description, date_released, weight, dimensions_x, dimensions_y, dimensions_z) VALUES ('1010', 'Lego Bonsai Tree', 'Lego Bonsai Tree by Matthew Dennis, Rich Boakes and Jacek Kopecky', '2022', '100', '100', '100', '100');
 INSERT INTO lego_set_tag (set_id, tag) VALUES ('1010', '1201');
-INSERT INTO lego_set_tag (set_id, tag) VALUES ('1010', '323');
 INSERT INTO set_descriptor (set_id, brick_id, amount) VALUES ('1010', '95228', '1000');
 INSERT INTO lego_set_inventory (set_id, stock, price, new_price, last_updated) VALUES ('1010', '5', '1000.69', '50', now());
 

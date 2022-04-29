@@ -86,6 +86,7 @@ class ProductList extends Component {
                                     id="${product.id}"
                                     listing="${product.listing}"
                                     price="${product.price}"
+                                    stock="${product.stock}"
                                     type="${product.type}"
                                     tags="${JSON.stringify(product.tags).replace(/"/g, '&quot;')}"
                                     discount="${product.discount || ''}"></compact-listing-component>

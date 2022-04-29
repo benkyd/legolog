@@ -7,10 +7,60 @@ const PgFormat = require('pg-format');
 // C
 
 // R
+
+async function SearchByTag(fuzzyTag) {
+    await Database.Query('BEGIN TRANSACTION;');
+    const dbres = await Database.Query(`
+        SELECT lego_set.id, lego_set.name, tag.name AS "tag", inv.price, inv.new_price AS "discount", inv.stock
+        FROM lego_set
+            LEFT JOIN lego_set_tag AS tags ON tags.set_id = lego_set.id
+            LEFT JOIN tag AS tag ON tags.tag = tag.id
+            LEFT JOIN lego_set_inventory AS inv ON inv.set_id = lego_set.id
+        WHERE tag.name ~* $1
+    `, [fuzzyTag]).catch(() => {
+        return {
+            error: 'Database error',
+        };
+    });
+    if (dbres.error) {
+        Database.Query('ROLLBACK TRANSACTION;');
+        Logger.Error(dbres.error);
+        return dbres;
+    }
+    Database.Query('COMMIT TRANSACTION;');
+
+    // validate database response
+    if (dbres.rows.length === 0) {
+        return {
+            error: 'Sets not found',
+            long: 'The sets you are looking for do not exist',
+        };
+    }
+
+    let sets = dbres.rows;
+    // combine tags into a single array
+    for (const set of sets) {
+        set.type = 'set';
+        set.tags = [];
+    }
+
+    // combine (joined) rows into a single array
+    sets = sets.reduce((arr, current) => {
+        if (!arr.some(item => item.id === current.id)) {
+            arr.push(current);
+        }
+
+        arr.find(item => item.id === current.id).tags.push(current.tag);
+        return arr;
+    }, []);
+
+    return sets;
+}
+
 async function Search(fuzzyStrings) {
     await Database.Query('BEGIN TRANSACTION;');
     const dbres = await Database.Query(PgFormat(`
-        SELECT lego_set.id, lego_set.name, tag.name AS "tag", inv.price, inv.new_price AS "discount"
+        SELECT lego_set.id, lego_set.name, tag.name AS "tag", inv.price, inv.new_price AS "discount", inv.stock
         FROM lego_set
             LEFT JOIN lego_set_tag AS tags ON tags.set_id = lego_set.id
             LEFT JOIN tag AS tag ON tags.tag = tag.id
@@ -31,8 +81,8 @@ async function Search(fuzzyStrings) {
     // validate database response
     if (dbres.rows.length === 0) {
         return {
-            error: 'Bricks not found',
-            long: 'The bricks you are looking for do not exist',
+            error: 'Set not found',
+            long: 'The sets you are looking for do not exist',
         };
     }
 
@@ -176,7 +226,7 @@ async function GetSets(page, resPerPage) {
     const countRes = await Database.Query('SELECT COUNT (*) FROM lego_set;');
     const dbres = await Database.Query(`
         SELECT
-            lego_set.id, lego_set.name, price, new_price AS "discount", tag.name AS "tag"
+            lego_set.id, lego_set.name, price, new_price AS "discount", tag.name AS "tag", inv.stock
         FROM lego_set
             LEFT JOIN lego_set_inventory as inv ON lego_set.id = inv.set_id
             LEFT JOIN lego_set_tag AS tags ON tags.set_id = lego_set.id
@@ -213,6 +263,61 @@ async function GetSets(page, resPerPage) {
         set.tags = [];
     }
 
+
+    // combine (joined) rows into a single array
+    sets = sets.reduce((arr, current) => {
+        if (!arr.some(item => item.id === current.id)) {
+            arr.push(current);
+        }
+
+        arr.find(item => item.id === current.id).tags.push(current.tag);
+        return arr;
+    }, []);
+
+    return { total, sets };
+}
+
+async function GetSetsByDate(page, resPerPage) {
+    await Database.Query('BEGIN TRANSACTION;');
+    const countRes = await Database.Query('SELECT COUNT (*) FROM lego_set;');
+    const dbres = await Database.Query(`
+        SELECT
+            lego_set.id, lego_set.name, price, new_price AS "discount", tag.name AS "tag", date_released, inv.stock
+        FROM lego_set
+            LEFT JOIN lego_set_inventory as inv ON lego_set.id = inv.set_id
+            LEFT JOIN lego_set_tag AS tags ON tags.set_id = lego_set.id
+            LEFT JOIN tag AS tag ON tags.tag = tag.id
+        ORDER BY date_released::int DESC
+        LIMIT $1
+        OFFSET $2;`,
+    [resPerPage, page * resPerPage]).catch(() => {
+        return {
+            error: 'Database error',
+        };
+    });
+    if (dbres.error) {
+        Database.Query('ROLLBACK TRANSACTION;');
+        Logger.Error(dbres.error);
+        return dbres;
+    }
+    Database.Query('COMMIT TRANSACTION;');
+
+    const total = parseInt(countRes.rows[0].count);
+
+    // validate database response
+    if (dbres.rows.length === 0) {
+        return {
+            error: 'No sets found',
+            long: 'There are no sets to display',
+        };
+    }
+
+    let sets = dbres.rows;
+
+    for (const set of sets) {
+        set.type = 'set';
+        set.tags = [];
+    }
 
     // combine (joined) rows into a single array
     sets = sets.reduce((arr, current) => {
@@ -274,10 +379,12 @@ async function UpdateStock(setId, newStock) {
 // D
 
 module.exports = {
+    SearchByTag,
     Search,
     SumPrices,
     GetSet,
     GetSets,
+    GetSetsByDate,
     RemoveSetStock,
     UpdateStock,
 };

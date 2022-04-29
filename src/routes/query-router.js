@@ -3,8 +3,95 @@ const BrickController = require('../controllers/brick-controller.js');
 const SetController = require('../controllers/set-controller.js');
 const SpellController = require('../controllers/spellchecker.js');
 
+async function SearchByTag(req, res, tag, pageRequested, perPage) {
+    const setResults = await SetController.SearchByTag(tag);
+    const brickResults = await BrickController.SearchByTag(tag);
+
+    if (setResults.error && brickResults.error) {
+        return res.send(JSON.stringify({
+            error: 'Not found',
+            long: 'What you are looking for do not exist',
+        }));
+    }
+
+    const results = setResults.concat(brickResults);
+    const count = results.length;
+
+    // remove after the requested page
+    results.splice(perPage * pageRequested);
+    // remove before the requested page
+    results.splice(0, perPage * (pageRequested - 1));
+
+    res.send(JSON.stringify({
+        data: results,
+        page: {
+            total: count,
+            per_page: perPage,
+            page: pageRequested,
+        },
+    }));
+}
+
+async function SearchByTypeAndTag(req, res, type, tag, pageRequested, perPage) {
+    let results = [];
+    let count = 0;
+
+    if (type === 'brick') {
+        results = await BrickController.SearchByTag(tag);
+
+        if (results.error) {
+            return res.send(JSON.stringify({
+                error: 'Not found',
+                long: 'What you are looking for do not exist',
+            }));
+        }
+
+        count = results.length;
+    }
+
+    if (type === 'set') {
+        results = await SetController.SearchByTag(tag);
+
+        if (results.error) {
+            return res.send(JSON.stringify({
+                error: 'Not found',
+                long: 'What you are looking for do not exist',
+            }));
+        }
+
+        count = results.length;
+    }
+
+    // remove after the requested page
+    results.splice(perPage * pageRequested);
+    // remove before the requested page
+    results.splice(0, perPage * (pageRequested - 1));
+
+    res.send(JSON.stringify({
+        data: results,
+        page: {
+            total: count,
+            per_page: perPage,
+            page: pageRequested,
+        },
+    }));
+}
+
+
 async function Search(req, res) {
-    const q = req.query.q;
+    const q = req.query.q || '';
+    const tag = req.query.tag || '';
+    const type = req.query.type || '';
+    const pageRequested = req.query.page || 1;
+    const perPage = req.query.per_page || 16;
+
+    if (q === '' && tag !== '' && type === '') {
+        return SearchByTag(req, res);
+    }
+
+    if (q === '' && tag !== '' && type !== '') {
+        return SearchByTypeAndTag(req, res, type, tag, pageRequested, perPage);
+    }
 
     // sanatise query
     const sanatisedQuery = ControllerMaster.SanatiseQuery(q);
@@ -17,9 +104,6 @@ async function Search(req, res) {
     }
 
     const alternateQueries = SpellController.MostProbableAlternateQueries(sanatisedQuery);
-
-    const pageRequested = req.query.page || 1;
-    const perPage = req.query.per_page || 16;
 
     // TODO: it is tricky to do a database offset / limit here
     // due to the fact that we have to combine the results of

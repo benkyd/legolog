@@ -12,7 +12,8 @@ automatically every request
 | --- | --- | --- | - | --- |
 | GET   | /api/special/                   |                 | ❌ | |
 | GET   | /api/search/                    | query (q), page | ❌ | Query endpoint |
-| GET   | /api/sets/featured              | page            | ❌ | Query endpoint |
+| GET   | /api/sets/featured              | page            | ❌ | |
+| GET   | /api/sets/new                   | page            | ❌ | |
 | GET   | /api/brick/:id                  |                 | ❌ | |
 | POST  | /api/bulk/brick                 | array           | ❌ | POST due to bulk nature |
 | GET   | /api/set/:id                    |                 | ❌ | |
@@ -38,7 +39,7 @@ For all endpoints that query, the following parameters are supported:
 
 q: string to search for (fuzzy)
 
-tags: tags to include in search
+tag: tag to include in search (one at a time)
 
 type: type of entity to return (set / brick)
 
