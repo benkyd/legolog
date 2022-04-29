@@ -104,8 +104,6 @@
     }
 }
 
-/* loosely based on https://codepen.io/luisar/pen/JjoOZav */
-
 .order-body-item-table {
     width: 100%;
     margin-top: 10px;
@@ -121,7 +119,12 @@
 
 .order-body-item-right {
     width: 49%;
+    height: auto;
     order: 1;
+}
+
+.order-list {
+    height: min-content;
 }
 
 .order-body-header {
@@ -132,6 +135,7 @@
     margin-bottom: 10px;
 }
 
+/* loosely based on https://codepen.io/luisar/pen/JjoOZav */
 .order-track-step {
     display: flex;
     height: 7rem;
