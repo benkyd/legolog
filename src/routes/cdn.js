@@ -22,7 +22,7 @@ function Get(req, res) {
     // if linux
     const defaultFile = `${process.cwd()}\\db\\img\\default.png`;
     if (process.platform === 'linux') {
-        defaultFile.replace('\\', '/');
+        defaultFile.replace(/\\/g, '/');
     }
 
     // this very randomly fails sometimes
@@ -34,7 +34,7 @@ function Get(req, res) {
         // if linux
         const file = `${process.cwd()}\\db\\img\\${bucket[0]}\\${bucket[1]}\\${bucket[2]}\\${bucket[3]}\\${id}`;
         if (process.platform === 'linux') {
-            file.replace('\\', '/');
+            file.replace(/\\/g, '/');
         }
 
         if (fs.existsSync(file)) {
