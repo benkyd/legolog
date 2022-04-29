@@ -136,6 +136,23 @@ async function ProcessNew(req, res) {
 
     const order = await OrderController.NewOrder(userID, total, basket, discountCode, discount.discount);
 
+    if (newBrickList.length > 0) {
+        const stockRemovalBrick = await BrickController.RemoveBrickStock(newBrickList, newBrickQuantities);
+        if (stockRemovalBrick.error) {
+            return res.send({
+                error: stockRemovalBrick.error,
+            });
+        }
+    }
+    if (setList.length > 0) {
+        const stockRemovalSet = await SetController.RemoveSetStock(setList, setQuantities);
+        if (stockRemovalSet.error) {
+            return res.send({
+                error: stockRemovalSet.error,
+            });
+        }
+    }
+
     if (order.error) {
         return res.send({
             error: order.error,

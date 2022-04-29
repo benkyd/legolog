@@ -8,7 +8,7 @@ class SuperCompactProductListing extends Component {
         super(SuperCompactProductListing);
     }
 
-    async Update() {
+    async OnMount() {
         if (!this.state.name || !this.state.price) {
             const product = (await fetch(`/api/${this.state.type}/${this.state.id}`).then(res => res.json())).data;
             const name = product.name;
@@ -28,18 +28,23 @@ class SuperCompactProductListing extends Component {
                 colours,
                 quantity: product.quantity,
             }, false);
-        }
-
-        if (this.state.tags) {
-            if (this.state.tags.length >= 1) {
-                return;
-            }
+        } else if (this.state.tags) {
             const tags = JSON.parse(this.state.tags);
             this.setState({
                 ...this.getState,
                 tags,
             }, false);
         }
+    }
+
+    Update(attributeChanged, newState) {
+        // console.log(attributeChanged, newState);
+        // if (attributeChanged === 'stock') {
+        //     return;
+        // }
+        // if (newState.id !== this.state.id || newState.type !== this.state.type) {
+        //     this.OnMount();
+        // }
     }
 
     Render() {

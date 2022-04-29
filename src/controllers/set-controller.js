@@ -229,6 +229,48 @@ async function GetSets(page, resPerPage) {
 
 // U
 
+async function RemoveSetStock(setIdList, quantityList) {
+    await Database.Query('BEGIN TRANSACTION;');
+    for (let i = 0; i < setIdList.length; i++) {
+        const dbres = await Database.Query(`
+            UPDATE lego_set_inventory
+            SET stock = stock - $1
+            WHERE set_id = $2;
+        `, [quantityList[i], setIdList[i]]).catch(() => {
+            return {
+                error: 'Database error',
+            };
+        });
+        if (dbres.error) {
+            Database.Query('ROLLBACK TRANSACTION;');
+            Logger.Error(dbres.error);
+            return dbres;
+        }
+    }
+    Database.Query('COMMIT TRANSACTION;');
+    return true;
+}
+
+async function UpdateStock(setId, newStock) {
+    await Database.Query('BEGIN TRANSACTION;');
+    const dbres = await Database.Query(`
+        UPDATE lego_set_inventory
+        SET stock = $1
+        WHERE set_id = $2;
+    `, [newStock, setId]).catch(() => {
+        return {
+            error: 'Database error',
+        };
+    });
+    if (dbres.error) {
+        Database.Query('ROLLBACK TRANSACTION;');
+        Logger.Error(dbres.error);
+        return dbres;
+    }
+    Database.Query('COMMIT TRANSACTION;');
+    return true;
+}
+
 // D
 
 module.exports = {
@@ -236,4 +278,6 @@ module.exports = {
     SumPrices,
     GetSet,
     GetSets,
+    RemoveSetStock,
+    UpdateStock,
 };

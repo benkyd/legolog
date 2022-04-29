@@ -38,20 +38,22 @@ class ProductList extends Component {
         if (!augmentable) {
             return '';
         }
-        return /* html */`
-            <div class="augment-panel">
-                <div class="augment-panel-header">
-                    <span class="augment-panel-header-text">Refine results</span>
-                </div>
-                <div class="augment-panel-body">
-                    <div class="augment-panel-body-row">
-                        <span class="augment-panel-body-row-text">Weight</span>
-                        <span class="augment-panel-body-row-text">Tag</span>
-                        <span class="augment-panel-body-row-text"></span>
-                    </div>
-                </div>
-            </div>
-        `;
+        // next time :(
+        // return /* html */`
+        //     <div class="augment-panel">
+        //         <div class="augment-panel-header">
+        //             <span class="augment-panel-header-text">Refine results</span>
+        //         </div>
+        //         <div class="augment-panel-body">
+        //             <div class="augment-panel-body-row">
+        //                 <span class="augment-panel-body-row-text">Weight</span>
+        //                 <span class="augment-panel-body-row-text">Tag</span>
+        //                 <span class="augment-panel-body-row-text"></span>
+        //             </div>
+        //         </div>
+        //     </div>
+        // `;
+        return '';
     }
 
     Render() {

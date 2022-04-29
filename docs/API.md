@@ -26,8 +26,8 @@ automatically every request
 | GET   | /api/auth/staff/orders/         |                 | ✔️ | All unshipped orders |
 | PUT   | /api/auth/staff/order/:id       |                 | ✔️ | Update order to shipped, recieved (carrier) |
 | PUT   | /api/auth/staff/stock/:type/:id |                 | ✔️ | Update stock on item |
-| POST  | /api/auth/staff/stock/          |                 | ✔️ | Add item to inventory |
-| DEL   | /api/auth/staff/stock/:type/:id |                 | ✔️ | Remove item from inventory |
+| POST  | /api/auth/staff/stock/          | NOT IMPLEMENTED | ✔️ | Add item to inventory |
+| DEL   | /api/auth/staff/stock/:type/:id | NOT IMPLEMENTED | ✔️ | Remove item from inventory |
 
 Query endpoints do not return the full data on a brick/set, they return
 a subset for product listing pages

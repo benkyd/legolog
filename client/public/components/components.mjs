@@ -29,7 +29,7 @@ export class Component extends HTMLElement {
 
     // Override these
     OnMount() { }
-    Update() { }
+    Update(attributeChanged, newState) { }
     Render() { Component.__WARN('Render'); }
     OnRender() { }
     OnUnMount() { }
@@ -78,9 +78,12 @@ export class Component extends HTMLElement {
 
     attributeChangedCallback(name, newValue) {
         console.log(`attribute changed: ${name} ${newValue}`);
-        this.setState({ ...this.state, [name]: newValue });
-        this.Update();
-        this.__INVOKE_RENDER();
+        this.Update(Object.bind(this, name, {
+            ...this.state,
+            [name]: newValue,
+        }));
+        this.setState({ ...this.state, [name]: newValue }, false);
+        this.__INVOKE_RENDER(Object.bind(this));
     }
 
     get getState() {

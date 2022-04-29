@@ -1,5 +1,7 @@
 import { RegisterComponent, Component, SideLoad } from './components.mjs';
 import { AddProductToBasket } from '../basket.mjs';
+import * as LocalStorageListener from '../localstorage-listener.mjs';
+import * as Auth from '../auth.mjs';
 
 class ProductListing extends Component {
     static __IDENTIFY() { return 'product-listing'; }
@@ -142,10 +144,21 @@ class ProductListing extends Component {
 
                             <div class="product-quantity-selector">
                                 <button class="product-quantity-button reduce-quantity" type="button">-</button>
-                                <input class="quantity-input" type="number" value="1" min="1" max="{this.state.stock}">
+                                <input class="quantity-input" type="number" value="${this.state.stock < 1 ? '0' : '1'}" min="0" max="{this.state.stock}">
                                 <button class="product-quantity-button increase-quantity" type="button">+</button>
                                 <span class="product-quantity">&nbsp;{this.state.stock} in stock</span>
                             </div>
+
+                            ${localStorage.getItem('stock-mode') === 'true'
+                                ? /* html */`
+                                    <div class="product-stock-mode">
+                                        <span class="product-stock-mode-text">Change Stock</span>
+                                        <input class="product-stock-mode-input" type="number" value="{this.state.stock}" min="0">
+                                        <button class="product-stock-mode-button" type="button">Update</button>
+                                    </div>
+                                `
+                                : ''
+                            }
 
                             <div class="product-add-to-basket">
                                 <button class="add-to-basket-button">Add to Basket</button>
@@ -178,6 +191,37 @@ class ProductListing extends Component {
     }
 
     OnRender() {
+        LocalStorageListener.ListenOnKey('stock-mode', () => {
+            this.__INVOKE_RENDER();
+        });
+
+        if (localStorage.getItem('stock-mode') === 'true') {
+            const updateStockButton = this.root.querySelector('.product-stock-mode-button');
+            updateStockButton.addEventListener('click', async () => {
+                const input = this.root.querySelector('.product-stock-mode-input');
+                const stock = parseInt(input.value);
+                this.state.stock = stock;
+                this.__INVOKE_RENDER();
+
+                // tell the server to update the stock
+                const productId = this.state.id;
+                const productType = this.state.type;
+
+                const params = {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${await Auth.GetToken()}`,
+                    },
+                    body: JSON.stringify({
+                        new_stock_level: stock,
+                    }),
+                };
+
+                fetch(`/api/auth/staff/stock/${productType}/${productId}`, params).then(response => response.json()).then(data => console.log(data));
+            });
+        }
+
         const backButton = this.root.querySelector('.back-button-svg');
 
         backButton.addEventListener('click', () => {
@@ -188,8 +232,16 @@ class ProductListing extends Component {
         const quantityInput = this.root.querySelector('.quantity-input');
         const increaseQuantityButton = this.root.querySelector('.increase-quantity');
         const reduceQuantityButton = this.root.querySelector('.reduce-quantity');
+        const addToBasket = this.root.querySelector('.add-to-basket-button');
 
         quantityInput.value = 1;
+        if (this.state.stock === 0) {
+            quantityInput.value = 0;
+            increaseQuantityButton.disabled = true;
+            reduceQuantityButton.disabled = true;
+            addToBasket.disabled = true;
+            addToBasket.innerText = 'Out of Stock';
+        }
 
         quantityInput.addEventListener('change', () => {
             quantityInput.value = parseInt(quantityInput.value);
@@ -225,8 +277,6 @@ class ProductListing extends Component {
         }));
 
         // add quantity to basket and then update the basket count
-        const addToBasket = this.root.querySelector('.add-to-basket-button');
-
         addToBasket.addEventListener('click', () => {
             // if it is a brick, get potential modifier from the drop down menu
             const brick = this.state.type === 'brick';

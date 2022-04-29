@@ -93,6 +93,12 @@ class NavBar extends Component {
             const admin = e.value;
             if (admin) {
                 this.root.querySelector('.stock-mode').style.display = 'flex';
+
+                if (localStorage.getItem('stock-mode') === 'true') {
+                    this.root.querySelector('.stock-slider').checked = true;
+                } else {
+                    this.root.querySelector('.stock-slider').checked = false;
+                }
             } else {
                 this.root.querySelector('.stock-mode').style.display = 'none';
             }

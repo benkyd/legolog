@@ -73,7 +73,7 @@ class Checkout extends Component {
                         </div>
 
                         <div class="checkout-place-order">
-                            <button class="checkout-place-order-button">Buy £${this.state.subtotal - this.state.discount}</button>
+                            <button class="checkout-place-order-button">Buy £${parseFloat(this.state.subtotal - this.state.discount).toFixed(2)}</button>
                         </div>
                     </div>
                     <div class="checkout-body-right">

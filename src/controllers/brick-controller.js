@@ -215,6 +215,48 @@ async function GetBrick(brickId) {
 
 // U
 
+async function RemoveBrickStock(brickIdList, quantityList) {
+    await Database.Query('BEGIN TRANSACTION;');
+    for (let i = 0; i < brickIdList.length; i++) {
+        const dbres = await Database.Query(`
+            UPDATE lego_brick_inventory
+            SET stock = stock - $2
+            WHERE brick_id = $1
+        `, [brickIdList[i], quantityList[i]]).catch(() => {
+            return {
+                error: 'Database error',
+            };
+        });
+        if (dbres.error) {
+            Database.Query('ROLLBACK TRANSACTION;');
+            Logger.Error(dbres.error);
+            return dbres;
+        }
+    }
+    Database.Query('COMMIT TRANSACTION;');
+    return true;
+}
+
+async function UpdateStock(brickId, newStock) {
+    await Database.Query('BEGIN TRANSACTION;');
+    const dbres = await Database.Query(`
+        UPDATE lego_brick_inventory
+        SET stock = $2
+        WHERE brick_id = $1
+    `, [brickId, newStock]).catch(() => {
+        return {
+            error: 'Database error',
+        };
+    });
+    if (dbres.error) {
+        Database.Query('ROLLBACK TRANSACTION;');
+        Logger.Error(dbres.error);
+        return dbres;
+    }
+    Database.Query('COMMIT TRANSACTION;');
+    return true;
+}
+
 // D
 
 module.exports = {
@@ -222,4 +264,6 @@ module.exports = {
     SumPrices,
     GetBulkBricks,
     GetBrick,
+    RemoveBrickStock,
+    UpdateStock,
 };

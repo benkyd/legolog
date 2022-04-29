@@ -47,17 +47,11 @@
 
 .menu-content {
     max-width: fit-content;
-    display: none;
+    display: flex;
     flex-direction: column;
     align-items: flex-start;
-    min-width: 0;
-    margin-top: 1em;
-}
-
-.details-open {
-    display: flex;
-    position: static;
     width: auto;
+    margin-top: 1em;
 }
 
 .product-details-content-item {
