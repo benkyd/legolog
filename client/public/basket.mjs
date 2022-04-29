@@ -14,9 +14,16 @@
 
 // TODO: Does the localstorage have a problem with mutual exclusion?
 // TODO: Should the basket be persisted to the server?
+function SetupBasket() {
+    localStorage.setItem('basket', JSON.stringify({
+        items: {},
+        total: 0,
+    }));
+}
+
 export function GetBasketItems() {
     if (localStorage.getItem('basket') === null || !localStorage.getItem('basket')) {
-        return;
+        SetupBasket();
     }
     return JSON.parse(localStorage.getItem('basket')).items;
 }
@@ -27,7 +34,7 @@ export function ClearBasket() {
 
 export function GetItemAmountBasket(product) {
     if (localStorage.getItem('basket') === null || !localStorage.getItem('basket')) {
-        return;
+        SetupBasket();
     }
     const basket = JSON.parse(localStorage.getItem('basket'));
 
@@ -44,10 +51,7 @@ export function GetItemAmountBasket(product) {
 
 export function AddProductToBasket(product, type, amount, brickModifier = 'none') {
     if (localStorage.getItem('basket') === null || !localStorage.getItem('basket')) {
-        localStorage.setItem('basket', JSON.stringify({
-            items: {},
-            total: 0,
-        }));
+        SetupBasket();
     }
 
     const basket = JSON.parse(localStorage.getItem('basket'));
@@ -72,7 +76,7 @@ export function AddProductToBasket(product, type, amount, brickModifier = 'none'
 
 export function RemoveProductFromBasket(product, type, amount, brickModifier = 'none') {
     if (localStorage.getItem('basket') === null || !localStorage.getItem('basket')) {
-        return;
+        SetupBasket();
     }
     const basket = JSON.parse(localStorage.getItem('basket'));
 
@@ -95,7 +99,7 @@ export function RemoveProductFromBasket(product, type, amount, brickModifier = '
 
 export function GetBasketTotal() {
     if (localStorage.getItem('basket') === null || !localStorage.getItem('basket')) {
-        return 0;
+        SetupBasket();
     }
 
     const basket = JSON.parse(localStorage.getItem('basket'));
@@ -105,7 +109,7 @@ export function GetBasketTotal() {
 
 export async function GetBasketTotalPrice(discount = 0, type = '£', entity = undefined) {
     if (localStorage.getItem('basket') === null || !localStorage.getItem('basket')) {
-        return 0;
+        SetupBasket();
     }
 
     const basket = JSON.parse(localStorage.getItem('basket'));
@@ -130,7 +134,7 @@ export async function GetBasketTotalPrice(discount = 0, type = '£', entity = un
 
 export function GetAbsoluteBasketDiscount(discount = 0, type = '£', entity = undefined) {
     if (localStorage.getItem('basket') === null || !localStorage.getItem('basket')) {
-        return;
+        SetupBasket();
     }
     const basket = JSON.parse(localStorage.getItem('basket'));
 

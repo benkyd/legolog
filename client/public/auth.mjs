@@ -35,6 +35,8 @@ async function CheckRedirect() {
 }
 
 export async function InitAuth0() {
+    localStorage.setItem('user', 'Guest');
+
     ready = false;
 
     auth0 = await window.createAuth0Client({
